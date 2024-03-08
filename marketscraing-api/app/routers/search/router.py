@@ -25,7 +25,7 @@ def getAllProducts():
             EC.presence_of_element_located((By.TAG_NAME, "app-product-block-v"))
         )
 
-        print(driver.page_source)
+        print(driver.)
 
         products_html = driver.find_elements(By.TAG_NAME, "app-product-block-v")
         
