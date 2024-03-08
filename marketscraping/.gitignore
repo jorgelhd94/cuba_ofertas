@@ -33,8 +33,3 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
-<<<<<<< HEAD
-next-env.d.ts
-=======
-next-env.d.ts
->>>>>>> 8cec031 (add gitignore)
