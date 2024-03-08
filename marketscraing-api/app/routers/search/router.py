@@ -3,7 +3,7 @@ from app.libs.selenium import SeleniumDriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from app.libs.scraper import get_product_name
+from app.libs.scraper import get_product_data
 
 search_router = APIRouter(
     prefix="/search",
@@ -25,16 +25,12 @@ def getAllProducts():
             EC.presence_of_element_located((By.TAG_NAME, "app-product-block-v"))
         )
 
-        print(driver.)
-
         products_html = driver.find_elements(By.TAG_NAME, "app-product-block-v")
         
         count_products = len(products_html)
 
         for product in products_html:
-            products.append({
-                "name": get_product_name(product)
-            })
+            products.append(get_product_data(product))
             
     except Exception as e:
         print("Ocurrió un error:", e)
