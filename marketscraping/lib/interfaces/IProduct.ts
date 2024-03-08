@@ -7,5 +7,5 @@ export interface IProduct {
   image_url: string;
   manufacture: IManufacture;
   current_price: string;
-  currency: string;
+  currency: number;
 }

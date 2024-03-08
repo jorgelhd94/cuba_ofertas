@@ -6,6 +6,10 @@ import { Input } from "@nextui-org/react";
 import { useEffect } from "react";
 import { useFormState } from "react-dom";
 
+type GenericSearchProps = {
+  handleProducts: Function;
+};
+
 type StateProps = {
   message: string;
   data: any;
@@ -13,17 +17,17 @@ type StateProps = {
 
 const initialState: StateProps = {
   message: "",
-  data: {},
+  data: null,
 };
 
-export const GenericSearch = () => {
+export const GenericSearch: React.FC<GenericSearchProps> = (props) => {
   const [state, searchAction] = useFormState(searchAllProducts, initialState);
 
   useEffect(() => {
     if (state?.data) {
-      console.log(state.data);
+      props.handleProducts(state.data);
     }
-  }, [state]);
+  }, [props, state]);
 
   return (
     <div className="max-w-2xl w-full flex flex-col max-md:items-center">
