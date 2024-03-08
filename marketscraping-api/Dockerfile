@@ -17,5 +17,5 @@ RUN unzip /tmp/chromedriver_linux64.zip -d /tmp && \
     chown root:root /usr/bin/chromedriver && \
     chmod +x /usr/bin/chromedriver
 
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80", "--log-level", "DEBUG"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80", "--log-level", "debug"]
 
