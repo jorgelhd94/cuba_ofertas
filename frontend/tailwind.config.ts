@@ -10,6 +10,9 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      screens: {
+        sm: "400px",
+      },
     },
   },
   darkMode: "class",

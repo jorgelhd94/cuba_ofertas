@@ -5,12 +5,7 @@ import { IProduct } from "@/lib/interfaces/IProduct";
 import { useEffect, useState } from "react";
 
 const HomeSection = () => {
-  const [loading, setLoading] = useState(false);
   const [products, setProducts] = useState<IProduct[]>([]);
-
-  useEffect(() => {
-    console.log(products);
-  }, [products]);
 
   const handleProducts = (data: { total: number; products: IProduct[] }) => {
     setProducts(data.products);
@@ -23,7 +18,9 @@ const HomeSection = () => {
           <div className="w-full flex flex-col items-center pt-8 md:pt-20 gap-8">
             <GenericSearch handleProducts={handleProducts} />
 
-            <ProductGrid products={products} />
+            {products && products.length > 0 && (
+              <ProductGrid products={products} />
+            )}
           </div>
         </div>
       </div>
