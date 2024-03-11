@@ -2,7 +2,7 @@
 import ProductGrid from "@/components/products/product-grid/ProductGrid";
 import { GenericSearch } from "@/components/search/generic-search/GenericSearch";
 import { IProduct } from "@/lib/interfaces/IProduct";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const HomeSection = () => {
   const [products, setProducts] = useState<IProduct[]>([]);

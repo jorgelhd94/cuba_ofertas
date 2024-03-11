@@ -12,7 +12,7 @@ search_router = APIRouter(
 )
 
 @search_router.get("/")
-def getAllProducts():
+def search_products(search_text: str = ""):
     # Navega a una página web
     seleniumDriver = SeleniumDriver()
 
@@ -20,7 +20,7 @@ def getAllProducts():
     products = []
 
     try:
-        driver = seleniumDriver.get_driver("productos/")
+        driver = seleniumDriver.get_driver("buscar?q=" + search_text  if search_text else "productos/")
         WebDriverWait(driver, 120).until(
             EC.presence_of_element_located((By.TAG_NAME, "app-product-block-v"))
         )
@@ -31,7 +31,6 @@ def getAllProducts():
 
         for product in products_html:
             products.append(get_product_data(product))
-            
     except Exception as e:
         print("Ocurrió un error:", e)
         raise HTTPException(status_code=500, detail="Ocurrio un error")
