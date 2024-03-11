@@ -12,16 +12,15 @@ COPY ./app /marketscraping-api/app
 RUN apt-get update -y && \
     apt-get install -y wget xvfb unzip
 
-# Descargar e instalar Google Chrome 114.0.5735.90
-# Nota: Esta URL puede no ser válida o el paquete puede no estar disponible directamente.
-# Deberías verificar si Google proporciona una URL directa para descargar versiones específicas de Chrome.
-RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add - && \
-    echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list && \
-    apt-get update -y && \
-    apt-get install -y google-chrome-stable
+
+
+ENV CHROME_VERSION 114.0.5735.90
+
+RUN wget --no-verbose -O /tmp/chrome.deb https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_${CHROME_VERSION}-1_amd64.deb \
+  && apt install -y /tmp/chrome.deb \
+  && rm /tmp/chrome.deb
 
 # Configurar las variables de entorno para ChromeDriver
-ENV CHROMEDRIVER_VERSION 114.0.5735.90
 ENV CHROMEDRIVER_DIR /chromedriver
 
 # Crear el directorio para ChromeDriver
@@ -29,7 +28,7 @@ RUN mkdir $CHROMEDRIVER_DIR
 
 # Descargar e instalar ChromeDriver 114.0.5735.90
 # Nota: Asegúrate de que esta URL sea correcta y accesible.
-RUN wget -q --continue -P $CHROMEDRIVER_DIR "http://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip" && \
+RUN wget -q --continue -P $CHROMEDRIVER_DIR "http://chromedriver.storage.googleapis.com/$CHROME_VERSION/chromedriver_linux64.zip" && \
     unzip $CHROMEDRIVER_DIR/chromedriver* -d $CHROMEDRIVER_DIR
 
 # Añadir ChromeDriver al PATH
