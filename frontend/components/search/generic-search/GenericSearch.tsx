@@ -3,11 +3,13 @@ import { SubmitBtn } from "@/components/shared/buttons/SubmitBtn/SubmitBtn";
 import { SearchIcon } from "@/components/shared/icons/SearchIcon";
 import { searchAllProducts } from "@/lib/actions/search/search";
 import { Input } from "@nextui-org/react";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useFormState } from "react-dom";
 
 type GenericSearchProps = {
   handleProducts: Function;
+  searchText: string;
+  handleSearchText: Function;
 };
 
 type StateProps = {
@@ -22,10 +24,12 @@ const initialState: StateProps = {
 
 export const GenericSearch: React.FC<GenericSearchProps> = (props) => {
   const [state, searchAction] = useFormState(searchAllProducts, initialState);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (state?.data) {
       props.handleProducts(state.data);
+      props.handleSearchText(inputRef.current ? inputRef.current.value : "");
     }
   }, [props, state]);
 
@@ -36,6 +40,7 @@ export const GenericSearch: React.FC<GenericSearchProps> = (props) => {
         className="w-full flex max-md:flex-col max-md:px-4 gap-4 items-center"
       >
         <Input
+          ref={inputRef}
           name="searchText"
           variant="bordered"
           radius="lg"
