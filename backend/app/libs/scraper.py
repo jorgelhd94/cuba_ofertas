@@ -8,7 +8,7 @@ def get_product_data(product_html: WebElement):
 
     manufacture_tag = product_html.find_element(By.CLASS_NAME, "manufacture_product").find_element(By.TAG_NAME, "a")
     manufacture_product = {
-        "name": manufacture_tag.get_attribute("innerHTML"),
+        "name": manufacture_tag.get_attribute("innerHTML").replace("&nbsp;", ""),
         "url": manufacture_tag.get_attribute("href")
     }
     

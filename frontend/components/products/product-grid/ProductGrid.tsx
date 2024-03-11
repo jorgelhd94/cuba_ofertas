@@ -9,8 +9,8 @@ type ProductGridProps = {
 export const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
   return (
     <div className="gap-4 grid sm:grid-cols-2 md:grid-cols-4 px-4 md:px-8">
-      {products.map((item) => (
-        <ProductCard key={item.id} product={item} />
+      {products.map((item, index) => (
+        <ProductCard key={item.id + "-" + index} product={item} />
       ))}
     </div>
   );

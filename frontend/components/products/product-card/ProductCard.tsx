@@ -21,6 +21,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       </CardBody>
       <CardFooter className="flex flex-col items-start justify-start gap-2">
         <b className="text-start text-small text-primary-800">{product.name}</b>
+        <p className="text-small font-medium">Marca: {product.manufacture.name}</p>
         <p className="font-bold text-lg">{product.current_price} {product.currency}</p>
       </CardFooter>
     </Card>
