@@ -19,9 +19,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           src={product.image_url}
         />
       </CardBody>
-      <CardFooter className="text-small flex flex-col items-start justify-start">
-        <b className="text-start">{product.name}</b>
-        <p className="text-default-500">{product.current_price}</p>
+      <CardFooter className="flex flex-col items-start justify-start gap-2">
+        <b className="text-start text-small text-primary-800">{product.name}</b>
+        <p className="font-bold text-lg">{product.current_price} {product.currency}</p>
       </CardFooter>
     </Card>
   );
