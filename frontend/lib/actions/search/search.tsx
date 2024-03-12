@@ -23,7 +23,7 @@ export async function searchAllProducts(prevState: any, formData: FormData) {
     };
   } catch (error) {
     return {
-      message: "Error de comunicación con el servidor " + process.env.NEXT_PUBLIC_API_URL,
+      message: "Error de comunicación con el servidor",
     };
   }
 }
