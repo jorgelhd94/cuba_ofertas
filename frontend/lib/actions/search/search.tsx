@@ -9,7 +9,7 @@ export async function searchAllProducts(prevState: any, formData: FormData) {
     };
 
     const data = await fetch(
-      process.env.NEXT_PUBLIC_API_URL! + "api/v1/search?" + params.searchParam
+      process.env.NEXT_PUBLIC_API_URL! + "api/v1/search/?" + params.searchParam
     )
       .then((response) => {
         return response.json();
