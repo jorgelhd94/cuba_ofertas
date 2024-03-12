@@ -1,9 +1,9 @@
-version: '3.9'
+version: '1.0'
 
 services:
   nextapp:
-    container_name: nextapp
-    image: nextapp
+    container_name: frontend
+    image: frontend
     build: .
     ports:
       - "3000:3000"

@@ -1,0 +1,9 @@
+version: '1.0'
+
+services:
+  nextapp:
+    container_name: backend
+    image: backend
+    build: .
+    ports:
+      - "80:80"
