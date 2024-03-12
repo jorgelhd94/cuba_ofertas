@@ -1,36 +1,57 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+#spysm23
 
-## Getting Started
+# 🖥️ SPY-SM23 Frontend
 
-First, run the development server:
+Esta es una aplicación desarrollada usando **NextJS 14** y el manejador de paquetes **pnpm**.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Desarrollo
+### Requisitos
+
+* **NodeJS 18+**
+* **pnpm**
+
+### Clone el repositorio
+```
+git clone https://github.com/alesarmiento/spySM23.git
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Instalar los paquetes
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Dentro de la carpeta **./frontend** ejecute:
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+```
+pnpm install
+```
 
-## Learn More
+### Iniciar aplicación
 
-To learn more about Next.js, take a look at the following resources:
+```
+pnpm dev
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Producción
+### Antes de empezar
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+Recuerde seguir primero las instrucciones en el Readme principal.
+### Docker
 
-## Deploy on Vercel
+1. Vaya a la carpeta ./frontend desde la carpeta principal
+```
+cd ./frontend
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+2. Cree la imagen de docker
+```
+sudo docker build -t frontend .
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+3. Inicie la imagen
+```
+sudo docker-compose up -d
+```
+
+4. Para ver las imágenes de Docker que están activas
+
+```
+sudo docker ps -a
+```
