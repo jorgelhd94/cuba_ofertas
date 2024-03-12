@@ -113,4 +113,4 @@ git clone https://github.com/alesarmiento/spySM23.git
 
 ## Iniciar aplicaciones
 
-Para iniciar ambas aplicaciones diríjase al archivo **Readme** de cada una, carpeta **frontend** y **backend** respectivamente.
+Para iniciar ambas aplicaciones diríjase al archivo **./Readme** de cada una, carpeta **./frontend** y **./backend** respectivamente.
