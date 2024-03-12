@@ -23,7 +23,7 @@ export async function searchAllProducts(prevState: any, formData: FormData) {
     };
   } catch (error) {
     return {
-      message: "Error de comunicación con el servidor",
+      message: "Error de comunicación con el servidor " + error,
     };
   }
 }
