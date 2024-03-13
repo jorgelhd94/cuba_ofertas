@@ -7,9 +7,9 @@ import { useEffect, useRef } from "react";
 import { useFormState } from "react-dom";
 
 type GenericSearchProps = {
-  handleProducts: Function;
   searchText: string;
-  handleSearchText: Function;
+  handleProducts?: Function;
+  handleSearchText?: Function;
 };
 
 type StateProps = {
@@ -28,8 +28,13 @@ export const GenericSearch: React.FC<GenericSearchProps> = (props) => {
 
   useEffect(() => {
     if (state?.data) {
-      props.handleProducts(state.data);
-      props.handleSearchText(inputRef.current ? inputRef.current.value : "");
+      if (props.handleProducts) {
+        props.handleProducts(state.data);
+      }
+
+      if (props.handleSearchText) {
+        props.handleSearchText(inputRef.current ? inputRef.current.value : "");
+      }
     }
   }, [props, state]);
 
@@ -54,7 +59,7 @@ export const GenericSearch: React.FC<GenericSearchProps> = (props) => {
             innerWrapper: "bg-transparent",
           }}
           placeholder="Escribe el nombre del producto..."
-          startContent={<SearchIcon />}
+          startContent={<SearchIcon color="black"/>}
         />
 
         <SubmitBtn />

@@ -3,8 +3,8 @@
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
-import "@theme-toggles/react/css/Within.css";
-import { Within } from "@theme-toggles/react";
+import "@theme-toggles/react/css/Expand.css"
+import { Expand } from "@theme-toggles/react";
 
 export function ThemeSwitcher() {
   const [mounted, setMounted] = useState(false);
@@ -18,12 +18,12 @@ export function ThemeSwitcher() {
 
   return (
     <div className="flex items-center">
-      <Within
+      <Expand
         toggled={theme === "dark"}
         toggle={() => setTheme(theme === "dark" ? "light" : "dark")}
         duration={750}
         placeholder={theme}
-        className="text-3xl"
+        className="text-3xl text-slate-800 dark:text-white"
       />
     </div>
   );
