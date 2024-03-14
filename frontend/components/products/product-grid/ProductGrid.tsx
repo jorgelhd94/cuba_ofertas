@@ -1,19 +1,43 @@
+"use client";
+
 import { IProduct } from "@/lib/interfaces/IProduct";
-import React from "react";
+import React, { useState } from "react";
 import { ProductCard } from "../product-card/ProductCard";
 import { ProductsSkeleton } from "../products-skeleton/ProductsSkeleton";
+import { OrderBy } from "@/components/shared/selects/order-by/OrderBy";
+import { Pagination } from "@nextui-org/react";
+
+type SearchParamsType = {
+  searchText: string;
+  orderBy: number;
+  pagination: number;
+};
 
 type ProductGridProps = {
   products: IProduct[] | undefined;
-  searchText: string;
+  searchParams: SearchParamsType;
   loading: boolean;
+  handleSearch: (
+    searchText: string,
+    pageNumber?: number,
+    order?: number
+  ) => void;
 };
 
 export const ProductGrid: React.FC<ProductGridProps> = ({
   products,
-  searchText,
+  searchParams,
   loading,
+  handleSearch,
 }) => {
+  const handleOrderBy = async (value: number) => {
+    handleSearch(searchParams.searchText, searchParams.pagination, value);
+  };
+
+  const handlePagination = async (value: number) => {
+    handleSearch(searchParams.searchText, value, searchParams.orderBy);
+  };
+
   const showData = () => {
     if (loading) {
       return <ProductsSkeleton />;
@@ -29,16 +53,31 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
       return "Vacio";
     }
   };
+
   return (
     products && (
-      <div className="px-4 md:px-8 flex flex-col gap-8 w-full">
-        <div>
-          <h3 className="text-xl">
+      <div className="px-4 md:px-8 flex flex-col items-center gap-8 w-full">
+        <div className="flex max-md:flex-col gap-4 justify-between items-center w-full">
+          <h3 className="text-xl max-md:text-center">
             Resultados de búsqueda para:{" "}
-            <b>{searchText ? searchText : "Todos los productos"}</b>
+            <b>
+              {searchParams.searchText
+                ? searchParams.searchText
+                : "Todos los productos"}
+            </b>
           </h3>
+          <OrderBy handleOrderBy={handleOrderBy} isDisabled={loading} />
         </div>
         {showData()}
+
+        <Pagination
+          onChange={(pag) => handlePagination(pag)}
+          color="secondary"
+          showControls
+          total={10}
+          initialPage={searchParams.pagination}
+          isDisabled={loading}
+        />
       </div>
     )
   );

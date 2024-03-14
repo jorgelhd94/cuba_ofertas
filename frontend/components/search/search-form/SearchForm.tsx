@@ -2,16 +2,20 @@
 import { SubmitBtn } from "@/components/shared/buttons/SubmitBtn/SubmitBtn";
 import { SearchIcon } from "@/components/shared/icons/SearchIcon";
 import { Input } from "@nextui-org/react";
-import React, { useState } from "react";
+import React from "react";
 
-type GenericSearchProps = {
-  handleSearch: Function;
+type SearchFormProps = {
+  handleSearch: (
+    searchText: string,
+    pageNumber?: number,
+    order?: number
+  ) => void;
   loading: boolean;
 };
 
-export const GenericSearch: React.FC<GenericSearchProps> = (props) => {
+export const SearchForm: React.FC<SearchFormProps> = (props) => {
   const handleSearch = (formData: FormData) => {
-    props.handleSearch(formData.get("searchText"));
+    props.handleSearch(formData.get("searchText")?.toString() || "");
   };
 
   return (
