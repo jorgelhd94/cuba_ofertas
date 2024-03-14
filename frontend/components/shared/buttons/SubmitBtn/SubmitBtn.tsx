@@ -1,23 +1,24 @@
 "use client";
 import { Button } from "@nextui-org/react";
-import React, { MouseEventHandler } from "react";
+import React from "react";
 import { useFormStatus } from "react-dom";
 
 type SubmitBtnProps = {
   onClick?: React.MouseEventHandler;
+  loading?: boolean;
 };
 
-export const SubmitBtn: React.FC<SubmitBtnProps> = ({ onClick }) => {
+export const SubmitBtn: React.FC<SubmitBtnProps> = ({ onClick, loading }) => {
   const { pending } = useFormStatus();
 
   return (
     <Button
       color="secondary"
       type="submit"
-      isLoading={pending}
-      disabled={pending}
+      isLoading={pending || loading}
+      disabled={pending || loading}
     >
-      {pending ? "Buscando" : "Buscar"}
+      {pending || loading ? "Buscando" : "Buscar"}
     </Button>
   );
 };
