@@ -16,9 +16,9 @@ export const SearchSection = () => {
   const handleSearch = async (text: string) => {
     setSearchText(text);
     setLoading(true);
-
+    
     const params = {
-      text: searchText ? "search_text=" + searchText : "",
+      text: searchText ? "search_text=" + text : "",
     };
 
     try {
@@ -42,12 +42,9 @@ export const SearchSection = () => {
 
   return (
     <div className="w-full flex flex-col items-center pt-8 md:pt-8 gap-8">
-      <GenericSearch
-        loading={loading}
-        handleSearch={handleSearch}
-      />
+      <GenericSearch loading={loading} handleSearch={handleSearch} />
       <ProductGrid
-        products={searchResults ? searchResults.products : []}
+        products={searchResults?.products}
         searchText={searchText}
         loading={loading}
       />
