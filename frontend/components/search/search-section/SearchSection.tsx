@@ -13,18 +13,17 @@ export const SearchSection = () => {
     null
   );
 
-  const handleSearch = async (searchParams: {
-    text: string;
-    pagination?: number;
-    orderby?: number;
-  }) => {
-    setSearchText(searchParams.text);
+  const handleSearch = async (text: string) => {
+    setSearchText(text);
     setLoading(true);
+
+    const params = {
+      text: searchText ? "search_text=" + searchText : "",
+    };
 
     try {
       const data = await fetch(
-        process.env.NEXT_PUBLIC_API_URL! +
-          `api/v1/search/?search_text=${searchText || ""}`
+        process.env.NEXT_PUBLIC_API_URL! + `api/v1/search/?` + params.text
       )
         .then((response) => {
           return response.json();
@@ -44,7 +43,6 @@ export const SearchSection = () => {
   return (
     <div className="w-full flex flex-col items-center pt-8 md:pt-8 gap-8">
       <GenericSearch
-        searchText={searchText}
         loading={loading}
         handleSearch={handleSearch}
       />

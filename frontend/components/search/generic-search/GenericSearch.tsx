@@ -5,14 +5,11 @@ import { Input } from "@nextui-org/react";
 import React, { useState } from "react";
 
 type GenericSearchProps = {
-  searchText: string;
   handleSearch: Function;
   loading: boolean;
 };
 
 export const GenericSearch: React.FC<GenericSearchProps> = (props) => {
-  const [searchText, setSearchText] = useState(props.searchText);
-
   const handleSearch = (formData: FormData) => {
     props.handleSearch(formData.get("searchText"));
   };
@@ -39,8 +36,6 @@ export const GenericSearch: React.FC<GenericSearchProps> = (props) => {
           }}
           placeholder="Escribe el nombre del producto..."
           startContent={<SearchIcon color="black" />}
-          value={searchText}
-          onChange={(event) => setSearchText(event.target.value)}
         />
 
         <SubmitBtn loading={props.loading} />

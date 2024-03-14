@@ -1,7 +1,7 @@
 import { IProduct } from "@/lib/interfaces/IProduct";
 import React from "react";
 import { ProductCard } from "../product-card/ProductCard";
-import { ProductSkeleton } from "../product-skeleton/ProductSkeleton";
+import { ProductsSkeleton } from "../products-skeleton/ProductsSkeleton";
 
 type ProductGridProps = {
   products: IProduct[];
@@ -16,10 +16,10 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
 }) => {
   const showData = () => {
     if (loading) {
-      return <ProductSkeleton />;
+      return <ProductsSkeleton />;
     } else if (products) {
       return (
-        <div className="flex flex-col md:flex-row items-center md:justify-between">
+        <div className="flex flex-col gap-8">
           <h3 className="text-xl">
             Resultados de búsqueda para:{" "}
             <b>{searchText ? searchText : "Todos los productos"}</b>
