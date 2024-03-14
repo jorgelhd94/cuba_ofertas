@@ -15,9 +15,7 @@ else:
 app = FastAPI()
 
 origins = [
-    "http://localhost:3000", # Dirección de tu aplicación Next.js en desarrollo
-    "http://localhost:80", # Dirección de tu aplicación Next.js en desarrollo
-    "http://localhost:80", # Dirección de tu aplicación Next.js en producción
+    "*"
 ]
 
 app.add_middleware(
