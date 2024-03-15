@@ -12,9 +12,10 @@ import { useState } from "react";
 import Logo from "../../shared/logo";
 import { ThemeSwitcher } from "../../shared/theme-switcher";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 function NavbarHome() {
+  const pathname = usePathname();
   const [blurred, setBlurred] = useState(false);
   const router = useRouter();
 
@@ -42,13 +43,17 @@ function NavbarHome() {
       <NavbarContent justify="end" className="align-items-center">
         <NavbarItem>
           <Button
+            variant={`${pathname === "/search" ? "solid" : "bordered"}`}
             type="button"
             isIconOnly
             color="secondary"
             aria-label="Like"
             onClick={() => router.push("/search")}
+            className="hover:border-default"
           >
-            <SearchIcon color="white" />
+            <SearchIcon
+              color={`${pathname === "/search" ? "white" : "black"}`}
+            />
           </Button>
         </NavbarItem>
         <NavbarItem>

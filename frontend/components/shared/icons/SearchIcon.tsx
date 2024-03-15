@@ -10,7 +10,7 @@ export const SearchIcon: React.FC<SearchIconProps> = ({ color }) => {
       return "text-white mb-0.5 dark:text-white/90 text-slate-200";
     }
 
-    return "text-black/50 mb-0.5 dark:text-white/90";
+    return "text-black/75 hover:text-white mb-0.5 dark:text-white/90";
   };
   return (
     <svg
