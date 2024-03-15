@@ -74,7 +74,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
               </h5>
             )}
           </div>
-          <OrderBy handleOrderBy={handleOrderBy} isDisabled={loading} />
+          <OrderBy handleOrderBy={handleOrderBy} isDisabled={loading} orderByOption={searchParams.orderBy}/>
         </div>
         {showData()}
 
