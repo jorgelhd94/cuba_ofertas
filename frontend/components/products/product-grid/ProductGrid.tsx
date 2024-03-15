@@ -6,6 +6,7 @@ import { Pagination } from "@nextui-org/react";
 import React, { useEffect, useState } from "react";
 import { ProductCard } from "../product-card/ProductCard";
 import { ProductsSkeleton } from "../products-skeleton/ProductsSkeleton";
+import EmptyMsg from "@/components/shared/messages/empty-msg/empty-msg";
 
 type SearchParamsType = {
   searchText: string;
@@ -50,7 +51,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
         </div>
       );
     } else {
-      return "Vacio";
+      return <EmptyMsg />;
     }
   };
 
@@ -74,7 +75,11 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
               </h5>
             )}
           </div>
-          <OrderBy handleOrderBy={handleOrderBy} isDisabled={loading} orderByOption={searchParams.orderBy}/>
+          <OrderBy
+            handleOrderBy={handleOrderBy}
+            isDisabled={loading}
+            orderByOption={searchParams.orderBy}
+          />
         </div>
         {showData()}
 

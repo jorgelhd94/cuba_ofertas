@@ -1,6 +1,15 @@
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.common.by import By
 
+def check_if_search_not_found(page_html: WebElement):
+    try:
+        page_html.find_element(By.CLASS_NAME, "no-products")
+        return True
+    except:
+        return False
+
+    
+
 def get_product_data(product_html: WebElement):
     product_url = product_html.find_element(By.CLASS_NAME, "primary_img").get_attribute("href")
     image_url = product_html.find_element(By.CLASS_NAME, "primary_img").find_element(By.TAG_NAME, "img").get_attribute("src")
