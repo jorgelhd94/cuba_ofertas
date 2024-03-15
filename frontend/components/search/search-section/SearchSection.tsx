@@ -1,12 +1,16 @@
 "use client";
 
 import ProductGrid from "@/components/products/product-grid/ProductGrid";
+import { PinProductContext } from "@/lib/context/PinProductContext";
+import { IProduct } from "@/lib/interfaces/IProduct";
 import { ISearchProducts } from "@/lib/interfaces/ISearchProducts";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SearchForm } from "../search-form/SearchForm";
+import { ProductPinCard } from "@/components/products/product-pin-card/ProductPinCard";
 
 export const SearchSection = () => {
   const [loading, setLoading] = useState(false);
+  const [pinProduct, setPinProduct] = useState<IProduct | null>(null);
 
   const [params, setParams] = useState({
     searchText: "",
@@ -88,12 +92,22 @@ export const SearchSection = () => {
   return (
     <div className="w-full flex flex-col items-center pt-8 md:pt-8 gap-8">
       <SearchForm loading={loading} handleSearch={handleSearch} />
-      <ProductGrid
-        searchResults={searchResults}
-        searchParams={params}
-        loading={loading}
-        handleSearch={handleSearch}
-      />
+      <PinProductContext.Provider value={{ pinProduct, setPinProduct }}>
+        <div className="flex max-md:flex-col justify-between px-4">
+          {pinProduct && (
+            <div className="h-max sticky top-20">
+              <h3 className="text-xl font-medium pb-4">Producto fijado</h3>
+              <ProductPinCard product={pinProduct} />
+            </div>
+          )}
+          <ProductGrid
+            searchResults={searchResults}
+            searchParams={params}
+            loading={loading}
+            handleSearch={handleSearch}
+          />
+        </div>
+      </PinProductContext.Provider>
     </div>
   );
 };

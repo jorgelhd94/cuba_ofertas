@@ -44,7 +44,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
       return <ProductsSkeleton />;
     } else if (searchResults?.products.length) {
       return (
-        <div className="gap-4 grid sm:grid-cols-2 md:grid-cols-4">
+        <div className="gap-4 flex flex-col sm:flex-row justify-evenly flex-wrap lg:columns-4">
           {searchResults.products.map((item, index) => (
             <ProductCard key={item.id + "-" + index} product={item} />
           ))}

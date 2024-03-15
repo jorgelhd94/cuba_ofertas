@@ -1,16 +1,14 @@
 import { PinBtn } from "@/components/shared/buttons/PinBtn/PinBtn";
-import { DownIcon } from "@/components/shared/icons/DownIcon";
-import { UpIcon } from "@/components/shared/icons/UpIcon";
 import { PinProductContext } from "@/lib/context/PinProductContext";
 import { IProduct } from "@/lib/interfaces/IProduct";
-import { Button, Card, CardBody, CardFooter, Image } from "@nextui-org/react";
+import { Card, CardBody, CardFooter, Image } from "@nextui-org/react";
 import React, { useContext, useEffect, useState } from "react";
 
-type ProductCardProps = {
+type ProductPinCardProps = {
   product: IProduct;
 };
 
-export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+export const ProductPinCard: React.FC<ProductPinCardProps> = ({ product }) => {
   const { pinProduct, setPinProduct } = useContext(PinProductContext);
 
   const [isPinActive, setIsPinActive] = useState(pinProduct?.id === product.id);
@@ -29,26 +27,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       setIsPinActive(false);
     }
   }, [pinProduct?.id, product.id]);
-
-  const getPriceStyle = () => {
-    if (pinProduct) {
-      if (pinProduct?.current_price > product.current_price) {
-        return "text-success";
-      } else if (pinProduct?.current_price < product.current_price) {
-        return "text-danger";
-      }
-    }
-  };
-
-  const getArrowIcon = () => {
-    if (pinProduct) {
-      if (pinProduct?.current_price > product.current_price) {
-        return <DownIcon />;
-      } else if (pinProduct?.current_price < product.current_price) {
-        return <UpIcon />;
-      }
-    }
-  };
 
   return (
     <Card shadow="sm" isPressable className="max-sm:w-full w-72">
@@ -79,9 +57,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           </p>
         </a>
 
-        <p className={`font-bold text-lg flex items-center gap-1 ${getPriceStyle()}`}>
+        <p className="font-bold text-lg">
           {product.current_price} {product.currency}
-          <span>{getArrowIcon()}</span>
         </p>
       </CardFooter>
     </Card>

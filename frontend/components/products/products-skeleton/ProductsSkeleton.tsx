@@ -6,7 +6,7 @@ export const ProductsSkeleton = () => {
  const cards = Array(8).fill(null);
 
  return (
-    <div className="gap-4 flex flex-col sm:flex-row justify-evenly flex-wrap lg:grid lg:grid-cols-4">
+    <div className="gap-4 flex flex-col sm:flex-row justify-evenly flex-wrap lg:columns-4">
       {cards.map((_, index) => (
         <Card key={index} className="w-[90vw] sm:w-48 md:w-[230px] space-y-5 " radius="lg">
           <Skeleton className="rounded-lg">
