@@ -25,6 +25,15 @@ def get_product_data(product_html: WebElement):
         "product_url": product_url,
         "image_url": image_url,
         "manufacture": manufacture_product,
-        "current_price":float(price[0].replace(" ", "").replace(",", ".")),
+        "current_price":float(price[0].replace(" ", "").replace(".", "").replace(",", ".")),
         "currency": price[1]
     }
+
+
+def get_page_amount_text(page_html: WebElement):
+    page_amount = page_html.find_element(By.CLASS_NAME, "page_amount").find_element(By.TAG_NAME, "p").get_attribute("innerHTML")
+    return page_amount.replace("<!---->", "").replace("\"", "")
+
+def get_page_amount(page_html: WebElement):
+    page_amount = page_html.find_element(By.CLASS_NAME, "page_amount").find_element(By.TAG_NAME, "p").get_attribute("innerHTML")
+    return int(page_amount.replace("<!---->", "").replace("\"", "").split(" ")[-2])

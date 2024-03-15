@@ -1,11 +1,11 @@
 "use client";
 
-import { IProduct } from "@/lib/interfaces/IProduct";
-import React, { useState } from "react";
+import { OrderBy } from "@/components/shared/selects/order-by/OrderBy";
+import { ISearchProducts } from "@/lib/interfaces/ISearchProducts";
+import { Pagination } from "@nextui-org/react";
+import React, { useEffect, useState } from "react";
 import { ProductCard } from "../product-card/ProductCard";
 import { ProductsSkeleton } from "../products-skeleton/ProductsSkeleton";
-import { OrderBy } from "@/components/shared/selects/order-by/OrderBy";
-import { Pagination } from "@nextui-org/react";
 
 type SearchParamsType = {
   searchText: string;
@@ -14,7 +14,7 @@ type SearchParamsType = {
 };
 
 type ProductGridProps = {
-  products: IProduct[] | undefined;
+  searchResults: ISearchProducts | null;
   searchParams: SearchParamsType;
   loading: boolean;
   handleSearch: (
@@ -25,7 +25,7 @@ type ProductGridProps = {
 };
 
 export const ProductGrid: React.FC<ProductGridProps> = ({
-  products,
+  searchResults,
   searchParams,
   loading,
   handleSearch,
@@ -41,10 +41,10 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
   const showData = () => {
     if (loading) {
       return <ProductsSkeleton />;
-    } else if (products?.length) {
+    } else if (searchResults?.products.length) {
       return (
         <div className="gap-4 grid sm:grid-cols-2 md:grid-cols-4">
-          {products.map((item, index) => (
+          {searchResults.products.map((item, index) => (
             <ProductCard key={item.id + "-" + index} product={item} />
           ))}
         </div>
@@ -55,17 +55,25 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
   };
 
   return (
-    products && (
+    searchResults?.products && (
       <div className="px-4 md:px-8 flex flex-col items-center gap-8 w-full">
         <div className="flex max-md:flex-col gap-4 justify-between items-center w-full">
-          <h3 className="text-xl max-md:text-center">
-            Resultados de búsqueda para:{" "}
-            <b>
-              {searchParams.searchText
-                ? searchParams.searchText
-                : "Todos los productos"}
-            </b>
-          </h3>
+          <div>
+            <h3 className="text-xl max-md:text-center">
+              Resultados de búsqueda para:{" "}
+              <b>
+                {searchParams.searchText
+                  ? searchParams.searchText
+                  : "Todos los productos"}
+              </b>
+            </h3>
+
+            {!loading && (
+              <h5 className="text-sm font-semibold max-md:text-center">
+                {searchResults.page_amount_text}
+              </h5>
+            )}
+          </div>
           <OrderBy handleOrderBy={handleOrderBy} isDisabled={loading} />
         </div>
         {showData()}
@@ -73,10 +81,11 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
         <Pagination
           onChange={(pag) => handlePagination(pag)}
           color="secondary"
-          showControls
-          total={10}
-          initialPage={searchParams.pagination}
+          total={Math.ceil(searchResults.total / 20)}
+          initialPage={1}
+          isCompact
           isDisabled={loading}
+          boundaries={1}
         />
       </div>
     )

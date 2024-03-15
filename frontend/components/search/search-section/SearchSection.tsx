@@ -18,13 +18,11 @@ export const SearchSection = () => {
     null
   );
 
-  const handleSearch = async (
+  const getSearchParams = (
     text: string,
     pagination?: number,
     orderby?: number
   ) => {
-    setLoading(true);
-
     const urlSearchParams = new URLSearchParams();
 
     if (text) {
@@ -54,8 +52,19 @@ export const SearchSection = () => {
       }));
     }
 
+    return urlSearchParams;
+  };
+
+  const handleSearch = async (
+    text: string,
+    pagination?: number,
+    orderby?: number
+  ) => {
+    setLoading(true);
+
+    const urlSearchParams = getSearchParams(text, pagination, orderby);
+
     try {
-      console.log(urlSearchParams.toString());
       const data = await fetch(
         process.env.NEXT_PUBLIC_API_URL! +
           `api/v1/search/?` +
@@ -80,7 +89,7 @@ export const SearchSection = () => {
     <div className="w-full flex flex-col items-center pt-8 md:pt-8 gap-8">
       <SearchForm loading={loading} handleSearch={handleSearch} />
       <ProductGrid
-        products={searchResults?.products}
+        searchResults={searchResults}
         searchParams={params}
         loading={loading}
         handleSearch={handleSearch}

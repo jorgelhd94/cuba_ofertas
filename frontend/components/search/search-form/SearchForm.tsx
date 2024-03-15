@@ -15,7 +15,7 @@ type SearchFormProps = {
 
 export const SearchForm: React.FC<SearchFormProps> = (props) => {
   const handleSearch = (formData: FormData) => {
-    props.handleSearch(formData.get("searchText")?.toString() || "");
+    props.handleSearch(formData.get("searchText")?.toString() || "", 1, -1);
   };
 
   return (
