@@ -51,7 +51,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   };
 
   return (
-    <Card shadow="sm" isPressable className="max-sm:w-full w-72">
+    <Card shadow="sm" className="max-sm:w-full w-72">
       <CardBody className="overflow-visible p-0 relative">
         <Image
           shadow="sm"
@@ -62,7 +62,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           src={product.image_url}
         />
 
-        <PinBtn isActive={isPinActive} handleClick={handlePinProduct} />
+        <div className="absolute top-1 right-1">
+          <PinBtn isActive={isPinActive} handleClick={handlePinProduct} />
+        </div>
       </CardBody>
       <CardFooter className="flex flex-col items-start text-start justify-start gap-2">
         <a href={product.product_url} target="_blank" rel="noopener noreferrer">
@@ -79,7 +81,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           </p>
         </a>
 
-        <p className={`font-bold text-lg flex items-center gap-1 ${getPriceStyle()}`}>
+        <p
+          className={`font-bold text-lg flex items-center gap-1 ${getPriceStyle()}`}
+        >
           {product.current_price} {product.currency}
           <span>{getArrowIcon()}</span>
         </p>

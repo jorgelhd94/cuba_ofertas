@@ -46,14 +46,16 @@ function NavbarHome() {
             variant={`${pathname === "/search" ? "solid" : "bordered"}`}
             type="button"
             isIconOnly
-            color="secondary"
+            color={`${pathname === "/search" ? "secondary" : "default"}`}
             aria-label="Like"
-            onClick={() => router.push("/search")}
             className="hover:border-default"
+            onClick={() => router.push("/search")}
           >
-            <SearchIcon
-              color={`${pathname === "/search" ? "white" : "black"}`}
-            />
+            <Link href="/search">
+              <SearchIcon
+                color={`${pathname === "/search" ? "white" : "black"}`}
+              />
+            </Link>
           </Button>
         </NavbarItem>
         <NavbarItem>
