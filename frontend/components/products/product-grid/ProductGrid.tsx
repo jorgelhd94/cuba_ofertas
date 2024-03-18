@@ -70,7 +70,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
             </h3>
 
             {!loading && (
-              <h5 className="text-sm font-semibold max-md:text-center">
+              <h5 className="text-sm font-semibold max-md:text-center max-sm:mt-4">
                 {searchResults.page_amount_text}
               </h5>
             )}

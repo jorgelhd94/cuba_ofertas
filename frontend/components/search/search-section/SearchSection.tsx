@@ -1,12 +1,12 @@
 "use client";
 
+import { ProductCard } from "@/components/products/product-card/ProductCard";
 import ProductGrid from "@/components/products/product-grid/ProductGrid";
 import { PinProductContext } from "@/lib/context/PinProductContext";
 import { IProduct } from "@/lib/interfaces/IProduct";
 import { ISearchProducts } from "@/lib/interfaces/ISearchProducts";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { SearchForm } from "../search-form/SearchForm";
-import { ProductPinCard } from "@/components/products/product-pin-card/ProductPinCard";
 
 export const SearchSection = () => {
   const [loading, setLoading] = useState(false);
@@ -93,11 +93,13 @@ export const SearchSection = () => {
     <div className="w-full flex flex-col items-center pt-8 md:pt-8 gap-8">
       <SearchForm loading={loading} handleSearch={handleSearch} />
       <PinProductContext.Provider value={{ pinProduct, setPinProduct }}>
-        <div className="flex max-md:flex-col justify-between px-4">
+        <div className="flex max-md:flex-col justify-between px-4 gap-4">
           {pinProduct && (
-            <div className="h-max sticky top-20">
-              <h3 className="text-xl font-medium pb-4">Producto fijado</h3>
-              <ProductPinCard product={pinProduct} />
+            <div className="h-max sticky top-16 lg:top-20 z-50 flex md:flex-col justify-center">
+              <h3 className="text-xl font-medium pb-4 max-md:hidden">
+                Producto fijado
+              </h3>
+              <ProductCard product={pinProduct} />
             </div>
           )}
           <ProductGrid
