@@ -31,6 +31,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
   loading,
   handleSearch,
 }) => {
+
   const handleOrderBy = async (value: number) => {
     handleSearch(searchParams.searchText, searchParams.pagination, value);
   };
@@ -88,6 +89,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
           color="secondary"
           total={Math.ceil(searchResults.total / 20)}
           initialPage={1}
+          page={searchParams.pagination > -1 ? searchParams.pagination : 1}
           isCompact
           isDisabled={loading}
           boundaries={1}

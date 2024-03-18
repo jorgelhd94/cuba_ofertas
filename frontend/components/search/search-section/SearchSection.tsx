@@ -92,8 +92,9 @@ export const SearchSection = () => {
   return (
     <div className="w-full flex flex-col items-center pt-8 md:pt-8 gap-8">
       <SearchForm loading={loading} handleSearch={handleSearch} />
+
       <PinProductContext.Provider value={{ pinProduct, setPinProduct }}>
-        <div className="flex max-md:flex-col justify-between px-4 gap-4">
+        <div className="flex max-md:flex-col justify-between px-4 gap-4 w-full">
           {pinProduct && (
             <div className="h-max sticky top-16 lg:top-20 z-50 flex md:flex-col justify-center">
               <h3 className="text-xl font-medium pb-4 max-md:hidden">

@@ -2,7 +2,7 @@
 import { SubmitBtn } from "@/components/shared/buttons/SubmitBtn/SubmitBtn";
 import { SearchIcon } from "@/components/shared/icons/SearchIcon";
 import { Input } from "@nextui-org/react";
-import React from "react";
+import React, { useState } from "react";
 
 type SearchFormProps = {
   handleSearch: (
@@ -14,6 +14,7 @@ type SearchFormProps = {
 };
 
 export const SearchForm: React.FC<SearchFormProps> = (props) => {
+  const [searchText, setSearchText] = useState("");
   const handleSearch = (formData: FormData) => {
     props.handleSearch(formData.get("searchText")?.toString() || "", 1, -1);
   };
@@ -40,6 +41,10 @@ export const SearchForm: React.FC<SearchFormProps> = (props) => {
           }}
           placeholder="Escribe el nombre del producto..."
           startContent={<SearchIcon color="black" />}
+          isClearable
+          onChange={(event) => setSearchText(event.target.value)}
+          onClear={() => setSearchText("")}
+          value={searchText}
         />
 
         <SubmitBtn loading={props.loading} />

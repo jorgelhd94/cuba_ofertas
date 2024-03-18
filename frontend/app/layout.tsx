@@ -11,8 +11,8 @@ const roboto = Roboto({
 });
 
 export const metadata: Metadata = {
-  title: "Market Scraping",
-  description: "Scraping Marketplaces With JS.",
+  title: "SPY-SM23",
+  description: "Scraping Marketplace With JS and Python.",
 };
 
 export default function RootLayout({
