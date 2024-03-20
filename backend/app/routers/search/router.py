@@ -12,7 +12,7 @@ search_router = APIRouter(
 )
 
 @search_router.get("/")
-def search_products(search_text: str = "", pagination: int = 1, orderby:int = -1):
+def search_products(search_text: str = "", pagination: int = 1, orderby: int = -1):
     total = 0
     page_amount_text = ""
     products = []
@@ -20,7 +20,7 @@ def search_products(search_text: str = "", pagination: int = 1, orderby:int = -1
     # Navega a una página web
     seleniumDriver = SeleniumDriver()
 
-    base_url = "buscar?q=" + search_text if search_text else "productos/"
+    base_url = "buscar?q=" + search_text if search_text else "productos?"
         
     # Append pagination and orderby as query parameters
     url_with_params = f"{base_url}&pagina={pagination}&orden={orderby}"
