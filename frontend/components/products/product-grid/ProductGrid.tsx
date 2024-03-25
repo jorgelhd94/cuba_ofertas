@@ -51,9 +51,31 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
   useEffect(() => {
     const filterProducts = () => {
       if (searchParams.productMode === "0") {
-        return [];
+        const regex = /\(.*\)/;
+
+        const filter = searchResults?.products.filter((value) => {
+          const match = regex.exec(value.name);
+
+          if (match?.length && match[0].includes("x")) return value;
+
+          return false;
+        });
+
+        return filter || [];
       } else if (searchParams.productMode === "1") {
-        return [];
+        const regex = /\(.*\)/;
+
+        const filter = searchResults?.products.filter((value) => {
+          const match = regex.exec(value.name);
+
+          if (!match?.length || !match[0].includes("x")) {
+            return value;
+          }
+
+          return false;
+        });
+
+        return filter || [];
       }
       return searchResults?.products || [];
     };
@@ -64,7 +86,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
   const showData = () => {
     if (loading) {
       return <ProductsSkeleton />;
-    } else if (searchResults?.products.length) {
+    } else if (products.length) {
       return (
         <div className="gap-4 flex flex-col sm:flex-row justify-evenly flex-wrap lg:columns-4">
           {products.map((item, index) => (
