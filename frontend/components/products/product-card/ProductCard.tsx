@@ -3,7 +3,7 @@ import { DownIcon } from "@/components/shared/icons/DownIcon";
 import { UpIcon } from "@/components/shared/icons/UpIcon";
 import { PinProductContext } from "@/lib/context/PinProductContext";
 import { IProduct } from "@/lib/interfaces/IProduct";
-import { Card, CardBody, CardFooter, Image } from "@nextui-org/react";
+import { Card, CardBody, Image } from "@nextui-org/react";
 import React, { useContext, useEffect, useState } from "react";
 
 type ProductCardProps = {
@@ -40,12 +40,38 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     }
   };
 
+  const getPriceByWeightStyle = () => {
+    if (pinProduct && pinProduct.price_by_weight && product.price_by_weight) {
+      if (pinProduct?.price_by_weight.price > product.price_by_weight.price) {
+        return "text-success-600";
+      } else if (
+        pinProduct?.price_by_weight.price < product.price_by_weight.price
+      ) {
+        return "text-danger";
+      } else {
+        return "text-slate-600";
+      }
+    }
+  };
+
   const getArrowIcon = () => {
     if (pinProduct) {
       if (pinProduct?.current_price > product.current_price) {
         return <DownIcon />;
       } else if (pinProduct?.current_price < product.current_price) {
         return <UpIcon />;
+      }
+    }
+  };
+
+  const getArrowByWeightStyle = () => {
+    if (pinProduct && pinProduct.price_by_weight && product.price_by_weight) {
+      if (pinProduct?.price_by_weight.price > product.price_by_weight.price) {
+        return <DownIcon size="small"/>;
+      } else if (
+        pinProduct?.price_by_weight.price < product.price_by_weight.price
+      ) {
+        return <UpIcon size="small"/>;
       }
     }
   };
@@ -87,12 +113,24 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               </p>
             </a>
 
-            <p
-              className={`font-bold text-lg flex items-center gap-1 ${getPriceStyle()}`}
-            >
-              {product.current_price} {product.currency}
-              <span>{getArrowIcon()}</span>
-            </p>
+            <div>
+              <p
+                className={`font-bold text-lg flex items-center gap-1 ${getPriceStyle()}`}
+              >
+                {product.current_price} {product.currency}
+                <span>{getArrowIcon()}</span>
+              </p>
+
+              {product.price_by_weight && (
+                <p
+                  className={`font-bold text-sm flex items-center ${getPriceByWeightStyle()}`}
+                >
+                  {product.price_by_weight.price}{" "}
+                  {product.price_by_weight.currency}
+                  <span>{getArrowByWeightStyle()}</span>
+                </p>
+              )}
+            </div>
           </div>
         </div>
       </CardBody>

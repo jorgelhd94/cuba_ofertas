@@ -82,6 +82,8 @@ export const SearchSection = () => {
           throw error;
         });
 
+      console.log(data);
+
       setSearchResults(data);
     } catch (error) {
       console.log("error");

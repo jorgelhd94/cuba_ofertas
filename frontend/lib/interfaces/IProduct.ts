@@ -8,4 +8,8 @@ export interface IProduct {
   manufacture: IManufacture;
   current_price: string;
   currency: number;
+  price_by_weight: {
+    price: number;
+    currency: string;
+  } | null;
 }
