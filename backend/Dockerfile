@@ -1,18 +1,15 @@
 FROM python:3.10.11
 
-WORKDIR /backend
+WORKDIR /spysm23-backend
 
-COPY ./requirements.txt /backend/requirements.txt
+COPY ./requirements.txt /spysm23-backend/requirements.txt
 
-RUN pip install --no-cache-dir --upgrade -r /backend/requirements.txt
+RUN pip install --no-cache-dir --upgrade -r /spysm23-backend/requirements.txt
 
-COPY ./app /backend/app
+COPY ./app /spysm23-backend/app
 
 # Actualizar la lista de paquetes e instalar dependencias necesarias
-RUN apt-get update -y && \
-    apt-get install -y wget xvfb unzip
-
-
+RUN apt-get update -y && \ apt-get install -y wget xvfb unzip
 
 ENV CHROME_VERSION 114.0.5735.90
 
