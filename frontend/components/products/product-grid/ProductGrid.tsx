@@ -4,15 +4,17 @@ import EmptyMsg from "@/components/shared/messages/empty-msg/empty-msg";
 import { OrderBy } from "@/components/shared/selects/order-by/OrderBy";
 import { ISearchProducts } from "@/lib/interfaces/ISearchProducts";
 import { Pagination } from "@nextui-org/react";
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { ProductCard } from "../product-card/ProductCard";
 import { ProductsSkeleton } from "../products-skeleton/ProductsSkeleton";
 import { ProductModeSelect } from "../../shared/selects/product-mode-select/ProductModeSelect";
+import { IProduct } from "@/lib/interfaces/IProduct";
 
 type SearchParamsType = {
   searchText: string;
   orderBy: number;
   pagination: number;
+  productMode: string;
 };
 
 type ProductGridProps = {
@@ -24,6 +26,7 @@ type ProductGridProps = {
     pageNumber?: number,
     order?: number
   ) => void;
+  handleProductMode: (productMode: string) => void;
 };
 
 export const ProductGrid: React.FC<ProductGridProps> = ({
@@ -31,7 +34,12 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
   searchParams,
   loading,
   handleSearch,
+  handleProductMode,
 }) => {
+  const [products, setProducts] = useState<IProduct[]>(
+    searchResults?.products || []
+  );
+
   const handleOrderBy = async (value: number) => {
     handleSearch(searchParams.searchText, searchParams.pagination, value);
   };
@@ -40,7 +48,18 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
     handleSearch(searchParams.searchText, value, searchParams.orderBy);
   };
 
-  const handleProductMode = () => {};
+  useEffect(() => {
+    const filterProducts = () => {
+      if (searchParams.productMode === "0") {
+        return [];
+      } else if (searchParams.productMode === "1") {
+        return [];
+      }
+      return searchResults?.products || [];
+    };
+
+    setProducts(filterProducts());
+  }, [searchParams.productMode, searchResults?.products]);
 
   const showData = () => {
     if (loading) {
@@ -48,7 +67,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
     } else if (searchResults?.products.length) {
       return (
         <div className="gap-4 flex flex-col sm:flex-row justify-evenly flex-wrap lg:columns-4">
-          {searchResults.products.map((item, index) => (
+          {products.map((item, index) => (
             <ProductCard key={item.id + "-" + index} product={item} />
           ))}
         </div>
@@ -82,7 +101,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
             <ProductModeSelect
               isDisabled={loading}
               handleProductMode={handleProductMode}
-              orderByOption={-1}
+              orderByOption={searchParams.productMode}
             />
             <OrderBy
               handleOrderBy={handleOrderBy}

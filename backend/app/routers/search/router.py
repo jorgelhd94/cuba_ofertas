@@ -39,11 +39,10 @@ def search_products(search_text: str = "", pagination: int = 1, orderby: int = -
 
             for product in products_html:
                 products.append(scraper.get_product_data(product))
-
     except Exception as e:
         print("Ocurrió un error:", e)
         raise HTTPException(status_code=500, detail="Ocurrio un error")
     finally:
-        seleniumDriver.driver.quit()
+        seleniumDriver.quit()
     
     return {"total": total, "page_amount_text": page_amount_text, "products": products}

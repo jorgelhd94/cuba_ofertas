@@ -15,7 +15,8 @@ else:
 app = FastAPI()
 
 origins = [
-    "*"
+    "*",
+    "localhost:3000"
 ]
 
 app.add_middleware(

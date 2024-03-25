@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 type ProductModeSelectProps = {
   handleProductMode: Function;
   isDisabled?: boolean;
-  orderByOption: number;
+  orderByOption: string;
 };
 
 export const ProductModeSelect: React.FC<ProductModeSelectProps> = ({
@@ -24,6 +24,12 @@ export const ProductModeSelect: React.FC<ProductModeSelectProps> = ({
     setDefaultOption([orderByOption.toString()]);
   }, [orderByOption]);
 
+  const handleChange = (value: string) => {
+    if (value) {
+      handleProductMode(value);
+    }
+  };
+
   return (
     <Select
       isDisabled={isDisabled}
@@ -32,7 +38,7 @@ export const ProductModeSelect: React.FC<ProductModeSelectProps> = ({
       variant="faded"
       label="Mostrar por"
       className="max-w-64"
-      onChange={(event) => handleProductMode(event.target.value)}
+      onChange={(event) => handleChange(event.target.value)}
     >
       {options.map((option) => (
         <SelectItem key={option.value} value={option.value}>

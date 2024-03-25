@@ -16,7 +16,7 @@ export const SearchSection = () => {
     searchText: "",
     orderBy: -1,
     pagination: 1,
-    productMode: -1,
+    productMode: "-1",
   });
 
   const [searchResults, setSearchResults] = useState<ISearchProducts | null>(
@@ -90,6 +90,14 @@ export const SearchSection = () => {
     }
   };
 
+  const handleProductMode = (productMode: string) => {
+    if (!productMode) {
+      setParams({ ...params, productMode: "-1" });
+    } else {
+      setParams({ ...params, productMode });
+    }
+  };
+
   return (
     <div className="w-full flex flex-col items-center pt-8 md:pt-8 gap-8">
       <SearchForm loading={loading} handleSearch={handleSearch} />
@@ -109,6 +117,7 @@ export const SearchSection = () => {
             searchParams={params}
             loading={loading}
             handleSearch={handleSearch}
+            handleProductMode={handleProductMode}
           />
         </div>
       </PinProductContext.Provider>
