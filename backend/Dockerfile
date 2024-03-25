@@ -1,12 +1,12 @@
 FROM python:3.10.11
 
-WORKDIR /marketscraping-api
+WORKDIR /backend
 
-COPY ./requirements.txt /marketscraping-api/requirements.txt
+COPY ./requirements.txt /backend/requirements.txt
 
-RUN pip install --no-cache-dir --upgrade -r /marketscraping-api/requirements.txt
+RUN pip install --no-cache-dir --upgrade -r /backend/requirements.txt
 
-COPY ./app /marketscraping-api/app
+COPY ./app /backend/app
 
 # Actualizar la lista de paquetes e instalar dependencias necesarias
 RUN apt-get update -y && \
