@@ -9,7 +9,7 @@ RUN pip install --no-cache-dir --upgrade -r /spysm23-backend/requirements.txt
 COPY ./app /spysm23-backend/app
 
 # Actualizar la lista de paquetes e instalar dependencias necesarias
-RUN apt-get update -y && \ apt-get install -y wget xvfb unzip
+RUN apt-get update -y && apt-get install -y wget xvfb unzip
 
 ENV CHROME_VERSION 114.0.5735.90
 
