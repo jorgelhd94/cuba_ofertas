@@ -1,12 +1,13 @@
 "use client";
 
+import EmptyMsg from "@/components/shared/messages/empty-msg/empty-msg";
 import { OrderBy } from "@/components/shared/selects/order-by/OrderBy";
 import { ISearchProducts } from "@/lib/interfaces/ISearchProducts";
 import { Pagination } from "@nextui-org/react";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { ProductCard } from "../product-card/ProductCard";
 import { ProductsSkeleton } from "../products-skeleton/ProductsSkeleton";
-import EmptyMsg from "@/components/shared/messages/empty-msg/empty-msg";
+import { ProductModeSelect } from "../../shared/selects/product-mode-select/ProductModeSelect";
 
 type SearchParamsType = {
   searchText: string;
@@ -31,7 +32,6 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
   loading,
   handleSearch,
 }) => {
-
   const handleOrderBy = async (value: number) => {
     handleSearch(searchParams.searchText, searchParams.pagination, value);
   };
@@ -39,6 +39,8 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
   const handlePagination = async (value: number) => {
     handleSearch(searchParams.searchText, value, searchParams.orderBy);
   };
+
+  const handleProductMode = () => {};
 
   const showData = () => {
     if (loading) {
@@ -76,11 +78,18 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
               </h5>
             )}
           </div>
-          <OrderBy
-            handleOrderBy={handleOrderBy}
-            isDisabled={loading}
-            orderByOption={searchParams.orderBy}
-          />
+          <div className="flex gap-2 flex-grow justify-end flex-wrap">
+            <ProductModeSelect
+              isDisabled={loading}
+              handleProductMode={handleProductMode}
+              orderByOption={-1}
+            />
+            <OrderBy
+              handleOrderBy={handleOrderBy}
+              isDisabled={loading}
+              orderByOption={searchParams.orderBy}
+            />
+          </div>
         </div>
         {showData()}
 

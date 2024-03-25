@@ -16,6 +16,7 @@ export const SearchSection = () => {
     searchText: "",
     orderBy: -1,
     pagination: 1,
+    productMode: -1,
   });
 
   const [searchResults, setSearchResults] = useState<ISearchProducts | null>(
