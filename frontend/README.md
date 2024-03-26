@@ -8,6 +8,10 @@ Esta es una aplicación desarrollada usando **NextJS 14** y el manejador de paqu
 * **NodeJS 18+**
 * **pnpm**
 
+### Definir variables de entorno
+
+Es necesario definir las variables para el entorno de desarrollo. Para eso, haga una copia del fichero **./env.template** y renómbrelo a **./env.local**, luego cambie los valores predeterminados por los que vaya a utlizar en el entorno de desarrollo.
+
 ### Clone el repositorio
 ```
 git clone https://github.com/alesarmiento/spySM23.git
@@ -52,4 +56,16 @@ sudo docker-compose up -d
 
 ```
 sudo docker ps -a
+```
+
+### Reiniciar aplicación
+
+Si necesitas hacer cambios en cada aplicación y reconstruir la imagen, puedes usar los siguientes comandos
+
+```
+# Detén los contenedores en ejecución
+sudo docker-compose down
+
+# Reconstruye la imagen y vuelve a desplegar la aplicación
+sudo docker-compose up -d --build
 ```

@@ -1,6 +1,6 @@
 # 🖥️ SPY-SM23 Backend
 
-Esta es una aplicación desarrollada usando **FastAPI** versión 0.110.0 con **Python 3.10.11**.
+Esta es una aplicación desarrollada usando **Django** versión 5.0.3 y **Django Rest Framework** versión 3.15.1 con **Python 3.10.11**.
 
 ## Desarrollo
 ### Requisitos
@@ -31,7 +31,8 @@ pip install -r requirements.txt
 ### Iniciar aplicación
 
 ```
-uvicorn app.main:app --reload
+python manage.py migrate
+python manage.py runserver 0.0.0.0:8080
 ```
 
 ## Producción
@@ -59,4 +60,16 @@ sudo docker-compose up -d
 
 ```
 sudo docker ps -a
+```
+
+### Reiniciar aplicación
+
+Si necesitas hacer cambios en cada aplicación y reconstruir la imagen, puedes usar los siguientes comandos
+
+```
+# Detén los contenedores en ejecución
+sudo docker-compose down
+
+# Reconstruye la imagen y vuelve a desplegar la aplicación
+sudo docker-compose up -d --build
 ```
