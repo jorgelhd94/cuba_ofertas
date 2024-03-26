@@ -1,13 +1,13 @@
 FROM python:3.10.11
 
-WORKDIR /spysm23-backend
+WORKDIR /backend
 
 # Copia el archivo de requerimientos y luego instala las dependencias
-COPY ./requirements.txt /spysm23-backend/requirements.txt
-RUN pip install --no-cache-dir --upgrade -r /spysm23-backend/requirements.txt
+COPY ./requirements.txt /backend/requirements.txt
+RUN pip install --no-cache-dir --upgrade -r /backend/requirements.txt
 
 # Copia el código de la aplicación Django
-COPY ./app /spysm23-backend/app
+COPY . /backend
 
 # Actualizar la lista de paquetes e instalar dependencias necesarias
 RUN apt-get update -y && apt-get install -y wget xvfb unzip
