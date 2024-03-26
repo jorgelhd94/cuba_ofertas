@@ -6,8 +6,8 @@ export interface IProduct {
   product_url: string;
   image_url: string;
   manufacture: IManufacture;
-  current_price: string;
-  currency: number;
+  current_price: number;
+  currency: string;
   price_by_weight: {
     price: number;
     currency: string;
