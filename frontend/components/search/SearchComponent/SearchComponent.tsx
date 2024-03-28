@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { SearchForm } from "../SearchForm/SearchForm";
 import ProductGrid from "@/components/products/ProductGrid/ProductGrid";
 import { ISearchProducts } from "@/lib/interfaces/ISearchProducts";
+import { SaveBtn } from "@/components/shared/buttons/SaveBtn";
 
 export const SearchComponent = () => {
   const [loading, setLoading] = useState(false);
@@ -93,7 +94,10 @@ export const SearchComponent = () => {
 
   return (
     <div className="flex flex-col items-center gap-8 max-md:pt-4 w-full">
-      <SearchForm loading={loading} handleSearch={handleSearch} />
+      <div className="flex max-md:flex-col items-center gap-2 max-w-3xl w-full">
+        <SearchForm loading={loading} handleSearch={handleSearch} />
+        <SaveBtn />
+      </div>
       <ProductGrid
         searchResults={searchResults}
         searchParams={params}

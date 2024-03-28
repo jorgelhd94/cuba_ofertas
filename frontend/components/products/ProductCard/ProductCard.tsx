@@ -5,6 +5,7 @@ import { PinProductContext } from "@/lib/context/PinProductContext";
 import { IProduct } from "@/lib/interfaces/IProduct";
 import { Card, CardBody, Image } from "@nextui-org/react";
 import React, { useContext, useEffect, useState } from "react";
+import { ProductDropdownMenu } from "../ProductDropdownMenu/ProductDropdownMenu";
 
 type ProductCardProps = {
   product: IProduct;
@@ -67,11 +68,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const getArrowByWeightStyle = () => {
     if (pinProduct && pinProduct.price_by_weight && product.price_by_weight) {
       if (pinProduct?.price_by_weight.price > product.price_by_weight.price) {
-        return <DownIcon size="small"/>;
+        return <DownIcon size="small" />;
       } else if (
         pinProduct?.price_by_weight.price < product.price_by_weight.price
       ) {
-        return <UpIcon size="small"/>;
+        return <UpIcon size="small" />;
       }
     }
   };
@@ -91,6 +92,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
             <div className="absolute top-1 left-1">
               <PinBtn isActive={isPinActive} handleClick={handlePinProduct} />
+            </div>
+
+            <div className="absolute top-1 right-1">
+              <ProductDropdownMenu />
             </div>
           </div>
 

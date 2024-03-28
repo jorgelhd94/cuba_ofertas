@@ -54,13 +54,24 @@ function NavbarHome() {
         </NavbarBrand>
       </NavbarContent>
 
-      <NavbarContent className="hidden sm:flex gap-4" justify="center">
+      <NavbarContent
+        className="hidden sm:flex gap-4"
+        justify="center"
+      >
         <NavbarItem>
           <Link
             href="#"
-            className="text-primary-700 hover:border-2 border-secondary rounded-lg p-2 hover:text-secondary-500"
+            className="text-secondary-700 hover:bg-secondary hover:text-white rounded-lg p-2"
           >
             Zonas de comparación
+          </Link>
+        </NavbarItem>
+        <NavbarItem>
+          <Link
+            href="#"
+            className="text-secondary-700 hover:bg-secondary hover:text-white rounded-lg p-2"
+          >
+            Búsquedas guardadas
           </Link>
         </NavbarItem>
       </NavbarContent>
@@ -90,11 +101,11 @@ function NavbarHome() {
 
       <NavbarMenu className="pt-4 px-0">
         {menuItems.map((item, index) => (
-          <NavbarMenuItem className="text-primary border-b-2 pb-4 px-8" key={`${item}-${index}`}>
-            <Link
-              className="w-full"
-              href="#"
-            >
+          <NavbarMenuItem
+            className="text-primary border-b-2 pb-4 px-8"
+            key={`${item}-${index}`}
+          >
+            <Link className="w-full" href="#">
               {item}
             </Link>
           </NavbarMenuItem>
