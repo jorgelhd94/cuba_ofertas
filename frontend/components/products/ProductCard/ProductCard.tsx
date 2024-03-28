@@ -6,6 +6,7 @@ import { IProduct } from "@/lib/interfaces/IProduct";
 import { Card, CardBody, Image } from "@nextui-org/react";
 import React, { useContext, useEffect, useState } from "react";
 import { ProductDropdownMenu } from "../ProductDropdownMenu/ProductDropdownMenu";
+import { CreateNewZoneContext } from "@/lib/context/CreateNewZoneContext";
 
 type ProductCardProps = {
   product: IProduct;
@@ -13,6 +14,7 @@ type ProductCardProps = {
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const { pinProduct, setPinProduct } = useContext(PinProductContext);
+  const { handleNewZone } = useContext(CreateNewZoneContext);
 
   const [isPinActive, setIsPinActive] = useState(pinProduct?.id === product.id);
 
@@ -94,8 +96,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               <PinBtn isActive={isPinActive} handleClick={handlePinProduct} />
             </div>
 
-            <div className="absolute top-1 right-1">
-              <ProductDropdownMenu />
+            <div className="absolute max-md:top-12 max-md:left-1 md:top-1 md:right-1">
+              <ProductDropdownMenu
+                handleNewZone={() => handleNewZone(product)}
+              />
             </div>
           </div>
 

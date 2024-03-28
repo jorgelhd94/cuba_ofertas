@@ -1,4 +1,5 @@
 import { VerticalDots } from "@/components/shared/icons/VerticalDots";
+import { IProduct } from "@/lib/interfaces/IProduct";
 import {
   Button,
   Dropdown,
@@ -8,7 +9,13 @@ import {
 } from "@nextui-org/react";
 import React from "react";
 
-export const ProductDropdownMenu = () => {
+type ProductDropdownMenuProps = {
+  handleNewZone?: () => void;
+};
+
+export const ProductDropdownMenu: React.FC<ProductDropdownMenuProps> = (
+  props
+) => {
   return (
     <Dropdown>
       <DropdownTrigger>
@@ -23,7 +30,13 @@ export const ProductDropdownMenu = () => {
         </Button>
       </DropdownTrigger>
       <DropdownMenu aria-label="Static Actions">
-        <DropdownItem key="new" description="Añadir a zona de comparación">Nueva comparación</DropdownItem>
+        <DropdownItem
+          onClick={props.handleNewZone}
+          key="new"
+          description="Añadir a zona de comparación"
+        >
+          Nueva comparación
+        </DropdownItem>
       </DropdownMenu>
     </Dropdown>
   );
