@@ -1,17 +1,10 @@
-"use client";
-
-import { ProductCard } from "@/components/products/product-card/ProductCard";
-import ProductGrid from "@/components/products/product-grid/ProductGrid";
-import { PinProductContext } from "@/lib/context/PinProductContext";
-import { IProduct } from "@/lib/interfaces/IProduct";
+import React, { useState } from "react";
+import { SearchForm } from "../SearchForm/SearchForm";
+import ProductGrid from "@/components/products/ProductGrid/ProductGrid";
 import { ISearchProducts } from "@/lib/interfaces/ISearchProducts";
-import { useState } from "react";
-import { SearchForm } from "../search-form/SearchForm";
 
-export const SearchSection = () => {
+export const SearchComponent = () => {
   const [loading, setLoading] = useState(false);
-  const [pinProduct, setPinProduct] = useState<IProduct | null>(null);
-
   const [params, setParams] = useState({
     searchText: "",
     orderBy: -1,
@@ -99,28 +92,15 @@ export const SearchSection = () => {
   };
 
   return (
-    <div className="w-full flex flex-col items-center pt-8 md:pt-8 gap-8">
+    <div className="flex flex-col items-center gap-8 max-md:pt-4 w-full">
       <SearchForm loading={loading} handleSearch={handleSearch} />
-
-      <PinProductContext.Provider value={{ pinProduct, setPinProduct }}>
-        <div className="flex max-md:flex-col justify-between px-4 gap-4 w-full">
-          {pinProduct && (
-            <div className="h-max sticky top-16 lg:top-20 z-50 flex md:flex-col justify-center">
-              <h3 className="text-xl font-medium pb-4 max-md:hidden">
-                Producto fijado
-              </h3>
-              <ProductCard product={pinProduct} />
-            </div>
-          )}
-          <ProductGrid
-            searchResults={searchResults}
-            searchParams={params}
-            loading={loading}
-            handleSearch={handleSearch}
-            handleProductMode={handleProductMode}
-          />
-        </div>
-      </PinProductContext.Provider>
+      <ProductGrid
+        searchResults={searchResults}
+        searchParams={params}
+        loading={loading}
+        handleSearch={handleSearch}
+        handleProductMode={handleProductMode}
+      />
     </div>
   );
 };

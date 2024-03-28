@@ -10,8 +10,8 @@ import { filterProducts } from "@/lib/utils/functions/filters";
 import { Pagination } from "@nextui-org/react";
 import React, { useEffect, useState } from "react";
 import { ProductModeSelect } from "../../shared/selects/product-mode-select/ProductModeSelect";
-import { ProductCard } from "../product-card/ProductCard";
-import { ProductsSkeleton } from "../products-skeleton/ProductsSkeleton";
+import { ProductCard } from "../ProductCard/ProductCard";
+import { ProductsSkeleton } from "../ProductsSkeleton/ProductsSkeleton";
 import { getEmptyMessageByProductMode } from "@/lib/utils/functions/common";
 
 type ProductGridProps = {
