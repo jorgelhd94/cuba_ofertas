@@ -89,7 +89,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               src={product.image_url}
             />
 
-            <div className="absolute top-1 max-md:left-1 md:right-1">
+            <div className="absolute top-1 left-1">
               <PinBtn isActive={isPinActive} handleClick={handlePinProduct} />
             </div>
           </div>

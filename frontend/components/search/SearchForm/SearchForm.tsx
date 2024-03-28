@@ -20,7 +20,7 @@ export const SearchForm: React.FC<SearchFormProps> = (props) => {
   };
 
   return (
-    <div className="max-w-2xl w-full flex flex-col max-md:items-center">
+    <div className="max-w-3xl w-full flex flex-col max-md:items-center">
       <form
         action={handleSearch}
         className="w-full flex max-md:flex-col max-md:px-4 gap-4 items-center"

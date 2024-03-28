@@ -7,6 +7,9 @@ import {
   NavbarBrand,
   NavbarContent,
   NavbarItem,
+  NavbarMenu,
+  NavbarMenuItem,
+  NavbarMenuToggle,
 } from "@nextui-org/react";
 import { useState } from "react";
 import Logo from "../../shared/logo";
@@ -19,6 +22,8 @@ function NavbarHome() {
   const [blurred, setBlurred] = useState(false);
   const router = useRouter();
 
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   const onScroll = (position: number) => {
     if (position > 20) {
       setBlurred(true);
@@ -27,18 +32,38 @@ function NavbarHome() {
     }
   };
 
+  const menuItems = ["Zonas de comparación"];
+
   return (
     <Navbar
+      onMenuOpenChange={setIsMenuOpen}
       maxWidth="xl"
       onScrollPositionChange={onScroll}
       isBlurred={blurred}
       className="fixed bg-transparent"
     >
-      <NavbarBrand>
-        <Link href="/">
-          <Logo />
-        </Link>
-      </NavbarBrand>
+      <NavbarContent>
+        <NavbarMenuToggle
+          aria-label={isMenuOpen ? "Cerrar menú" : "Abrir menú"}
+          className="sm:hidden"
+        />
+        <NavbarBrand>
+          <Link href="/">
+            <Logo />
+          </Link>
+        </NavbarBrand>
+      </NavbarContent>
+
+      <NavbarContent className="hidden sm:flex gap-4" justify="center">
+        <NavbarItem>
+          <Link
+            href="#"
+            className="text-primary-700 hover:border-2 border-secondary rounded-lg p-2 hover:text-secondary-500"
+          >
+            Zonas de comparación
+          </Link>
+        </NavbarItem>
+      </NavbarContent>
 
       <NavbarContent justify="end" className="align-items-center">
         <NavbarItem>
@@ -62,6 +87,19 @@ function NavbarHome() {
           <ThemeSwitcher />
         </NavbarItem>
       </NavbarContent>
+
+      <NavbarMenu className="pt-4 px-0">
+        {menuItems.map((item, index) => (
+          <NavbarMenuItem className="text-primary border-b-2 pb-4 px-8" key={`${item}-${index}`}>
+            <Link
+              className="w-full"
+              href="#"
+            >
+              {item}
+            </Link>
+          </NavbarMenuItem>
+        ))}
+      </NavbarMenu>
     </Navbar>
   );
 }
