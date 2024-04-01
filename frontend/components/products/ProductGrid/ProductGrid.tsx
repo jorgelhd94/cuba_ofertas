@@ -54,7 +54,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
       return (
         <div className="gap-4 flex flex-col sm:flex-row justify-evenly flex-wrap lg:columns-4">
           {products.map((item, index) => (
-            <ProductCard key={item.id + "-" + index} product={item} />
+            <ProductCard key={item.product_id + "-" + index} product={item} />
           ))}
         </div>
       );

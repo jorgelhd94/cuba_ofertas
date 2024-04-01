@@ -32,7 +32,10 @@ function NavbarHome() {
     }
   };
 
-  const menuItems = ["Zonas de comparación"];
+  const menuItems = [
+    { url: "/comparison-zones", name: "Zonas de comparación" },
+    { url: "/", name: "Búsquedas guardadas" },
+  ];
 
   return (
     <Navbar
@@ -54,26 +57,19 @@ function NavbarHome() {
         </NavbarBrand>
       </NavbarContent>
 
-      <NavbarContent
-        className="hidden sm:flex gap-4"
-        justify="center"
-      >
-        <NavbarItem>
-          <Link
-            href="#"
-            className="text-secondary-700 hover:bg-secondary hover:text-white rounded-lg p-2"
-          >
-            Zonas de comparación
-          </Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Link
-            href="#"
-            className="text-secondary-700 hover:bg-secondary hover:text-white rounded-lg p-2"
-          >
-            Búsquedas guardadas
-          </Link>
-        </NavbarItem>
+      <NavbarContent className="hidden sm:flex gap-4" justify="center">
+        {menuItems.map((item, index) => (
+          <NavbarItem key={`${item}-${index}`}>
+            <Link
+              href={item.url}
+              className={` hover:bg-secondary hover:text-white rounded-lg p-2 ${
+                pathname === item.url ? "bg-secondary text-white" : "text-secondary-700"
+              }`}
+            >
+              {item.name}
+            </Link>
+          </NavbarItem>
+        ))}
       </NavbarContent>
 
       <NavbarContent justify="end" className="align-items-center">
@@ -105,8 +101,8 @@ function NavbarHome() {
             className="text-primary border-b-2 pb-4 px-8"
             key={`${item}-${index}`}
           >
-            <Link className="w-full" href="#">
-              {item}
+            <Link className="w-full" href={item.url}>
+              {item.name}
             </Link>
           </NavbarMenuItem>
         ))}

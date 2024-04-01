@@ -1,6 +1,9 @@
 import { ProductInfoCard } from "@/components/products/ProductInfoCard/ProductInfoCard";
 import { CreateZoneSuccessMsg } from "@/components/shared/messages/CreateZoneSuccessMsg/CreateZoneSuccessMsg";
-import { IComparisonZone } from "@/lib/interfaces/IComparisonZone";
+import {
+  IComparisonZone,
+  ICreateComparisonZone,
+} from "@/lib/interfaces/IComparisonZone";
 import { IProduct } from "@/lib/interfaces/IProduct";
 import {
   Button,
@@ -12,7 +15,7 @@ import {
   ModalHeader,
 } from "@nextui-org/react";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 type NewZoneModalProps = {
   isOpen?: boolean;
@@ -47,7 +50,7 @@ export const NewZoneModal: React.FC<NewZoneModalProps> = ({
   const handleForm = async () => {
     if (!product) return;
 
-    const data: IComparisonZone = {
+    const data: ICreateComparisonZone = {
       name: zoneName,
       main_product: product,
     };
@@ -57,7 +60,7 @@ export const NewZoneModal: React.FC<NewZoneModalProps> = ({
     setIsLoading(false);
   };
 
-  const createZone = async (data: IComparisonZone) => {
+  const createZone = async (data: ICreateComparisonZone) => {
     const responseData = await fetch(
       process.env.NEXT_PUBLIC_API_URL! + `api/v1/comparation_zones/`,
       {
