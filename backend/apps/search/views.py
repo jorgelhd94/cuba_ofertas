@@ -45,7 +45,7 @@ class SearchView(APIView):
                     products.append(scraper.get_product_data(product))
         except Exception as e:
             print("Ocurrió un error:", e)
-            raise APIException({"detail": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            raise APIException({"detail": str(e)}, code=status.HTTP_500_INTERNAL_SERVER_ERROR)
         finally:
             seleniumDriver.quit()
         

@@ -11,7 +11,8 @@ class Manufacture(models.Model):
 
 class Product(models.Model):
     id = models.AutoField(primary_key=True)
-    manufacture_id = models.ForeignKey(Manufacture, on_delete=models.CASCADE)
+    product_id = models.CharField(max_length=24)
+    manufacture = models.ForeignKey(Manufacture, on_delete=models.CASCADE)
     name = models.CharField(max_length=255, null=True)
     product_url = models.CharField(max_length=255, null=True)
     image_url = models.CharField(max_length=255, null=True)
@@ -23,22 +24,17 @@ class Product(models.Model):
     class Meta:
         db_table = 'product'
         indexes = [
-            models.Index(fields=['manufacture_id'], name='product_FK'),
+            models.Index(fields=['manufacture'], name='product_FK'),
         ]
 
 
 class ComparisonZone(models.Model):
     id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=255, null=True)
-    created_at = models.DateTimeField(null=True)
+    name = models.CharField(max_length=255, null=True, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     main_product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='main_comparison_zones')
     comparison_products = models.ManyToManyField(Product, related_name='comparison_zones')
 
     class Meta:
         db_table = 'comparison_zone'
-
-    def save(self, *args, **kwargs):
-        if self.main_product in self.comparison_products.all():
-            raise IntegrityError("El producto principal no puede estar en la lista de productos de comparación.")
-        super().save(*args, **kwargs)
 

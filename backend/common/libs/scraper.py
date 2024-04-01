@@ -28,28 +28,28 @@ def get_product_data(product_html: WebElement):
     price = price.replace("\n", "").split("&nbsp;")
 
     try:
-        price_by_weight = product_html.find_element(By.CLASS_NAME, "price-by-weight").get_attribute("innerHTML")
+        price_by_weight_text = product_html.find_element(By.CLASS_NAME, "price-by-weight").get_attribute("innerHTML")
     except:
-        price_by_weight = ""
+        price_by_weight_text = ""
 
-    if price_by_weight:
-        price_by_weight = price_by_weight.replace("\n", "").split("&nbsp;")
-        price_by_weight = {
-                "price": float(price_by_weight[0].replace(" ", "").replace(".", "").replace(",", ".")),
-                "currency": price_by_weight[1]
-            }
+    if price_by_weight_text:
+        price_by_weight_text = price_by_weight_text.replace("\n", "").split("&nbsp;")
+        price_by_weight = float(price_by_weight_text[0].replace(" ", "").replace(".", "").replace(",", "."))
+        currency_by_weight = price_by_weight_text[1]
     else:
         price_by_weight = None
+        currency_by_weight = None
 
     return {
-        "id": product_url.split("/")[-1],
+        "product_id": product_url.split("/")[-1],
         "name": name,
         "product_url": product_url,
         "image_url": image_url,
         "manufacture": manufacture_product,
         "current_price":float(price[0].replace(" ", "").replace(".", "").replace(",", ".")),
         "currency": price[1],
-        "price_by_weight": price_by_weight
+        "price_by_weight": price_by_weight,
+        "currency_by_weight": currency_by_weight
     }
 
 

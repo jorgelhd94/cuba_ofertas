@@ -20,8 +20,6 @@ export const SearchSection = () => {
   const handleNewZone = (product: IProduct | null) => {
     setIsModalOpen(true);
     setZoneMainProduct(product);
-
-    console.log(product);
   };
 
   return (

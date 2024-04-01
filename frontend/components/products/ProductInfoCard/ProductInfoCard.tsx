@@ -6,7 +6,9 @@ type ProductInfoCardProps = {
   product: IProduct;
 };
 
-export const ProductInfoCard: React.FC<ProductInfoCardProps> = ({ product }) => {
+export const ProductInfoCard: React.FC<ProductInfoCardProps> = ({
+  product,
+}) => {
   return (
     <Card shadow="sm" className="w-full">
       <CardBody className="overflow-visible p-0">
@@ -47,8 +49,8 @@ export const ProductInfoCard: React.FC<ProductInfoCardProps> = ({ product }) => 
 
               {product.price_by_weight && (
                 <p className={`font-bold text-sm flex items-center`}>
-                  {product.price_by_weight.price}
-                  {product.price_by_weight.currency}
+                  {product.price_by_weight}
+                  {product.currency_by_weight}
                 </p>
               )}
             </div>

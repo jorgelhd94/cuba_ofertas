@@ -16,7 +16,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const { pinProduct, setPinProduct } = useContext(PinProductContext);
   const { handleNewZone } = useContext(CreateNewZoneContext);
 
-  const [isPinActive, setIsPinActive] = useState(pinProduct?.id === product.id);
+  const [isPinActive, setIsPinActive] = useState(pinProduct?.product_id === product.product_id);
 
   const handlePinProduct = (isActive: boolean) => {
     setIsPinActive(isActive);
@@ -28,10 +28,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   };
 
   useEffect(() => {
-    if (pinProduct?.id !== product.id) {
+    if (pinProduct?.product_id !== product.product_id) {
       setIsPinActive(false);
     }
-  }, [pinProduct?.id, product.id]);
+  }, [pinProduct?.product_id, product.product_id]);
 
   const getPriceStyle = () => {
     if (pinProduct) {
@@ -45,10 +45,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
   const getPriceByWeightStyle = () => {
     if (pinProduct && pinProduct.price_by_weight && product.price_by_weight) {
-      if (pinProduct?.price_by_weight.price > product.price_by_weight.price) {
+      if (pinProduct?.price_by_weight > product.price_by_weight) {
         return "text-success-600";
       } else if (
-        pinProduct?.price_by_weight.price < product.price_by_weight.price
+        pinProduct?.price_by_weight < product.price_by_weight
       ) {
         return "text-danger";
       } else {
@@ -69,10 +69,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
   const getArrowByWeightStyle = () => {
     if (pinProduct && pinProduct.price_by_weight && product.price_by_weight) {
-      if (pinProduct?.price_by_weight.price > product.price_by_weight.price) {
+      if (pinProduct?.price_by_weight > product.price_by_weight) {
         return <DownIcon size="small" />;
       } else if (
-        pinProduct?.price_by_weight.price < product.price_by_weight.price
+        pinProduct?.price_by_weight < product.price_by_weight
       ) {
         return <UpIcon size="small" />;
       }
@@ -83,12 +83,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     <Card shadow="sm" className="w-full sm:w-72 md:w-64">
       <CardBody className="overflow-visible p-0">
         <div className="grid grid-cols-12">
-          <div className="relative col-span-6 md:col-span-12">
+          <div className="relative col-span-6 md:col-span-12 max-md:my-2 max-md:ml-2">
             <Image
               radius="lg"
               width="100%"
               alt={product.name}
-              className="w-full object-cover h-[140px] md:h-[240px] max-md:my-2 max-md:ml-2"
+              className="w-full object-cover h-[140px] md:h-[240px]"
               src={product.image_url}
             />
 
@@ -96,7 +96,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               <PinBtn isActive={isPinActive} handleClick={handlePinProduct} />
             </div>
 
-            <div className="absolute max-md:top-12 max-md:left-1 md:top-1 md:right-1">
+            <div className="absolute top-1 right-1">
               <ProductDropdownMenu
                 handleNewZone={() => handleNewZone(product)}
               />
@@ -134,8 +134,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                 <p
                   className={`font-bold text-sm flex items-center ${getPriceByWeightStyle()}`}
                 >
-                  {product.price_by_weight.price}{" "}
-                  {product.price_by_weight.currency}
+                  {product.price_by_weight} {product.currency_by_weight}
                   <span>{getArrowByWeightStyle()}</span>
                 </p>
               )}
