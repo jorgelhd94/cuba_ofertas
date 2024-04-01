@@ -1,4 +1,5 @@
 import { ProductInfoCard } from "@/components/products/ProductInfoCard/ProductInfoCard";
+import { CreateZoneSuccessMsg } from "@/components/shared/messages/CreateZoneSuccessMsg/CreateZoneSuccessMsg";
 import { IComparisonZone } from "@/lib/interfaces/IComparisonZone";
 import { IProduct } from "@/lib/interfaces/IProduct";
 import {
@@ -10,6 +11,7 @@ import {
   ModalFooter,
   ModalHeader,
 } from "@nextui-org/react";
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
 type NewZoneModalProps = {
@@ -26,6 +28,10 @@ export const NewZoneModal: React.FC<NewZoneModalProps> = ({
   const [zoneName, setZoneName] = useState("");
   const [duplicateError, setDuplicateError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  const [comparisonZone, setComparisonZone] = useState<IComparisonZone | null>(
+    null
+  );
 
   const handleKey = (key: string) => {
     if (key === "Enter") {
@@ -76,7 +82,6 @@ export const NewZoneModal: React.FC<NewZoneModalProps> = ({
             setDuplicateError(true);
           }
         } else {
-          // Si el error no es una instancia de Response, lo lanzamos tal cual
           console.error(
             "There was a problem with your fetch operation:",
             error
@@ -85,7 +90,7 @@ export const NewZoneModal: React.FC<NewZoneModalProps> = ({
         }
       });
 
-    console.log(responseData);
+    setComparisonZone(responseData);
   };
 
   return (
@@ -98,43 +103,60 @@ export const NewZoneModal: React.FC<NewZoneModalProps> = ({
       <ModalContent>
         {(onClose) => (
           <>
-            <ModalHeader className="flex flex-col gap-1">
-              Nueva zona de comparación
-            </ModalHeader>
-            <ModalBody>
-              <Input
-                autoFocus
-                label="Nombre de la zona"
-                variant="bordered"
-                isRequired
-                value={zoneName}
-                onChange={(ev) => handleInput(ev.target)}
-                onKeyUp={(event) => handleKey(event.key)}
-                isClearable
-                onClear={() => setZoneName("")}
-                errorMessage={
-                  duplicateError && "Ya existe una zona con este nombre"
-                }
-              />
+            {!comparisonZone ? (
+              <>
+                <ModalHeader className="flex flex-col gap-1">
+                  Nueva zona de comparación
+                </ModalHeader>
+                <ModalBody>
+                  <Input
+                    autoFocus
+                    label="Nombre de la zona"
+                    variant="bordered"
+                    isRequired
+                    value={zoneName}
+                    onChange={(ev) => handleInput(ev.target)}
+                    onKeyUp={(event) => handleKey(event.key)}
+                    isClearable
+                    onClear={() => setZoneName("")}
+                    errorMessage={
+                      duplicateError && "Ya existe una zona con este nombre"
+                    }
+                  />
 
-              {product && (
-                <div>
-                  <ProductInfoCard product={product} />
-                </div>
-              )}
-            </ModalBody>
-            <ModalFooter>
+                  {product && (
+                    <div>
+                      <ProductInfoCard product={product} />
+                    </div>
+                  )}
+                </ModalBody>
+              </>
+            ) : (
+              <ModalBody className="pt-4">
+                <CreateZoneSuccessMsg />
+              </ModalBody>
+            )}
+
+            <ModalFooter
+              className={comparisonZone ? "flex justify-center" : ""}
+            >
               <Button color="danger" variant="bordered" onPress={onClose}>
                 Cerrar
               </Button>
-              <Button
-                color="primary"
-                onPress={handleForm}
-                isDisabled={!zoneName}
-                isLoading={isLoading}
-              >
-                Crear
-              </Button>
+              {!comparisonZone ? (
+                <Button
+                  color="primary"
+                  onPress={handleForm}
+                  isDisabled={!zoneName}
+                  isLoading={isLoading}
+                >
+                  Crear
+                </Button>
+              ) : (
+                <Button color="primary">
+                  <Link href="/">Ver zona</Link>
+                </Button>
+              )}
             </ModalFooter>
           </>
         )}
