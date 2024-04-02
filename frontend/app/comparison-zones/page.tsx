@@ -3,17 +3,11 @@ import { EmptyMsg } from "@/components/shared/messages/empty-msg/empty-msg";
 import { IComparisonZone } from "@/lib/interfaces/IComparisonZone";
 
 export default async function ComparisonZonesPage() {
-
-  const comparisonZones = await fetch(
+  const data = await fetch(
     process.env.NEXT_PUBLIC_API_URL! + "api/v1/comparation_zones/"
-  )
-    .then<IComparisonZone[]>((response) => {
-      return response.json();
-    })
-    .catch((error) => {
-      console.log(error)
-      return [];
-    });
+  );
+
+  const comparisonZones = (await data.json()) as IComparisonZone[];
 
   return (
     <div className="min-h-max lg:min-h-screen bg-gradient-to-tr from-white to-slate-200 dark:bg-gradient-to-b dark:from-slate-800 via-transparent dark:to-black">
