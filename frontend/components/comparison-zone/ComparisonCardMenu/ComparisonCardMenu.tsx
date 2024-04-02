@@ -11,6 +11,7 @@ import {
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
+import { useSWRConfig } from "swr";
 
 type ComparisonCardMenuProps = {
   comparisonZoneId: string | number;
@@ -21,26 +22,21 @@ export const ComparisonCardMenu: React.FC<ComparisonCardMenuProps> = (
 ) => {
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
-  const router = useRouter();
+  const { mutate } = useSWRConfig();
 
   const handleDelete = async () => {
     setIsLoading(true);
 
-    await fetch(
-      process.env.NEXT_PUBLIC_API_URL! +
-        `api/v1/comparation_zones/${props.comparisonZoneId}/`,
-      {
-        method: "Delete",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    )
+    await fetch("/comparison-zones/api/", {
+      method: "DELETE",
+      body: JSON.stringify({
+        id: props.comparisonZoneId,
+      }),
+    })
       .then(() => {
         toast.success("Zona eliminada correctamente");
         setOpenDeleteModal(false);
-        router.refresh();
+        mutate("/comparison-zones/api/");
       })
       .catch(() => {
         toast.error("Ha ocurrido un error al eliminar la Zona");
