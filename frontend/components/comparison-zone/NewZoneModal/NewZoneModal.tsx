@@ -36,6 +36,16 @@ export const NewZoneModal: React.FC<NewZoneModalProps> = ({
     null
   );
 
+  const handleOpen = (isOpen: boolean) => {
+    if (!isOpen) {
+      setComparisonZone(null);
+      setZoneName("");
+    }
+    if (onOpenChange) {
+      onOpenChange(isOpen);
+    }
+  };
+
   const handleKey = (key: string) => {
     if (key === "Enter") {
       handleForm();
@@ -99,7 +109,7 @@ export const NewZoneModal: React.FC<NewZoneModalProps> = ({
   return (
     <Modal
       isOpen={isOpen}
-      onOpenChange={onOpenChange}
+      onOpenChange={handleOpen}
       placement="center"
       isDismissable={false}
     >

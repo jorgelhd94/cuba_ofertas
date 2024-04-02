@@ -3,7 +3,9 @@ import { Providers } from "./providers";
 import { Roboto } from "next/font/google";
 import "./globals.css";
 import NavbarHome from "@/components/home/navbar-home/navbar-home";
-import NextTopLoader from 'nextjs-toploader';
+import NextTopLoader from "nextjs-toploader";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 
 const roboto = Roboto({
   weight: "400",
@@ -23,7 +25,8 @@ export default function RootLayout({
   return (
     <html lang="es" suppressHydrationWarning>
       <body className={`${roboto.className} antialiased`}>
-      <NextTopLoader />
+        <NextTopLoader />
+        <ToastContainer />
         <Providers>
           <NavbarHome />
           {children}
