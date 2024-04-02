@@ -2,12 +2,20 @@ import { ComparisonZoneCard } from "@/components/comparison-zone/ComparisonZoneC
 import { EmptyMsg } from "@/components/shared/messages/empty-msg/empty-msg";
 import { IComparisonZone } from "@/lib/interfaces/IComparisonZone";
 
-export default async function ComparisonZonesPage() {
-  const data = await fetch(
+async function getData(): Promise<IComparisonZone[]> {
+  const res = await fetch(
     process.env.NEXT_PUBLIC_API_URL! + "api/v1/comparation_zones/"
   );
 
-  const comparisonZones = (await data.json()) as IComparisonZone[];
+  if (!res.ok) {
+    throw new Error("Failed to fetch data");
+  }
+
+  return res.json();
+}
+
+export default async function ComparisonZonesPage() {
+  const comparisonZones = await getData();
 
   return (
     <div className="min-h-max lg:min-h-screen bg-gradient-to-tr from-white to-slate-200 dark:bg-gradient-to-b dark:from-slate-800 via-transparent dark:to-black">
