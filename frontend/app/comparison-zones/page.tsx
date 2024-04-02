@@ -2,6 +2,8 @@ import { ComparisonZoneCard } from "@/components/comparison-zone/ComparisonZoneC
 import { EmptyMsg } from "@/components/shared/messages/empty-msg/empty-msg";
 import { IComparisonZone } from "@/lib/interfaces/IComparisonZone";
 
+export const dynamic = "force-dynamic";
+
 async function getData(): Promise<IComparisonZone[]> {
   const res = await fetch(
     process.env.NEXT_PUBLIC_API_URL! + "api/v1/comparation_zones/"
