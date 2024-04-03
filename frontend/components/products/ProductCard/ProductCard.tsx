@@ -1,147 +1,142 @@
 import { PinBtn } from "@/components/shared/buttons/PinBtn/PinBtn";
-import { DownIcon } from "@/components/shared/icons/DownIcon";
-import { UpIcon } from "@/components/shared/icons/UpIcon";
+import { CreateNewZoneContext } from "@/lib/context/CreateNewZoneContext";
 import { PinProductContext } from "@/lib/context/PinProductContext";
 import { IProduct } from "@/lib/interfaces/IProduct";
+import {
+  getArrowByWeightStyle,
+  getArrowIcon,
+  getPriceByWeightStyle,
+  getPriceStyle,
+} from "@/lib/utils/functions/pricesStyle";
 import { Card, CardBody, Image } from "@nextui-org/react";
 import React, { useContext, useEffect, useState } from "react";
 import { ProductDropdownMenu } from "../ProductDropdownMenu/ProductDropdownMenu";
-import { CreateNewZoneContext } from "@/lib/context/CreateNewZoneContext";
+import { PriceByWeightCalculatorModal } from "@/components/price/PriceByWeightCalculator/PriceByWeightCalculatorModal";
 
 type ProductCardProps = {
   product: IProduct;
+  hideSetPin?: boolean;
+  hideMenu?: boolean;
 };
 
-export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+export const ProductCard: React.FC<ProductCardProps> = (props) => {
   const { pinProduct, setPinProduct } = useContext(PinProductContext);
-  const { handleNewZone } = useContext(CreateNewZoneContext);
 
-  const [isPinActive, setIsPinActive] = useState(pinProduct?.product_id === product.product_id);
+  const { handleNewZone } = useContext(CreateNewZoneContext);
+  const [isPriceCalculatorModalOpen, setPriceCalculatorModalOpen] =
+    useState(false);
+
+  const [isPinActive, setIsPinActive] = useState(
+    pinProduct?.product_id === props.product.product_id
+  );
 
   const handlePinProduct = (isActive: boolean) => {
     setIsPinActive(isActive);
     if (isActive) {
-      setPinProduct(product);
+      setPinProduct(props.product);
     } else {
       setPinProduct(null);
     }
   };
 
   useEffect(() => {
-    if (pinProduct?.product_id !== product.product_id) {
+    if (pinProduct?.product_id !== props.product.product_id) {
       setIsPinActive(false);
     }
-  }, [pinProduct?.product_id, product.product_id]);
-
-  const getPriceStyle = () => {
-    if (pinProduct) {
-      if (pinProduct?.current_price > product.current_price) {
-        return "text-success";
-      } else if (pinProduct?.current_price < product.current_price) {
-        return "text-danger";
-      }
-    }
-  };
-
-  const getPriceByWeightStyle = () => {
-    if (pinProduct && pinProduct.price_by_weight && product.price_by_weight) {
-      if (pinProduct?.price_by_weight > product.price_by_weight) {
-        return "text-success-600";
-      } else if (
-        pinProduct?.price_by_weight < product.price_by_weight
-      ) {
-        return "text-danger";
-      } else {
-        return "text-slate-600";
-      }
-    }
-  };
-
-  const getArrowIcon = () => {
-    if (pinProduct) {
-      if (pinProduct?.current_price > product.current_price) {
-        return <DownIcon />;
-      } else if (pinProduct?.current_price < product.current_price) {
-        return <UpIcon />;
-      }
-    }
-  };
-
-  const getArrowByWeightStyle = () => {
-    if (pinProduct && pinProduct.price_by_weight && product.price_by_weight) {
-      if (pinProduct?.price_by_weight > product.price_by_weight) {
-        return <DownIcon size="small" />;
-      } else if (
-        pinProduct?.price_by_weight < product.price_by_weight
-      ) {
-        return <UpIcon size="small" />;
-      }
-    }
-  };
+  }, [pinProduct?.product_id, props.product.product_id]);
 
   return (
-    <Card shadow="sm" className="w-full sm:w-72 md:w-64">
-      <CardBody className="overflow-visible p-0">
-        <div className="grid grid-cols-12">
-          <div className="relative col-span-6 md:col-span-12 max-md:my-2 max-md:ml-2">
-            <Image
-              radius="lg"
-              width="100%"
-              alt={product.name}
-              className="w-full object-cover h-[140px] md:h-[240px]"
-              src={product.image_url}
-            />
-
-            <div className="absolute top-1 left-1">
-              <PinBtn isActive={isPinActive} handleClick={handlePinProduct} />
-            </div>
-
-            <div className="absolute top-1 right-1">
-              <ProductDropdownMenu
-                handleNewZone={() => handleNewZone(product)}
+    <>
+      <Card shadow="sm" className="w-full sm:w-72 md:w-64">
+        <CardBody className="overflow-visible p-0">
+          <div className="grid grid-cols-12">
+            <div className="relative col-span-6 md:col-span-12 max-md:my-2 max-md:ml-2">
+              <Image
+                radius="lg"
+                width="100%"
+                alt={props.product.name}
+                className="w-full object-cover h-[140px] md:h-[240px]"
+                src={props.product.image_url}
               />
-            </div>
-          </div>
 
-          <div className="col-span-6 md:col-span-12 flex flex-col items-start text-start justify-start gap-2 p-4">
-            <a
-              href={product.product_url}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <b className="text-small text-primary-800">{product.name}</b>
-            </a>
+              {!props.hideSetPin && (
+                <div className="absolute top-1 left-1">
+                  <PinBtn
+                    isActive={isPinActive}
+                    handleClick={handlePinProduct}
+                  />
+                </div>
+              )}
 
-            <a
-              href={product.manufacture.url}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <p className="text-small font-medium">
-                Marca: {product.manufacture.name}
-              </p>
-            </a>
-
-            <div>
-              <p
-                className={`font-bold text-lg flex items-center gap-1 ${getPriceStyle()}`}
-              >
-                {product.current_price} {product.currency}
-                <span>{getArrowIcon()}</span>
-              </p>
-
-              {product.price_by_weight && (
-                <p
-                  className={`font-bold text-sm flex items-center ${getPriceByWeightStyle()}`}
-                >
-                  {product.price_by_weight} {product.currency_by_weight}
-                  <span>{getArrowByWeightStyle()}</span>
-                </p>
+              {!props.hideMenu && (
+                <div className="absolute top-1 right-1">
+                  <ProductDropdownMenu
+                    handleNewZone={() => handleNewZone(props.product)}
+                    handlePriceByWeightCalculatorModal={
+                      setPriceCalculatorModalOpen
+                    }
+                  />
+                </div>
               )}
             </div>
+
+            <div className="col-span-6 md:col-span-12 flex flex-col items-start text-start justify-start gap-2 p-4">
+              <a
+                href={props.product.product_url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <b className="text-small text-primary-800">
+                  {props.product.name}
+                </b>
+              </a>
+
+              <a
+                href={props.product.manufacture.url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <p className="text-small font-medium">
+                  Marca: {props.product.manufacture.name}
+                </p>
+              </a>
+
+              <div>
+                <p
+                  className={`font-bold text-lg flex items-center gap-1 ${getPriceStyle(
+                    pinProduct,
+                    props.product
+                  )}`}
+                >
+                  {props.product.current_price} {props.product.currency}
+                  <span>{getArrowIcon(pinProduct, props.product)}</span>
+                </p>
+
+                {props.product.price_by_weight && (
+                  <p
+                    className={`font-bold text-sm flex items-center ${getPriceByWeightStyle(
+                      pinProduct,
+                      props.product
+                    )}`}
+                  >
+                    {props.product.price_by_weight}{" "}
+                    {props.product.currency_by_weight}
+                    <span>
+                      {getArrowByWeightStyle(pinProduct, props.product)}
+                    </span>
+                  </p>
+                )}
+              </div>
+            </div>
           </div>
-        </div>
-      </CardBody>
-    </Card>
+        </CardBody>
+      </Card>
+
+      <PriceByWeightCalculatorModal
+        product={props.product}
+        isOpen={isPriceCalculatorModalOpen}
+        onOpenChange={setPriceCalculatorModalOpen}
+      />
+    </>
   );
 };

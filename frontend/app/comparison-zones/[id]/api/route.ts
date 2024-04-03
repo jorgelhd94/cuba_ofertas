@@ -15,7 +15,7 @@ export async function GET(request: Request) {
 
   const data = await res.json();
 
-  return Response.json({ comparisonZones: data }, { status: 200 });
+  return Response.json({ comparisonZone: data }, { status: 200 });
 }
 
 export async function DELETE(request: Request) {

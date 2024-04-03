@@ -167,7 +167,9 @@ export const NewZoneModal: React.FC<NewZoneModalProps> = ({
                 </Button>
               ) : (
                 <Button color="primary">
-                  <Link href="/">Ver zona</Link>
+                  <Link href={"/comparison-zones/" + comparisonZone.id}>
+                    Ver zona
+                  </Link>
                 </Button>
               )}
             </ModalFooter>

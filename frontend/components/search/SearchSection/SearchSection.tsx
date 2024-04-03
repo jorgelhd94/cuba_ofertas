@@ -10,15 +10,12 @@ import { CreateNewZoneContext } from "@/lib/context/CreateNewZoneContext";
 
 export const SearchSection = () => {
   const [pinProduct, setPinProduct] = useState<IProduct | null>(null);
-  const [zoneMainProduct, setZoneMainProduct] = useState<IProduct | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleModalOpen = (isOpen: boolean) => {
-    setIsModalOpen(isOpen);
-  };
+  const [zoneMainProduct, setZoneMainProduct] = useState<IProduct | null>(null);
+  const [isModalNewZoneOpen, setIsModalNewZoneOpen] = useState(false);
 
   const handleNewZone = (product: IProduct | null) => {
-    setIsModalOpen(true);
+    setIsModalNewZoneOpen(true);
     setZoneMainProduct(product);
   };
 
@@ -39,8 +36,8 @@ export const SearchSection = () => {
         </div>
 
         <NewZoneModal
-          isOpen={isModalOpen}
-          onOpenChange={handleModalOpen}
+          isOpen={isModalNewZoneOpen}
+          onOpenChange={setIsModalNewZoneOpen}
           product={zoneMainProduct}
         />
       </CreateNewZoneContext.Provider>

@@ -11,6 +11,7 @@ import React from "react";
 
 type ProductDropdownMenuProps = {
   handleNewZone?: () => void;
+  handlePriceByWeightCalculatorModal?: (isOpen: boolean) => void;
 };
 
 export const ProductDropdownMenu: React.FC<ProductDropdownMenuProps> = (
@@ -31,11 +32,23 @@ export const ProductDropdownMenu: React.FC<ProductDropdownMenuProps> = (
       </DropdownTrigger>
       <DropdownMenu aria-label="Static Actions">
         <DropdownItem
-          onClick={props.handleNewZone}
+          onPress={props.handleNewZone}
           key="new"
-          description="Añadir a zona de comparación"
+          description="Crear nueva zona de comparación"
+          color="primary"
         >
           Nueva comparación
+        </DropdownItem>
+        <DropdownItem
+          key="calculate_price_by_weight"
+          description="Calcular nuevo precio por peso"
+          color="secondary"
+          onPress={() =>
+            props.handlePriceByWeightCalculatorModal &&
+            props.handlePriceByWeightCalculatorModal(true)
+          }
+        >
+          Calcular nuevo precio
         </DropdownItem>
       </DropdownMenu>
     </Dropdown>

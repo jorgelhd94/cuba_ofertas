@@ -13,12 +13,12 @@ export const SaveBtn: React.FC<SaveBtnProps> = ({ onClick, loading }) => {
 
   return (
     <Button
-      color="success"
-      variant="bordered"
+      color="primary"
+      variant="ghost"
       type="submit"
       isLoading={pending || loading}
       disabled={pending || loading}
-      className="w-max text-black dark:text-white"
+      className="w-max text-black dark:text-white "
     >
       {pending || loading ? "Guardando" : "Guardar"}
     </Button>
