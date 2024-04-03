@@ -1,5 +1,3 @@
-import { IComparisonZone } from "@/lib/interfaces/IComparisonZone";
-import { revalidatePath } from "next/cache";
 
 export async function GET() {
   const res = await fetch(
@@ -14,23 +12,4 @@ export async function GET() {
   const data = await res.json();
 
   return Response.json({ comparisonZones: data }, { status: 200 });
-}
-
-export async function DELETE(request: Request) {
-  const req = await request.json();
-  const id = req.id;
-
-  await fetch(
-    process.env.NEXT_PUBLIC_API_URL! + `api/v1/comparison_zones/${id}/`,
-    {
-      method: "Delete",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
-  );
-
-  revalidatePath("/comparison-zones");
-
-  return Response.json({}, { status: 200 });
 }

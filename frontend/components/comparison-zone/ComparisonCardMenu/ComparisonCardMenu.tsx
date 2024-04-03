@@ -30,11 +30,8 @@ export const ComparisonCardMenu: React.FC<ComparisonCardMenuProps> = (
   const handleDelete = async () => {
     setIsLoading(true);
 
-    await fetch("/comparison-zones/api/", {
+    await fetch(`/comparison-zones/${props.comparisonZoneId}/api/`, {
       method: "DELETE",
-      body: JSON.stringify({
-        id: props.comparisonZoneId,
-      }),
     })
       .then(() => {
         toast.success("Zona eliminada correctamente");

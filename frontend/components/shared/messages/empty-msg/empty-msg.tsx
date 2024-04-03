@@ -13,7 +13,7 @@ export const EmptyMsg: React.FC<EmptyMsgProps> = (props) => {
     <div className="flex items-center justify-center">
       <div className="flex flex-col justify-center items-center">
         <Image src={EmptyImage} width={100} alt="Fetching Error" priority />
-        <div className="flex flex-col items-center px-4 pt-2">
+        <div className="flex flex-col items-center px-4 pt-2 text-center">
           <h3 className="text-2xl mb-2 font-medium">
             {props.title || "Búsqueda sin resultados"}
           </h3>

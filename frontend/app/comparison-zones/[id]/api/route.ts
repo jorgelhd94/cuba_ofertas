@@ -1,8 +1,10 @@
 import { revalidatePath } from "next/cache";
 
-export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const id = searchParams.get("id");
+export async function GET(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
+  const id = params.id;
 
   const res = await fetch(
     process.env.NEXT_PUBLIC_API_URL! + "api/v1/comparison_zones/" + id,
@@ -18,9 +20,11 @@ export async function GET(request: Request) {
   return Response.json({ comparisonZone: data }, { status: 200 });
 }
 
-export async function DELETE(request: Request) {
-  const req = await request.json();
-  const id = req.id;
+export async function DELETE(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
+  const id = params.id;
 
   await fetch(
     process.env.NEXT_PUBLIC_API_URL! + `api/v1/comparison_zones/${id}/`,
