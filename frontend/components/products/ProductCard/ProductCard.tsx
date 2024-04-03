@@ -1,5 +1,4 @@
 import { PinBtn } from "@/components/shared/buttons/PinBtn/PinBtn";
-import { CreateNewZoneContext } from "@/lib/context/CreateNewZoneContext";
 import { PinProductContext } from "@/lib/context/PinProductContext";
 import { IProduct } from "@/lib/interfaces/IProduct";
 import {
@@ -11,7 +10,6 @@ import {
 import { Card, CardBody, Image } from "@nextui-org/react";
 import React, { useContext, useEffect, useState } from "react";
 import { ProductDropdownMenu } from "../ProductDropdownMenu/ProductDropdownMenu";
-import { PriceByWeightCalculatorModal } from "@/components/price/PriceByWeightCalculator/PriceByWeightCalculatorModal";
 
 type ProductCardProps = {
   product: IProduct;
@@ -21,10 +19,6 @@ type ProductCardProps = {
 
 export const ProductCard: React.FC<ProductCardProps> = (props) => {
   const { pinProduct, setPinProduct } = useContext(PinProductContext);
-
-  const { handleNewZone } = useContext(CreateNewZoneContext);
-  const [isPriceCalculatorModalOpen, setPriceCalculatorModalOpen] =
-    useState(false);
 
   const [isPinActive, setIsPinActive] = useState(
     pinProduct?.product_id === props.product.product_id
@@ -70,12 +64,7 @@ export const ProductCard: React.FC<ProductCardProps> = (props) => {
 
               {!props.hideMenu && (
                 <div className="absolute top-1 right-1">
-                  <ProductDropdownMenu
-                    handleNewZone={() => handleNewZone(props.product)}
-                    handlePriceByWeightCalculatorModal={
-                      setPriceCalculatorModalOpen
-                    }
-                  />
+                  <ProductDropdownMenu product={props.product} />
                 </div>
               )}
             </div>
@@ -131,12 +120,6 @@ export const ProductCard: React.FC<ProductCardProps> = (props) => {
           </div>
         </CardBody>
       </Card>
-
-      <PriceByWeightCalculatorModal
-        product={props.product}
-        isOpen={isPriceCalculatorModalOpen}
-        onOpenChange={setPriceCalculatorModalOpen}
-      />
     </>
   );
 };

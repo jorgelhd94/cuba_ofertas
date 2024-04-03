@@ -8,11 +8,12 @@ import { ISearchProducts } from "@/lib/interfaces/ISearchProducts";
 import { HandleSearchType } from "@/lib/types/HandleSearchType";
 import { filterProducts } from "@/lib/utils/functions/filters";
 import { Pagination } from "@nextui-org/react";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { ProductModeSelect } from "../../shared/selects/product-mode-select/ProductModeSelect";
 import { ProductCard } from "../ProductCard/ProductCard";
 import { ProductsSkeleton } from "../ProductsSkeleton/ProductsSkeleton";
 import { getEmptyMessageByProductMode } from "@/lib/utils/functions/common";
+import { HidePinProductContext } from "@/lib/context/HidePinProductContext";
 
 type ProductGridProps = {
   searchResults: ISearchProducts | null;
@@ -29,6 +30,8 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
   handleSearch,
   handleProductMode,
 }) => {
+  const hidePinProduct = useContext(HidePinProductContext);
+
   const [products, setProducts] = useState<IProduct[]>(
     searchResults?.products || []
   );
@@ -54,7 +57,11 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
       return (
         <div className="gap-4 flex flex-col sm:flex-row justify-evenly flex-wrap lg:columns-4">
           {products.map((item, index) => (
-            <ProductCard key={item.product_id + "-" + index} product={item} />
+            <ProductCard
+              key={item.product_id + "-" + index}
+              product={item}
+              hideSetPin={hidePinProduct}
+            />
           ))}
         </div>
       );

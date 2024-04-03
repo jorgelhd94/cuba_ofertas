@@ -4,7 +4,11 @@ import ProductGrid from "@/components/products/ProductGrid/ProductGrid";
 import { ISearchProducts } from "@/lib/interfaces/ISearchProducts";
 import { SaveBtn } from "@/components/shared/buttons/SaveBtn";
 
-export const SearchComponent = () => {
+type Props = {
+  hideSaveSearch?: boolean;
+};
+
+export const SearchComponent: React.FC<Props> = (props) => {
   const [loading, setLoading] = useState(false);
   const [params, setParams] = useState({
     searchText: "",
@@ -96,7 +100,7 @@ export const SearchComponent = () => {
     <div className="flex flex-col items-center gap-8 max-md:pt-4 w-full">
       <div className="flex max-md:flex-col items-center gap-2 max-w-3xl w-full">
         <SearchForm loading={loading} handleSearch={handleSearch} />
-        <SaveBtn />
+        {!props.hideSaveSearch && <SaveBtn />}
       </div>
       <ProductGrid
         searchResults={searchResults}

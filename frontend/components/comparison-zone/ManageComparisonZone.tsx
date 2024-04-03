@@ -5,18 +5,19 @@ import { Button } from "@nextui-org/react";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import useSWR from "swr";
-import { AddComparisonProduct } from "../comparison-products/AddComparisonProduct";
 import { ComparisonProductsList } from "../comparison-products/ComparisonProductsList";
 import { ProductCard } from "../products/ProductCard/ProductCard";
 import { ErrorMsg } from "../shared/messages/ErrorMsg/ErrorMsg";
 import { ComparisonZoneSkeleton } from "../shared/skeletons/ComparisonZoneSkeleton";
 import { DeleteComparisonZone } from "./DeleteComparisonZone";
+import { useRouter } from "next/navigation";
 
 type Props = {
   id: string | number;
 };
 
 export const ManageComparisonZone: React.FC<Props> = (props) => {
+  const router = useRouter();
   const { data, error, isLoading } = useSWR(
     `/comparison-zones/${props.id}/api/`,
     fetcher
@@ -43,11 +44,13 @@ export const ManageComparisonZone: React.FC<Props> = (props) => {
     return (
       <div className="pt-12 space-y-4 flex flex-col items-center">
         <ErrorMsg message="Esta zona no existe" />
-        <Link href="/comparison-zones">
-          <Button color="primary" variant="ghost">
-            Todas las zonas
-          </Button>
-        </Link>
+        <Button
+          color="primary"
+          variant="ghost"
+          onPress={() => router.push("/comparison-zones")}
+        >
+          Todas las zonas
+        </Button>
       </div>
     );
 
@@ -55,11 +58,13 @@ export const ManageComparisonZone: React.FC<Props> = (props) => {
     comparisonZone && (
       <div className="flex flex-col gap-2">
         <div className="flex justify-between">
-          <Link href="/comparison-zones">
-            <Button color="primary" variant="ghost">
-              Todas las zonas
-            </Button>
-          </Link>
+          <Button
+            color="primary"
+            variant="ghost"
+            onPress={() => router.push("/comparison-zones")}
+          >
+            Todas las zonas
+          </Button>
 
           <DeleteComparisonZone id={props.id} />
         </div>
@@ -82,7 +87,15 @@ export const ManageComparisonZone: React.FC<Props> = (props) => {
             <div className="w-full space-y-2">
               <div className="flex justify-between">
                 <h3 className="text-xl font-medium">Comparado con:</h3>
-                <AddComparisonProduct />
+                <Button
+                  color="primary"
+                  variant="ghost"
+                  onPress={() =>
+                    router.push(`/comparison-zones/${props.id}/add-product`)
+                  }
+                >
+                  Añadir producto
+                </Button>
               </div>
               <div className="flex justify-center border rounded-lg p-8">
                 <ComparisonProductsList comparisonZone={comparisonZone} />
