@@ -5,7 +5,7 @@ from .views import ProductViewSet, ManufactureViewSet, ComparisonZoneViewSet
 router = DefaultRouter()
 router.register(r'products', ProductViewSet)
 router.register(r'manufactures', ManufactureViewSet)
-router.register(r'comparation_zones', ComparisonZoneViewSet)
+router.register(r'comparison_zones', ComparisonZoneViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),

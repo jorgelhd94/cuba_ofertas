@@ -1,9 +1,11 @@
-import { IComparisonZone } from "@/lib/interfaces/IComparisonZone";
 import { revalidatePath } from "next/cache";
 
-export async function GET() {
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const id = searchParams.get("id");
+
   const res = await fetch(
-    process.env.NEXT_PUBLIC_API_URL! + "api/v1/comparison_zones/",
+    process.env.NEXT_PUBLIC_API_URL! + "api/v1/comparison_zones/" + id,
     { cache: "no-store" }
   );
 

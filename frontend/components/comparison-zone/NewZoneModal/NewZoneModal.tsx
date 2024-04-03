@@ -72,7 +72,7 @@ export const NewZoneModal: React.FC<NewZoneModalProps> = ({
 
   const createZone = async (data: ICreateComparisonZone) => {
     const responseData = await fetch(
-      process.env.NEXT_PUBLIC_API_URL! + `api/v1/comparation_zones/`,
+      process.env.NEXT_PUBLIC_API_URL! + `api/v1/comparison_zones/`,
       {
         method: "POST",
         headers: {

@@ -8,6 +8,7 @@ import {
   DropdownMenu,
   DropdownTrigger,
 } from "@nextui-org/react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
@@ -23,6 +24,8 @@ export const ComparisonCardMenu: React.FC<ComparisonCardMenuProps> = (
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { mutate } = useSWRConfig();
+
+  const router = useRouter();
 
   const handleDelete = async () => {
     setIsLoading(true);
@@ -60,6 +63,16 @@ export const ComparisonCardMenu: React.FC<ComparisonCardMenuProps> = (
           </Button>
         </DropdownTrigger>
         <DropdownMenu aria-label="Static Actions">
+          <DropdownItem
+            key="manage"
+            description="Administrar zona de comparación"
+            color="secondary"
+            onPress={() =>
+              router.push("/comparison-zones/" + props.comparisonZoneId)
+            }
+          >
+            Administrar
+          </DropdownItem>
           <DropdownItem
             key="delete"
             description="Eliminar zona de comparación"

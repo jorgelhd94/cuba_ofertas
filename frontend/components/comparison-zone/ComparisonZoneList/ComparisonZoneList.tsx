@@ -7,6 +7,8 @@ import Link from "next/link";
 import useSWR from "swr";
 import { IComparisonZone } from "@/lib/interfaces/IComparisonZone";
 import { fetcher } from "@/lib/utils/api/fetcher";
+import ZonesSkeleton from "@/components/shared/skeletons/ZonesSkeleton";
+import { ErrorMsg } from "@/components/shared/messages/ErrorMsg/ErrorMsg";
 
 export const ComparisonZoneList = () => {
   const { data, error, isLoading } = useSWR("/comparison-zones/api/", fetcher);
@@ -18,8 +20,19 @@ export const ComparisonZoneList = () => {
     }
   }, [data]);
 
-  if (isLoading) return <div>loading...</div>;
-  if (error) return <div>failed to load</div>;
+  if (isLoading)
+    return (
+      <div className="pt-8">
+        <ZonesSkeleton />
+      </div>
+    );
+
+  if (error)
+    return (
+      <div className="pt-12">
+        <ErrorMsg />
+      </div>
+    );
 
   return (
     <div>
