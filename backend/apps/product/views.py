@@ -32,7 +32,24 @@ class ComparisonZoneViewSet(viewsets.ModelViewSet):
         if not comparison_zone.comparison_products.filter(id=product.id).exists():
             # If not, add the product to the comparison_products
             comparison_zone.comparison_products.add(product)
-
+        
         return Response({'pk': pk}, status=status.HTTP_201_CREATED)
+    
+    @action(detail=True, methods=['delete'])
+    def remove_product_from_compare(self, request, pk):
+        serializer = ProductSerializer(data=request.data["product"])
+        
+        if not serializer.is_valid():
+            return Response({"detail": "The product data isn't valid"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        product = serializer.save()
+
+        comparison_zone = ComparisonZone.objects.get(pk=pk)
+
+        if comparison_zone.comparison_products.filter(id=product.id).exists():
+            # If not, add the product to the comparison_products
+            comparison_zone.comparison_products.remove(product)
+
+        return Response({'pk': pk, 'product_id': product.product_id}, status=status.HTTP_200_OK)
         
 

@@ -1,5 +1,6 @@
 import { ComparisonZoneContext } from "@/lib/context/ComparisonZoneContext";
 import { IProduct } from "@/lib/interfaces/IProduct";
+import { postFetcher } from "@/lib/utils/api/fetcher";
 import {
   Button,
   Modal,
@@ -9,6 +10,8 @@ import {
   ModalHeader,
 } from "@nextui-org/react";
 import React, { useContext, useState } from "react";
+import { toast } from "react-toastify";
+import { useSWRConfig } from "swr";
 
 type Props = {
   product: IProduct;
@@ -20,17 +23,24 @@ export const RemoveFromZoneModal: React.FC<Props> = (props) => {
   const comparisonZone = useContext(ComparisonZoneContext);
   const [isLoading, setIsLoading] = useState(false);
 
+  const { mutate } = useSWRConfig();
+
   const removeProduct = async () => {
-    // setIsLoading(true);
-    // await postFetcher(`/comparison-zones/${comparisonZone?.id}/api/`, {
-    //   product: props.product,
-    // })
-    //   .then(() => {
-    //     if (props.onOpenChange) props.onOpenChange(false);
-    //     toast.success("El producto se ha añadido correctamente");
-    //   })
-    //   .catch(() => toast.error("Ha ocurrido un error al añadir el producto"))
-    //   .finally(() => setIsLoading(false));
+    setIsLoading(true);
+    await postFetcher(
+      `/api/comparison-zones/${comparisonZone?.id}/comparison-product/`,
+      {
+        product: props.product,
+      },
+      "DELETE"
+    )
+      .then(() => {
+        if (props.onOpenChange) props.onOpenChange(false);
+        toast.success("El producto se ha eliminado correctamente");
+        mutate(`/api/comparison-zones/${comparisonZone?.id}/`);
+      })
+      .catch(() => toast.error("Ha ocurrido un error al eliminar el producto"))
+      .finally(() => setIsLoading(false));
   };
 
   return (

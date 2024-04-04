@@ -5,14 +5,17 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   const id = params.id;
+  const body = await request.json();
 
   await fetch(
-    process.env.NEXT_PUBLIC_API_URL! + `api/v1/comparison_zones/${id}/`,
+    process.env.NEXT_PUBLIC_API_URL! +
+      `api/v1/comparison_zones/${id}/remove_product_from_compare/`,
     {
       method: "Delete",
       headers: {
         "Content-Type": "application/json",
       },
+      body: JSON.stringify(body),
     }
   );
 
