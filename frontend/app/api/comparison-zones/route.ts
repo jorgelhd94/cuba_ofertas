@@ -1,3 +1,4 @@
+import { revalidatePath } from "next/cache";
 
 export async function GET() {
   const res = await fetch(
@@ -10,6 +11,8 @@ export async function GET() {
   }
 
   const data = await res.json();
+
+  revalidatePath("/comparison-zones");
 
   return Response.json({ comparisonZones: data }, { status: 200 });
 }

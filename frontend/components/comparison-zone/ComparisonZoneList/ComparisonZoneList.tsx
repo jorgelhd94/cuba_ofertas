@@ -36,7 +36,7 @@ export const ComparisonZoneList = () => {
 
   return (
     <div>
-      {comparisonZones && comparisonZones.length ? (
+      {comparisonZones ? (
         <div className="w-full md:pt-8 space-y-8">
           <h1 className="text-3xl w-full text-center">Zonas de comparación</h1>
           <div className="gap-8 flex flex-col sm:flex-row max-sm:items-center justify-center flex-wrap">

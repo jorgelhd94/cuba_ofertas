@@ -17,6 +17,8 @@ export async function GET(
 
   const data = await res.json();
 
+  revalidatePath("/comparison-zones");
+
   return Response.json({ comparisonZone: data }, { status: 200 });
 }
 
@@ -38,6 +40,7 @@ export async function POST(
         "Content-Type": "application/json",
       },
       body: JSON.stringify(body),
+      cache: "no-store",
     }
   );
 
@@ -46,6 +49,8 @@ export async function POST(
   }
 
   const data = await res.json();
+
+  revalidatePath("/comparison-zones");
 
   return Response.json({ data }, { status: 200 });
 }
@@ -63,6 +68,7 @@ export async function DELETE(
       headers: {
         "Content-Type": "application/json",
       },
+      cache: "no-store",
     }
   );
 
