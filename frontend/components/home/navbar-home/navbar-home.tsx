@@ -39,6 +39,7 @@ function NavbarHome() {
 
   return (
     <Navbar
+      isMenuOpen={isMenuOpen}
       onMenuOpenChange={setIsMenuOpen}
       maxWidth="xl"
       onScrollPositionChange={onScroll}
@@ -63,7 +64,9 @@ function NavbarHome() {
             <Link
               href={item.url}
               className={` hover:bg-secondary hover:text-white rounded-lg p-2 ${
-                pathname === item.url ? "bg-secondary text-white" : "text-secondary-700"
+                pathname === item.url
+                  ? "bg-secondary text-white"
+                  : "text-secondary-700"
               }`}
             >
               {item.name}

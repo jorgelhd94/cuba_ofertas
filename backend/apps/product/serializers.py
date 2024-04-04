@@ -12,6 +12,14 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = ['id', 'product_id', 'manufacture', 'name', 'product_url', 'image_url', 'current_price', 'currency', 'price_by_weight', 'currency_by_weight']
+    
+    def create(self, validated_data):
+        manufacture_data = validated_data.pop('manufacture')
+
+        manufacture, created = Manufacture.objects.get_or_create(**manufacture_data)
+        product, created = Product.objects.get_or_create(manufacture=manufacture, **validated_data)
+        
+        return product
 
 
 class ComparisonZoneSerializer(serializers.ModelSerializer):
@@ -23,11 +31,8 @@ class ComparisonZoneSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'created_at', 'main_product', 'comparison_products']
     
     def create(self, validated_data):
-        print(validated_data)
         main_product_data = validated_data.pop('main_product')
         manufacture_data = main_product_data.pop('manufacture')
-
-        print(main_product_data)
 
         manufacture, created = Manufacture.objects.get_or_create(**manufacture_data)
         main_product, created = Product.objects.get_or_create(manufacture=manufacture, **main_product_data)

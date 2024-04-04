@@ -1,4 +1,5 @@
 "use client";
+import { AddToZoneWrapper } from "@/components/comparison-products/add-to-compare/AddToZoneWrapper";
 import { NewZoneModal } from "@/components/comparison-zone/NewZoneModal/NewZoneModal";
 import { PriceByWeightCalculatorModal } from "@/components/price/PriceByWeightCalculator/PriceByWeightCalculatorModal";
 import { VerticalDots } from "@/components/shared/icons/VerticalDots";
@@ -19,6 +20,7 @@ type ProductDropdownMenuProps = {
 export const ProductDropdownMenu: React.FC<ProductDropdownMenuProps> = (
   props
 ) => {
+  const [isModalAddToZoneOpen, setIsModalAddToZoneOpen] = useState(false);
   const [isModalNewZoneOpen, setIsModalNewZoneOpen] = useState(false);
   const [isPriceCalculatorModalOpen, setPriceCalculatorModalOpen] =
     useState(false);
@@ -39,7 +41,7 @@ export const ProductDropdownMenu: React.FC<ProductDropdownMenuProps> = (
         </DropdownTrigger>
         <DropdownMenu aria-label="Static Actions">
           <DropdownItem
-            onPress={() => setIsModalNewZoneOpen(true)}
+            onPress={() => setIsModalAddToZoneOpen(true)}
             key="add"
             description="Añadir a zona de comparación"
             color="secondary"
@@ -75,6 +77,12 @@ export const ProductDropdownMenu: React.FC<ProductDropdownMenuProps> = (
         product={props.product}
         isOpen={isPriceCalculatorModalOpen}
         onOpenChange={setPriceCalculatorModalOpen}
+      />
+
+      <AddToZoneWrapper
+        product={props.product}
+        isOpen={isModalAddToZoneOpen}
+        onOpenChange={setIsModalAddToZoneOpen}
       />
     </>
   );
