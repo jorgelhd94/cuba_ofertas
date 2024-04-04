@@ -16,7 +16,7 @@ export const PriceByWeightCalculator: React.FC<PriceByWeightCalculatorProps> = (
   const getWeightName = () => {
     return props.product.currency_by_weight
       ? props.product.currency_by_weight.split("/")[1]
-      : "lb";
+      : "";
   };
 
   const getTotalPrice = () => {
@@ -63,7 +63,7 @@ export const PriceByWeightCalculator: React.FC<PriceByWeightCalculatorProps> = (
             endContent={
               props.product.currency_by_weight
                 ? props.product.currency_by_weight
-                : "US$/lb"
+                : ""
             }
             onChange={(event) =>
               setNewPriceByWeight(parseFloat(event.target.value))

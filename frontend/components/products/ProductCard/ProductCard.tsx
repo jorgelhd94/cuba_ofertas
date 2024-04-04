@@ -26,6 +26,11 @@ export const ProductCard: React.FC<ProductCardProps> = (props) => {
 
   const handlePinProduct = (isActive: boolean) => {
     setIsPinActive(isActive);
+
+    if (!setPinProduct) {
+      return;
+    }
+
     if (isActive) {
       setPinProduct(props.product);
     } else {

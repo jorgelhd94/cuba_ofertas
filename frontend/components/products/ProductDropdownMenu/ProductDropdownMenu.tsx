@@ -40,6 +40,14 @@ export const ProductDropdownMenu: React.FC<ProductDropdownMenuProps> = (
         <DropdownMenu aria-label="Static Actions">
           <DropdownItem
             onPress={() => setIsModalNewZoneOpen(true)}
+            key="add"
+            description="Añadir a zona de comparación"
+            color="secondary"
+          >
+            Añadir a comparar
+          </DropdownItem>
+          <DropdownItem
+            onPress={() => setIsModalNewZoneOpen(true)}
             key="new"
             description="Crear nueva zona de comparación"
             color="primary"
@@ -49,7 +57,7 @@ export const ProductDropdownMenu: React.FC<ProductDropdownMenuProps> = (
           <DropdownItem
             key="calculate_price_by_weight"
             description="Calcular nuevo precio por peso"
-            color="secondary"
+            color="warning"
             onPress={() => setPriceCalculatorModalOpen(true)}
           >
             Calcular nuevo precio

@@ -19,7 +19,17 @@ const config: Config = {
   plugins: [
     nextui({
       themes: {
-        light: {},
+        light: {
+          colors: {
+            success: {
+              foreground: "#ffffff",
+            },
+            warning: {
+              DEFAULT: "#ffeead",
+              foreground: "#000000",
+            }
+          },
+        },
         dark: {},
       },
     }),

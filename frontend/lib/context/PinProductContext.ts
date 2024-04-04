@@ -1,7 +1,11 @@
 import { createContext } from "react";
 import { IProduct } from "../interfaces/IProduct";
 
-export const PinProductContext = createContext({
-    pinProduct: null as IProduct | null,
-    setPinProduct: (product: IProduct | null) => {},
-   });
+interface PinProductContextType {
+  pinProduct: IProduct | null;
+  setPinProduct?: (product: IProduct | null) => void;
+}
+
+export const PinProductContext = createContext<PinProductContextType>({
+  pinProduct: null,
+});
