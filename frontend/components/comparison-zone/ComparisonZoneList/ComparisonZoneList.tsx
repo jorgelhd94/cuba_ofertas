@@ -11,7 +11,7 @@ import ZonesSkeleton from "@/components/shared/skeletons/ZonesSkeleton";
 import { ErrorMsg } from "@/components/shared/messages/ErrorMsg/ErrorMsg";
 
 export const ComparisonZoneList = () => {
-  const { data, error, isLoading } = useSWR("/comparison-zones/api/", fetcher);
+  const { data, error, isLoading } = useSWR("/api/comparison-zones/", fetcher);
   const [comparisonZones, setComparisonZones] = useState<IComparisonZone[]>([]);
 
   useEffect(() => {

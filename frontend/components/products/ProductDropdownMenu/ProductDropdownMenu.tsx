@@ -1,5 +1,6 @@
 "use client";
 import { AddToZoneWrapper } from "@/components/comparison-products/add-to-compare/AddToZoneWrapper";
+import { RemoveFromZoneModal } from "@/components/comparison-products/RemoveFromZoneModal";
 import { NewZoneModal } from "@/components/comparison-zone/NewZoneModal/NewZoneModal";
 import { PriceByWeightCalculatorModal } from "@/components/price/PriceByWeightCalculator/PriceByWeightCalculatorModal";
 import { VerticalDots } from "@/components/shared/icons/VerticalDots";
@@ -23,8 +24,10 @@ export const ProductDropdownMenu: React.FC<ProductDropdownMenuProps> = (
 ) => {
   const comparisonZone = useContext(ComparisonZoneContext);
 
-  const [isModalAddToZoneOpen, setIsModalAddToZoneOpen] = useState(false);
-  const [isModalNewZoneOpen, setIsModalNewZoneOpen] = useState(false);
+  const [isAddToZoneModalOpen, setAddToZoneModalOpen] = useState(false);
+  const [isRemoveFromZoneModalOpen, setRemoveFromZoneModalOpen] =
+    useState(false);
+  const [isNewZoneModalOpen, setNewZoneModalOpen] = useState(false);
   const [isPriceCalculatorModalOpen, setPriceCalculatorModalOpen] =
     useState(false);
 
@@ -53,7 +56,7 @@ export const ProductDropdownMenu: React.FC<ProductDropdownMenuProps> = (
         <DropdownMenu aria-label="Static Actions">
           {!isProductInZone() ? (
             <DropdownItem
-              onPress={() => setIsModalAddToZoneOpen(true)}
+              onPress={() => setAddToZoneModalOpen(true)}
               key="addToZone"
               description="Añadir a zona de comparación"
               color="secondary"
@@ -62,7 +65,7 @@ export const ProductDropdownMenu: React.FC<ProductDropdownMenuProps> = (
             </DropdownItem>
           ) : (
             <DropdownItem
-              onPress={() => setIsModalAddToZoneOpen(true)}
+              onPress={() => setRemoveFromZoneModalOpen(true)}
               key="removeFromZone"
               description="Eliminar de la zona de comparación"
               color="danger"
@@ -72,7 +75,7 @@ export const ProductDropdownMenu: React.FC<ProductDropdownMenuProps> = (
           )}
 
           <DropdownItem
-            onPress={() => setIsModalNewZoneOpen(true)}
+            onPress={() => setNewZoneModalOpen(true)}
             key="new"
             description="Crear nueva zona de comparación"
             color="primary"
@@ -92,8 +95,8 @@ export const ProductDropdownMenu: React.FC<ProductDropdownMenuProps> = (
 
       <NewZoneModal
         product={props.product}
-        isOpen={isModalNewZoneOpen}
-        onOpenChange={setIsModalNewZoneOpen}
+        isOpen={isNewZoneModalOpen}
+        onOpenChange={setNewZoneModalOpen}
       />
 
       <PriceByWeightCalculatorModal
@@ -104,8 +107,14 @@ export const ProductDropdownMenu: React.FC<ProductDropdownMenuProps> = (
 
       <AddToZoneWrapper
         product={props.product}
-        isOpen={isModalAddToZoneOpen}
-        onOpenChange={setIsModalAddToZoneOpen}
+        isOpen={isAddToZoneModalOpen}
+        onOpenChange={setAddToZoneModalOpen}
+      />
+
+      <RemoveFromZoneModal
+        product={props.product}
+        isOpen={isRemoveFromZoneModalOpen}
+        onOpenChange={setRemoveFromZoneModalOpen}
       />
     </>
   );

@@ -20,7 +20,7 @@ type Props = {
 export const ManageComparisonZone: React.FC<Props> = (props) => {
   const router = useRouter();
   const { data, error, isLoading } = useSWR(
-    `/comparison-zones/${props.id}/api/`,
+    `/api/comparison-zones/${props.id}/`,
     fetcher
   );
 
@@ -92,7 +92,7 @@ export const ManageComparisonZone: React.FC<Props> = (props) => {
                   color="primary"
                   variant="ghost"
                   onPress={() =>
-                    router.push(`/comparison-zones/${props.id}/add-product`)
+                    router.push(`/comparison-zones/${props.id}/comparison-product`)
                   }
                 >
                   Añadir producto

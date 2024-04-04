@@ -30,13 +30,13 @@ export const ComparisonCardMenu: React.FC<ComparisonCardMenuProps> = (
   const handleDelete = async () => {
     setIsLoading(true);
 
-    await fetch(`/comparison-zones/${props.comparisonZoneId}/api/`, {
+    await fetch(`/api/comparison-zones/${props.comparisonZoneId}/`, {
       method: "DELETE",
     })
       .then(() => {
         toast.success("Zona eliminada correctamente");
         setOpenDeleteModal(false);
-        mutate("/comparison-zones/api/");
+        mutate("/api/comparison-zones/");
       })
       .catch(() => {
         toast.error("Ha ocurrido un error al eliminar la Zona");

@@ -1,6 +1,5 @@
 import { ComparisonZoneContext } from "@/lib/context/ComparisonZoneContext";
 import { IProduct } from "@/lib/interfaces/IProduct";
-import { postFetcher } from "@/lib/utils/api/fetcher";
 import {
   Button,
   Modal,
@@ -10,7 +9,6 @@ import {
   ModalHeader,
 } from "@nextui-org/react";
 import React, { useContext, useState } from "react";
-import { toast } from "react-toastify";
 
 type Props = {
   product: IProduct;
@@ -18,21 +16,21 @@ type Props = {
   onOpenChange: ((isOpen: boolean) => void) | undefined;
 };
 
-export const AddToCurrentZoneModal: React.FC<Props> = (props) => {
+export const RemoveFromZoneModal: React.FC<Props> = (props) => {
   const comparisonZone = useContext(ComparisonZoneContext);
   const [isLoading, setIsLoading] = useState(false);
 
-  const addProduct = async () => {
-    setIsLoading(true);
-    await postFetcher(`/api/comparison-zones/${comparisonZone?.id}/`, {
-      product: props.product,
-    })
-      .then(() => {
-        if (props.onOpenChange) props.onOpenChange(false);
-        toast.success("El producto se ha añadido correctamente");
-      })
-      .catch(() => toast.error("Ha ocurrido un error al añadir el producto"))
-      .finally(() => setIsLoading(false));
+  const removeProduct = async () => {
+    // setIsLoading(true);
+    // await postFetcher(`/comparison-zones/${comparisonZone?.id}/api/`, {
+    //   product: props.product,
+    // })
+    //   .then(() => {
+    //     if (props.onOpenChange) props.onOpenChange(false);
+    //     toast.success("El producto se ha añadido correctamente");
+    //   })
+    //   .catch(() => toast.error("Ha ocurrido un error al añadir el producto"))
+    //   .finally(() => setIsLoading(false));
   };
 
   return (
@@ -46,10 +44,10 @@ export const AddToCurrentZoneModal: React.FC<Props> = (props) => {
         {(onClose) => (
           <>
             <ModalHeader className="flex flex-col gap-1">
-              Añadir producto
+              Eliminar producto
             </ModalHeader>
             <ModalBody>
-              <p>¿Desea añadir este producto a la zona de comparación?</p>
+              <p>¿Desea eliminar este producto de la zona de comparación?</p>
             </ModalBody>
             <ModalFooter>
               <Button
@@ -61,11 +59,11 @@ export const AddToCurrentZoneModal: React.FC<Props> = (props) => {
                 Cerrar
               </Button>
               <Button
-                color="primary"
-                onPress={addProduct}
+                color="danger"
+                onPress={removeProduct}
                 isLoading={isLoading}
               >
-                Añadir
+                Eliminar
               </Button>
             </ModalFooter>
           </>

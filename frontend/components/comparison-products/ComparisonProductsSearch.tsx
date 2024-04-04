@@ -20,7 +20,7 @@ export const ComparisonProductsSearch: React.FC<Props> = (props) => {
   const router = useRouter();
 
   const { data, error, isLoading } = useSWR(
-    `/comparison-zones/${props.zoneId}/api/`,
+    `/api/comparison-zones/${props.zoneId}/`,
     fetcher
   );
 

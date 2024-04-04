@@ -13,15 +13,16 @@ export const ComparisonProductsList: React.FC<Props> = (props) => {
     <div className="gap-4 flex flex-col sm:flex-row justify-evenly flex-wrap lg:columns-4 w-full">
       {props.comparisonZone.comparison_products?.map((product) => {
         return (
-          <ProductCard
-            key={product.product_id}
-            product={product}
-            hideSetPin
-          />
+          <ProductCard key={product.product_id} product={product} hideSetPin />
         );
       })}
     </div>
   ) : (
-    <EmptyMsg title="Listado vacío" message="No hay productos para comparar" />
+    <div className="w-full">
+      <EmptyMsg
+        title="Listado vacío"
+        message="No hay productos para comparar"
+      />
+    </div>
   );
 };
