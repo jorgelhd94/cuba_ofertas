@@ -34,6 +34,7 @@ export const AddToCurrentZoneModal: React.FC<Props> = (props) => {
         if (props.onOpenChange) props.onOpenChange(false);
         toast.success("El producto se ha añadido correctamente");
         mutate(`/api/comparison-zones/${comparisonZone?.id}/`);
+        mutate("/api/comparison-zones/");
       })
       .catch(() => toast.error("Ha ocurrido un error al añadir el producto"))
       .finally(() => setIsLoading(false));
