@@ -39,6 +39,56 @@ export const ProductDropdownMenu: React.FC<ProductDropdownMenuProps> = (
     );
   };
 
+  const manageProductInZone = !isProductInZone() ? (
+    <DropdownItem
+      onPress={() => setAddToZoneModalOpen(true)}
+      key="addToZone"
+      description="Añadir a zona de comparación"
+      color="secondary"
+    >
+      Añadir a comparar
+    </DropdownItem>
+  ) : (
+    <DropdownItem
+      onPress={() => setRemoveFromZoneModalOpen(true)}
+      key="removeFromZone"
+      description="Eliminar de la zona de comparación"
+      color="danger"
+    >
+      Eliminar de la zona
+    </DropdownItem>
+  );
+
+  const getMenuItems = () => {
+    const menu = [
+      <DropdownItem
+        onPress={() => setNewZoneModalOpen(true)}
+        key="new"
+        description="Crear nueva zona de comparación"
+        color="primary"
+      >
+        Nueva comparación
+      </DropdownItem>,
+
+      <DropdownItem
+        key="calculate_price_by_weight"
+        description="Calcular nuevo precio por peso"
+        color="warning"
+        onPress={() => setPriceCalculatorModalOpen(true)}
+      >
+        Calcular nuevo precio
+      </DropdownItem>,
+    ];
+
+    if (
+      comparisonZone &&
+      comparisonZone.main_product.product_id !== props.product.product_id
+    ) {
+      menu.unshift(manageProductInZone);
+    }
+    return menu;
+  };
+
   return (
     <>
       <Dropdown>
@@ -54,42 +104,7 @@ export const ProductDropdownMenu: React.FC<ProductDropdownMenuProps> = (
           </Button>
         </DropdownTrigger>
         <DropdownMenu aria-label="Static Actions">
-          {!isProductInZone() ? (
-            <DropdownItem
-              onPress={() => setAddToZoneModalOpen(true)}
-              key="addToZone"
-              description="Añadir a zona de comparación"
-              color="secondary"
-            >
-              Añadir a comparar
-            </DropdownItem>
-          ) : (
-            <DropdownItem
-              onPress={() => setRemoveFromZoneModalOpen(true)}
-              key="removeFromZone"
-              description="Eliminar de la zona de comparación"
-              color="danger"
-            >
-              Eliminar de la zona
-            </DropdownItem>
-          )}
-
-          <DropdownItem
-            onPress={() => setNewZoneModalOpen(true)}
-            key="new"
-            description="Crear nueva zona de comparación"
-            color="primary"
-          >
-            Nueva comparación
-          </DropdownItem>
-          <DropdownItem
-            key="calculate_price_by_weight"
-            description="Calcular nuevo precio por peso"
-            color="warning"
-            onPress={() => setPriceCalculatorModalOpen(true)}
-          >
-            Calcular nuevo precio
-          </DropdownItem>
+          {getMenuItems().map((item) => item)}
         </DropdownMenu>
       </Dropdown>
 

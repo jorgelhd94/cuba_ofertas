@@ -11,6 +11,7 @@ import {
 } from "@nextui-org/react";
 import React, { useContext, useState } from "react";
 import { toast } from "react-toastify";
+import useSWR, { useSWRConfig } from "swr";
 
 type Props = {
   product: IProduct;
@@ -22,6 +23,8 @@ export const AddToCurrentZoneModal: React.FC<Props> = (props) => {
   const comparisonZone = useContext(ComparisonZoneContext);
   const [isLoading, setIsLoading] = useState(false);
 
+  const { mutate } = useSWRConfig();
+
   const addProduct = async () => {
     setIsLoading(true);
     await postFetcher(`/api/comparison-zones/${comparisonZone?.id}/`, {
@@ -30,6 +33,7 @@ export const AddToCurrentZoneModal: React.FC<Props> = (props) => {
       .then(() => {
         if (props.onOpenChange) props.onOpenChange(false);
         toast.success("El producto se ha añadido correctamente");
+        mutate(`/api/comparison-zones/${comparisonZone?.id}/`);
       })
       .catch(() => toast.error("Ha ocurrido un error al añadir el producto"))
       .finally(() => setIsLoading(false));
