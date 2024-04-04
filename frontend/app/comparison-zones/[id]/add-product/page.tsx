@@ -1,6 +1,4 @@
 import { ComparisonProductsSearch } from "@/components/comparison-products/ComparisonProductsSearch";
-import { Button } from "@nextui-org/react";
-import { useRouter } from "next/navigation";
 
 export default async function AddProductToComparisonPage({
   params,

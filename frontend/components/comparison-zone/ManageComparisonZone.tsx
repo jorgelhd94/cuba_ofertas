@@ -2,7 +2,7 @@
 import { IComparisonZone } from "@/lib/interfaces/IComparisonZone";
 import { fetcher } from "@/lib/utils/api/fetcher";
 import { Button } from "@nextui-org/react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import useSWR from "swr";
 import { ComparisonProductsList } from "../comparison-products/ComparisonProductsList";
@@ -10,7 +10,8 @@ import { ProductCard } from "../products/ProductCard/ProductCard";
 import { ErrorMsg } from "../shared/messages/ErrorMsg/ErrorMsg";
 import { ComparisonZoneSkeleton } from "../shared/skeletons/ComparisonZoneSkeleton";
 import { DeleteComparisonZone } from "./DeleteComparisonZone";
-import { useRouter } from "next/navigation";
+import { PinProductContext } from "@/lib/context/PinProductContext";
+import { ComparisonZoneContext } from "@/lib/context/ComparisonZoneContext";
 
 type Props = {
   id: string | number;
@@ -97,8 +98,14 @@ export const ManageComparisonZone: React.FC<Props> = (props) => {
                   Añadir producto
                 </Button>
               </div>
-              <div className="flex justify-center border rounded-lg p-8">
-                <ComparisonProductsList comparisonZone={comparisonZone} />
+              <div className="flex border rounded-lg p-8">
+                <ComparisonZoneContext.Provider value={comparisonZone}>
+                  <PinProductContext.Provider
+                    value={{ pinProduct: comparisonZone.main_product }}
+                  >
+                    <ComparisonProductsList comparisonZone={comparisonZone} />
+                  </PinProductContext.Provider>
+                </ComparisonZoneContext.Provider>
               </div>
             </div>
           </div>

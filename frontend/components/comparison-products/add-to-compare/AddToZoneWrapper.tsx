@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
 import { AddToCurrentZoneModal } from "./AddToCurrentZoneModal";
 import { AddToSelectZoneModal } from "./AddToSelectZoneModal";
-import { ComparisonZoneIdContext } from "@/lib/context/ComparisonZoneIdContext";
 import { IProduct } from "@/lib/interfaces/IProduct";
+import { ComparisonZoneContext } from "@/lib/context/ComparisonZoneContext";
 
 type Props = {
   isOpen: boolean;
@@ -11,9 +11,9 @@ type Props = {
 };
 
 export const AddToZoneWrapper: React.FC<Props> = (props) => {
-  const zoneId = useContext(ComparisonZoneIdContext);
+  const comparisonZone = useContext(ComparisonZoneContext);
 
-  return zoneId ? (
+  return comparisonZone ? (
     <AddToCurrentZoneModal
       product={props.product}
       isOpen={props.isOpen}

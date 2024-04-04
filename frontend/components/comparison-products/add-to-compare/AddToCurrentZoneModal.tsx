@@ -1,4 +1,4 @@
-import { ComparisonZoneIdContext } from "@/lib/context/ComparisonZoneIdContext";
+import { ComparisonZoneContext } from "@/lib/context/ComparisonZoneContext";
 import { IProduct } from "@/lib/interfaces/IProduct";
 import { postFetcher } from "@/lib/utils/api/fetcher";
 import {
@@ -19,12 +19,12 @@ type Props = {
 };
 
 export const AddToCurrentZoneModal: React.FC<Props> = (props) => {
-  const zoneId = useContext(ComparisonZoneIdContext);
+  const comparisonZone = useContext(ComparisonZoneContext);
   const [isLoading, setIsLoading] = useState(false);
 
   const addProduct = async () => {
     setIsLoading(true);
-    await postFetcher(`/comparison-zones/${zoneId}/api/`, {
+    await postFetcher(`/comparison-zones/${comparisonZone?.id}/api/`, {
       product: props.product,
     })
       .then(() => {

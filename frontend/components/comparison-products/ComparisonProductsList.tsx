@@ -10,13 +10,12 @@ type Props = {
 export const ComparisonProductsList: React.FC<Props> = (props) => {
   return props.comparisonZone.comparison_products &&
     props.comparisonZone.comparison_products.length ? (
-    <div className="gap-4 flex flex-col sm:flex-row justify-evenly flex-wrap lg:columns-4">
+    <div className="gap-4 flex flex-col sm:flex-row justify-evenly flex-wrap lg:columns-4 w-full">
       {props.comparisonZone.comparison_products?.map((product) => {
         return (
           <ProductCard
             key={product.product_id}
             product={product}
-            hideMenu
             hideSetPin
           />
         );

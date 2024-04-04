@@ -10,7 +10,7 @@ import { IComparisonZone } from "@/lib/interfaces/IComparisonZone";
 import { ErrorMsg } from "../shared/messages/ErrorMsg/ErrorMsg";
 import { ProductCard } from "../products/ProductCard/ProductCard";
 import { PinProductContext } from "@/lib/context/PinProductContext";
-import { ComparisonZoneIdContext } from "@/lib/context/ComparisonZoneIdContext";
+import { ComparisonZoneContext } from "@/lib/context/ComparisonZoneContext";
 
 type Props = {
   zoneId: string;
@@ -77,9 +77,9 @@ export const ComparisonProductsSearch: React.FC<Props> = (props) => {
               value={{ pinProduct: comparisonZone.main_product }}
             >
               <HidePinProductContext.Provider value={true}>
-                <ComparisonZoneIdContext.Provider value={props.zoneId}>
+                <ComparisonZoneContext.Provider value={comparisonZone}>
                   <SearchComponent hideSaveSearch />
-                </ComparisonZoneIdContext.Provider>
+                </ComparisonZoneContext.Provider>
               </HidePinProductContext.Provider>
             </PinProductContext.Provider>
           </div>

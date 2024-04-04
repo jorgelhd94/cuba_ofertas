@@ -26,7 +26,7 @@ export const ComparisonZoneCard: React.FC<ComparisonZoneCardProps> = ({
       </CardBody>
       <CardFooter className="flex justify-center">
         <p className="font-medium">
-          Comparado con: {comparisonZone.comparison_products?.length} productos
+          Comparado con: <b>{comparisonZone.comparison_products?.length}</b> productos
         </p>
       </CardFooter>
     </Card>

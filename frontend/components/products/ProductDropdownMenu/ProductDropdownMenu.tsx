@@ -3,6 +3,7 @@ import { AddToZoneWrapper } from "@/components/comparison-products/add-to-compar
 import { NewZoneModal } from "@/components/comparison-zone/NewZoneModal/NewZoneModal";
 import { PriceByWeightCalculatorModal } from "@/components/price/PriceByWeightCalculator/PriceByWeightCalculatorModal";
 import { VerticalDots } from "@/components/shared/icons/VerticalDots";
+import { ComparisonZoneContext } from "@/lib/context/ComparisonZoneContext";
 import { IProduct } from "@/lib/interfaces/IProduct";
 import {
   Button,
@@ -11,7 +12,7 @@ import {
   DropdownMenu,
   DropdownTrigger,
 } from "@nextui-org/react";
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 type ProductDropdownMenuProps = {
   product: IProduct;
@@ -20,10 +21,20 @@ type ProductDropdownMenuProps = {
 export const ProductDropdownMenu: React.FC<ProductDropdownMenuProps> = (
   props
 ) => {
+  const comparisonZone = useContext(ComparisonZoneContext);
+
   const [isModalAddToZoneOpen, setIsModalAddToZoneOpen] = useState(false);
   const [isModalNewZoneOpen, setIsModalNewZoneOpen] = useState(false);
   const [isPriceCalculatorModalOpen, setPriceCalculatorModalOpen] =
     useState(false);
+
+  const isProductInZone = () => {
+    if (!comparisonZone || !comparisonZone.comparison_products) return false;
+
+    return comparisonZone.comparison_products.find(
+      (value) => value.product_id === props.product.product_id
+    );
+  };
 
   return (
     <>
@@ -40,14 +51,26 @@ export const ProductDropdownMenu: React.FC<ProductDropdownMenuProps> = (
           </Button>
         </DropdownTrigger>
         <DropdownMenu aria-label="Static Actions">
-          <DropdownItem
-            onPress={() => setIsModalAddToZoneOpen(true)}
-            key="add"
-            description="Añadir a zona de comparación"
-            color="secondary"
-          >
-            Añadir a comparar
-          </DropdownItem>
+          {!isProductInZone() ? (
+            <DropdownItem
+              onPress={() => setIsModalAddToZoneOpen(true)}
+              key="addToZone"
+              description="Añadir a zona de comparación"
+              color="secondary"
+            >
+              Añadir a comparar
+            </DropdownItem>
+          ) : (
+            <DropdownItem
+              onPress={() => setIsModalAddToZoneOpen(true)}
+              key="removeFromZone"
+              description="Eliminar de la zona de comparación"
+              color="danger"
+            >
+              Eliminar de la zona
+            </DropdownItem>
+          )}
+
           <DropdownItem
             onPress={() => setIsModalNewZoneOpen(true)}
             key="new"
