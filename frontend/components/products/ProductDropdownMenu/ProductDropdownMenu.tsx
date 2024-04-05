@@ -1,5 +1,5 @@
 "use client";
-import { AddToZoneWrapper } from "@/components/comparison-products/add-to-compare/AddToZoneWrapper";
+import { AddToZoneModal } from "@/components/comparison-products/add-to-compare/AddToZoneModal";
 import { RemoveFromZoneModal } from "@/components/comparison-products/RemoveFromZoneModal";
 import { NewZoneModal } from "@/components/comparison-zone/NewZoneModal/NewZoneModal";
 import { PriceByWeightCalculatorModal } from "@/components/price/PriceByWeightCalculator/PriceByWeightCalculatorModal";
@@ -82,10 +82,12 @@ export const ProductDropdownMenu: React.FC<ProductDropdownMenuProps> = (
 
     if (
       comparisonZone &&
-      comparisonZone.main_product.product_id !== props.product.product_id
+      comparisonZone.main_product.product_id === props.product.product_id
     ) {
-      menu.unshift(manageProductInZone);
+      return menu;
     }
+
+    menu.unshift(manageProductInZone);
     return menu;
   };
 
@@ -120,7 +122,7 @@ export const ProductDropdownMenu: React.FC<ProductDropdownMenuProps> = (
         onOpenChange={setPriceCalculatorModalOpen}
       />
 
-      <AddToZoneWrapper
+      <AddToZoneModal
         product={props.product}
         isOpen={isAddToZoneModalOpen}
         onOpenChange={setAddToZoneModalOpen}

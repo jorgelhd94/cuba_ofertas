@@ -1,4 +1,6 @@
 "use client";
+import { ComparisonZoneContext } from "@/lib/context/ComparisonZoneContext";
+import { PinProductContext } from "@/lib/context/PinProductContext";
 import { IComparisonZone } from "@/lib/interfaces/IComparisonZone";
 import { fetcher } from "@/lib/utils/api/fetcher";
 import { Button } from "@nextui-org/react";
@@ -10,8 +12,6 @@ import { ProductCard } from "../products/ProductCard/ProductCard";
 import { ErrorMsg } from "../shared/messages/ErrorMsg/ErrorMsg";
 import { ComparisonZoneSkeleton } from "../shared/skeletons/ComparisonZoneSkeleton";
 import { DeleteComparisonZone } from "./DeleteComparisonZone";
-import { PinProductContext } from "@/lib/context/PinProductContext";
-import { ComparisonZoneContext } from "@/lib/context/ComparisonZoneContext";
 
 type Props = {
   id: string | number;

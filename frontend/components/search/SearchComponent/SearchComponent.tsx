@@ -3,6 +3,7 @@ import { SearchForm } from "../SearchForm/SearchForm";
 import ProductGrid from "@/components/products/ProductGrid/ProductGrid";
 import { ISearchProducts } from "@/lib/interfaces/ISearchProducts";
 import { SaveBtn } from "@/components/shared/buttons/SaveBtn";
+import { ErrorMsg } from "@/components/shared/messages/ErrorMsg/ErrorMsg";
 
 type Props = {
   hideSaveSearch?: boolean;
@@ -10,6 +11,8 @@ type Props = {
 
 export const SearchComponent: React.FC<Props> = (props) => {
   const [loading, setLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+
   const [params, setParams] = useState({
     searchText: "",
     orderBy: -1,
@@ -64,6 +67,7 @@ export const SearchComponent: React.FC<Props> = (props) => {
     orderby?: number
   ) => {
     setLoading(true);
+    setIsError(false);
 
     const urlSearchParams = getSearchParams(text, pagination, orderby);
 
@@ -82,7 +86,7 @@ export const SearchComponent: React.FC<Props> = (props) => {
 
       setSearchResults(data);
     } catch (error) {
-      console.log("error");
+      setIsError(true);
     } finally {
       setLoading(false);
     }
@@ -109,6 +113,8 @@ export const SearchComponent: React.FC<Props> = (props) => {
         handleSearch={handleSearch}
         handleProductMode={handleProductMode}
       />
+
+      {isError && <ErrorMsg />}
     </div>
   );
 };
