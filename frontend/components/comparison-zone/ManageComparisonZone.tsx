@@ -74,7 +74,7 @@ export const ManageComparisonZone: React.FC<Props> = (props) => {
           <hr />
 
           <div className="flex max-sm:flex-col pt-4 gap-8">
-            <div className="text-center space-y-2 sticky top-16 z-50">
+            <div className="text-center space-y-2 sticky top-16 z-50 h-max">
               <h3 className="text-xl font-medium max-sm:hidden">
                 Producto principal
               </h3>
