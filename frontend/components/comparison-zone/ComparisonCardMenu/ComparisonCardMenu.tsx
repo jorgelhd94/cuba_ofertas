@@ -61,16 +61,6 @@ export const ComparisonCardMenu: React.FC<ComparisonCardMenuProps> = (
         </DropdownTrigger>
         <DropdownMenu aria-label="Static Actions">
           <DropdownItem
-            key="manage"
-            description="Administrar zona de comparación"
-            color="secondary"
-            onPress={() =>
-              router.push("/comparison-zones/" + props.comparisonZoneId)
-            }
-          >
-            Administrar
-          </DropdownItem>
-          <DropdownItem
             key="delete"
             description="Eliminar zona de comparación"
             color="danger"
