@@ -10,6 +10,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from common.libs.selenium import SeleniumDriver
 from common.libs import scraper
 
+from .tasks import update_database_sm23
+
 class SearchView(APIView):
     def get(self, request):
         total = 0
@@ -50,3 +52,8 @@ class SearchView(APIView):
             seleniumDriver.quit()
         
         return Response({"total": total, "page_amount_text": page_amount_text, "products": products})
+
+
+class UpdateDatabaseView(APIView):
+    def get(self, request):       
+        return Response({"msg": update_database_sm23()})

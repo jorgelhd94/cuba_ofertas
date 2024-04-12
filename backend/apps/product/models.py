@@ -4,6 +4,8 @@ class Manufacture(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255, null=True)
     url = models.CharField(max_length=255, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = 'manufacture'
@@ -20,6 +22,8 @@ class Product(models.Model):
     currency = models.CharField(max_length=255, null=True)
     price_by_weight = models.FloatField(null=True)
     currency_by_weight = models.CharField(max_length=255, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = 'product'

@@ -34,7 +34,7 @@ function NavbarHome() {
 
   const menuItems = [
     { url: "/comparison-zones", name: "Zonas de comparación" },
-    { url: "/", name: "Búsquedas guardadas" },
+    { url: "/search/all", name: "Búsquedas guardadas" },
   ];
 
   return (
