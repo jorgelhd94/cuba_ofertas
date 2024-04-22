@@ -1,5 +1,10 @@
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.common.by import By
+from common.libs.selenium import SeleniumDriver
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+import re
+
 
 def check_if_search_not_found(page_html: WebElement):
     try:
@@ -50,6 +55,34 @@ def get_product_data(product_html: WebElement):
             "currency": price[1],
             "price_by_weight": price_by_weight,
             "currency_by_weight": currency_by_weight
+    }
+
+
+def get_product_meta(seleniumDriver: SeleniumDriver, product_id: str):
+    driver = seleniumDriver.get_driver(f"producto/{product_id}")
+    WebDriverWait(driver, 120).until(
+        EC.presence_of_element_located((By.CLASS_NAME, "product_meta"))
+        )
+
+    categoria_elemento = driver.find_element(By.XPATH, '//span[@itemtype="https://schema.org/CategoryCode"]')
+    categoria_url = categoria_elemento.find_element(By.TAG_NAME, 'a').get_attribute("href")
+
+    categoria = {
+        "category_id": categoria_url.split("/")[-1],
+        "name": re.search(r'Categoría: (.*)', categoria_elemento.text).group(1),
+        "url": categoria_url
+    }
+
+    proveedor_elemento = driver.find_element(By.XPATH, '//span[contains(text(), "Proveedor")]')
+    proveedor_url = proveedor_elemento.find_element(By.TAG_NAME, 'a').get_attribute("href")
+
+    proveedor = {
+        "name": re.search(r'Proveedor: (.*)', proveedor_elemento.text).group(1),
+        "url": proveedor_url
+    }
+
+    return {
+        "category": categoria, "provider": proveedor
     }
 
 

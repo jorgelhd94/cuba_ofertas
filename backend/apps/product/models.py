@@ -1,4 +1,4 @@
-from django.db import models, IntegrityError
+from django.db import models
 
 class Manufacture(models.Model):
     id = models.AutoField(primary_key=True)
@@ -11,10 +11,35 @@ class Manufacture(models.Model):
         db_table = 'manufacture'
 
 
+class Provider(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=255, null=True)
+    url = models.CharField(max_length=255, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'provider'
+
+
+class Category(models.Model):
+    id = models.AutoField(primary_key=True)
+    category_id = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, null=True)
+    url = models.CharField(max_length=255, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'category'
+
+
 class Product(models.Model):
     id = models.AutoField(primary_key=True)
-    product_id = models.CharField(max_length=24)
+    product_id = models.CharField(max_length=255)
     manufacture = models.ForeignKey(Manufacture, on_delete=models.CASCADE)
+    provider = models.ForeignKey(Provider, on_delete=models.CASCADE, null=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True)
     name = models.CharField(max_length=255, null=True)
     product_url = models.CharField(max_length=255, null=True)
     image_url = models.CharField(max_length=255, null=True)

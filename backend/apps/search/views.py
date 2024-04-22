@@ -10,7 +10,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from common.libs.selenium import SeleniumDriver
 from common.libs import scraper
 
-from .tasks import update_database_sm23
+from .tasks import update_database_sm23, update_product_meta
 
 class SearchView(APIView):
     def get(self, request):
