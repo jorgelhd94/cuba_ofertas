@@ -1,17 +1,29 @@
 from rest_framework import serializers
-from .models import Product, Manufacture, ComparisonZone
+from .models import Product, Manufacture, ComparisonZone, Provider, Category
 
 class ManufactureSerializer(serializers.ModelSerializer):
     class Meta:
         model = Manufacture
         fields = ['id', 'name', 'url']
 
+class ProviderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Provider
+        fields = ['id', 'name', 'url']
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ['id', 'category_id', 'name', 'url']
+
 class ProductSerializer(serializers.ModelSerializer):
     manufacture = ManufactureSerializer()
+    category = CategorySerializer()
+    provider = ProviderSerializer()
 
     class Meta:
         model = Product
-        fields = ['id', 'product_id', 'manufacture', 'name', 'product_url', 'image_url', 'current_price', 'currency', 'price_by_weight', 'currency_by_weight']
+        fields = '__all__'
     
     def create(self, validated_data):
         manufacture_data = validated_data.pop('manufacture')
