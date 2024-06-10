@@ -144,5 +144,5 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CRONJOBS = [
-    ('50 22 * * *', 'apps.search.tasks.update_database_sm23'),
+    ('10 23 * * *', 'apps.search.tasks.update_database_sm23'),
 ]
