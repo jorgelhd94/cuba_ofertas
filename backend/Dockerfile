@@ -12,9 +12,9 @@ COPY . /backend
 # Actualizar la lista de paquetes e instalar dependencias necesarias
 RUN apt-get update -y && apt-get install -y wget xvfb unzip
 
-ENV CHROME_VERSION 127.0.6532.0
+ENV CHROME_VERSION 114.0.5735.90
 
-RUN wget --no-verbose -O /tmp/chrome.deb https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_${CHROME_VERSION}-1_amd64.deb \
+RUN wget --no-verbose -O /tmp/chrome.deb https://mirror.cs.uchicago.edu/google-chrome/pool/main/g/google-chrome-stable/google-chrome-stable_${CHROME_VERSION}-1_amd64.deb \
  && apt install -y /tmp/chrome.deb \
  && rm /tmp/chrome.deb
 
@@ -24,7 +24,7 @@ ENV CHROMEDRIVER_DIR /chromedriver
 # Crear el directorio para ChromeDriver
 RUN mkdir $CHROMEDRIVER_DIR
 
-# Descargar e instalar ChromeDriver
+# Descargar e instalar ChromeDriver 114.0.5735.90
 RUN wget -q --continue -P $CHROMEDRIVER_DIR "http://chromedriver.storage.googleapis.com/$CHROME_VERSION/chromedriver_linux64.zip" && \
     unzip $CHROMEDRIVER_DIR/chromedriver* -d $CHROMEDRIVER_DIR
 
