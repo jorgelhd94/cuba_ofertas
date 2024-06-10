@@ -7,7 +7,8 @@ class SeleniumDriver:
     def __init__(self):    
         # Configuración de Chrome en modo headless
         chrome_options = Options()
-        # chrome_options.add_argument("--headless")
+        # TODO: Decomentar debajo cuando pase a produccion
+        chrome_options.add_argument("--headless")
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument('--disable-blink-features=AutomationControlled')

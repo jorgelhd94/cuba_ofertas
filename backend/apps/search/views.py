@@ -8,7 +8,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 from common.libs.selenium import SeleniumDriver
-from common.libs import scraper
+from common.libs import scraper_sm23
 
 from .tasks import update_database_sm23, update_product_meta
 
@@ -37,14 +37,14 @@ class SearchView(APIView):
                 EC.presence_of_element_located((By.TAG_NAME, "app-product-block-v"))
             )
 
-            if not scraper.check_if_search_not_found(driver):
+            if not scraper_sm23.check_if_search_not_found(driver):
                 products_html = driver.find_elements(By.TAG_NAME, "app-product-block-v")
                 
-                page_amount_text = scraper.get_page_amount_text(driver)
-                total = scraper.get_page_amount(driver)
+                page_amount_text = scraper_sm23.get_page_amount_text(driver)
+                total = scraper_sm23.get_page_amount(driver)
 
                 for product in products_html:
-                    products.append(scraper.get_product_data(product))
+                    products.append(scraper_sm23.get_product_data(product))
         except Exception as e:
             print("Ocurrió un error:", e)
             raise APIException({"detail": str(e)}, code=status.HTTP_500_INTERNAL_SERVER_ERROR)

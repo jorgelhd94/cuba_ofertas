@@ -3,9 +3,11 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 from common.libs.selenium import SeleniumDriver
-from common.libs import scraper
+from common.libs import scraper_sm23
 
 from apps.product.models import Product, Manufacture, Category, Provider
+
+from django.utils import timezone
 
 
 def update_database_sm23():   
@@ -13,15 +15,15 @@ def update_database_sm23():
     base_url = "productos"
 
     try:
-        # now = timezone.now()
-        # total, first_20 = create_first_20(seleniumDriver, base_url)
+        now = timezone.now()
+        total, first_20 = create_first_20(seleniumDriver, base_url)
 
-        # if not total: return {"total": 0, "products": []}
+        if not total: return {"total": 0, "products": []}
 
-        # create_or_update_products(seleniumDriver, base_url, first_20)
+        create_or_update_products(seleniumDriver, base_url, first_20)
 
-        # filter_products = Product.objects.filter(updated_at__lt=now)
-        # filter_products.delete()
+        filter_products = Product.objects.filter(updated_at__lt=now)
+        filter_products.delete()
 
         update_product_meta(seleniumDriver)
 
@@ -40,12 +42,12 @@ def create_first_20(seleniumDriver: SeleniumDriver, base_url: str):
         EC.presence_of_element_located((By.TAG_NAME, "app-product-block-v"))
     )
 
-    total = scraper.get_total(driver)
+    total = scraper_sm23.get_total(driver)
 
     products_html = driver.find_elements(By.TAG_NAME, "app-product-block-v")
     
     for product_html in products_html:
-        product_id, product_data = scraper.get_product_data(product_html)
+        product_id, product_data = scraper_sm23.get_product_data(product_html)
         
         first_20.append(product_id)
 
@@ -86,7 +88,7 @@ def create_or_update_products(seleniumDriver: SeleniumDriver, base_url: str, fir
         count = 0
 
         for product_html in products_html:
-            product_id, product_data = scraper.get_product_data(product_html)
+            product_id, product_data = scraper_sm23.get_product_data(product_html)
 
             if product_id in first_20:
                 # Si el producto se encuentra en los primeros 20
@@ -108,7 +110,7 @@ def create_or_update_products(seleniumDriver: SeleniumDriver, base_url: str, fir
 
             create_product_and_manufacture(product_id, product_data)
             
-        # En caso de que este en la primera pagina
+        # En caso de que esté en la primera pagina
         # pero el orden actual sea de menor a mayor
         # se cambia el orden de mayor a menor
         # En caso contrario se finaliza el bucle
@@ -119,7 +121,7 @@ def create_or_update_products(seleniumDriver: SeleniumDriver, base_url: str, fir
             continue
         
         # TODO: Cambiar a 1 al terminar
-        current_page += 500
+        current_page += 1
 
 
 def create_product_and_manufacture(product_id: str, product_data: dict):
@@ -132,14 +134,13 @@ def update_product_meta(seleniumDriver: SeleniumDriver):
     products = Product.objects.all()
 
     for product in products:
-        product_meta = scraper.get_product_meta(seleniumDriver, product.product_id)
+        product_meta = scraper_sm23.get_product_meta(seleniumDriver, product.product_id)
         category, provider = create_update_product_meta(product_meta)
 
         product.category = category
         product.provider = provider
 
         product.save()
-        break
 
 
 def create_update_product_meta(product_meta: dict):
