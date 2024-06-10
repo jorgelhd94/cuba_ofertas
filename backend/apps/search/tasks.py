@@ -6,6 +6,7 @@ from common.libs.selenium import SeleniumDriver
 from common.libs import scraper_sm23
 
 from apps.product.models import Product, Manufacture, Category, Provider
+from apps.statistics_spy.models import ProductsUpdateLogs
 
 from django.utils import timezone
 
@@ -14,29 +15,56 @@ def update_database_sm23():
     seleniumDriver = SeleniumDriver()
     base_url = "productos"
 
+    now = timezone.now()
+    
+    update = ProductsUpdateLogs(
+        start_time=now,
+        status='processing'
+    )
+    update.save()
+    
     try:
-        now = timezone.now()
+        new_products_count = 0
+        updated_products_count = 0
+
         total, first_20 = create_first_20(seleniumDriver, base_url)
 
         if not total: return {"total": 0, "products": []}
 
         create_or_update_products(seleniumDriver, base_url, first_20)
-
-        filter_products = Product.objects.filter(updated_at__lt=now)
-        filter_products.delete()
-
         update_product_meta(seleniumDriver)
+
+        new_products = Product.objects.filter(created_at__gte=now)
+        new_products_count = new_products.count()
+
+        updated_products = Product.objects.filter(updated_at__gte=now).exclude(created_at=now)
+        updated_products_count = updated_products.count()
+
+        deleted_products = Product.objects.filter(updated_at__lt=now)
+        deleted_products_count = deleted_products.count()
+        deleted_products.delete()
+
+        update.end_time = timezone.now()
+        update.status = 'success'
+        update.new_products_count = new_products_count
+        update.updated_products_count = updated_products_count
+        update.deleted_products_count = deleted_products_count
 
     except Exception as e:
         print("Ocurrió un error:", e)
+        update.end_time = timezone.now()
+        update.status = 'error'
+        update.note = str(e)
     finally:
         seleniumDriver.quit()
+        update.save()
 
     return {"total": 0, "deleted_products": []}
 
 
 def create_first_20(seleniumDriver: SeleniumDriver, base_url: str):
     first_20 = []
+
     driver = seleniumDriver.get_driver(base_url)
     WebDriverWait(driver, 120).until(
         EC.presence_of_element_located((By.TAG_NAME, "app-product-block-v"))
@@ -87,6 +115,7 @@ def create_or_update_products(seleniumDriver: SeleniumDriver, base_url: str, fir
 
         count = 0
 
+
         for product_html in products_html:
             product_id, product_data = scraper_sm23.get_product_data(product_html)
 
@@ -121,8 +150,7 @@ def create_or_update_products(seleniumDriver: SeleniumDriver, base_url: str, fir
             continue
         
         # TODO: Cambiar a 1 al terminar
-        current_page += 1
-
+        current_page += 500
 
 def create_product_and_manufacture(product_id: str, product_data: dict):
     manufacture_data = product_data.pop("manufacture", None)
