@@ -66,6 +66,7 @@ def get_product_meta(seleniumDriver: SeleniumDriver, product_id: str):
             EC.presence_of_element_located((By.CLASS_NAME, "product_meta"))
             )
     except:
+        print("Error Actualizando meta de producto: " + product_id)
         return {
             "category": None, "provider": None
         }
@@ -86,6 +87,8 @@ def get_product_meta(seleniumDriver: SeleniumDriver, product_id: str):
         "name": re.search(r'Proveedor: (.*)', proveedor_elemento.text).group(1),
         "url": proveedor_url
     }
+
+    print("Actualizando meta de producto: " + product_id)
 
     return {
         "category": categoria, "provider": proveedor

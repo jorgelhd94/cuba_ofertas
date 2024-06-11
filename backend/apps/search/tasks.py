@@ -180,8 +180,14 @@ def update_product_meta(seleniumDriver: SeleniumDriver):
 
 
 def create_update_product_meta(product_meta: dict):
-    category, created = Category.objects.update_or_create(**product_meta["category"])
-    provider, created = Provider.objects.update_or_create(**product_meta["provider"])
+    category = product_meta["category"]
+    provider = product_meta["provider"]
+
+    if(category):
+        category, created = Category.objects.update_or_create(**product_meta["category"])
+    
+    if(provider):
+        provider, created = Provider.objects.update_or_create(**product_meta["provider"])
 
     return category, provider
 
