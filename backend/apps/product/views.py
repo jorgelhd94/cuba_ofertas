@@ -4,10 +4,12 @@ from rest_framework.decorators import action
 from rest_framework.exceptions import status
 from .models import Product, Manufacture, ComparisonZone
 from .serializers import ProductSerializer, ManufactureSerializer, ComparisonZoneSerializer
+from common.configuration.pagination import StandardResultsSetPagination 
 
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+    pagination_class = StandardResultsSetPagination
 
 class ManufactureViewSet(viewsets.ModelViewSet):
     queryset = Manufacture.objects.all()

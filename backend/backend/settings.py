@@ -146,3 +146,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CRONJOBS = [
     ('10 23 * * *', 'apps.search.tasks.update_database_sm23'),
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,  # Número de elementos por página
+}

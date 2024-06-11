@@ -23,41 +23,41 @@ def update_database_sm23():
     )
     update.save()
     
-    try:
-        new_products_count = 0
-        updated_products_count = 0
+    # try:
+    new_products_count = 0
+    updated_products_count = 0
 
-        total, first_20 = create_first_20(seleniumDriver, base_url)
+    total, first_20 = create_first_20(seleniumDriver, base_url)
 
-        if not total: return {"total": 0, "products": []}
+    if not total: return {"total": 0, "products": []}
 
-        create_or_update_products(seleniumDriver, base_url, first_20)
-        update_product_meta(seleniumDriver)
+    create_or_update_products(seleniumDriver, base_url, first_20)
+    update_product_meta(seleniumDriver)
 
-        new_products = Product.objects.filter(created_at__gte=now)
-        new_products_count = new_products.count()
+    new_products = Product.objects.filter(created_at__gte=now)
+    new_products_count = new_products.count()
 
-        updated_products = Product.objects.filter(updated_at__gte=now).exclude(created_at=now)
-        updated_products_count = updated_products.count()
+    updated_products = Product.objects.filter(updated_at__gte=now).exclude(created_at=now)
+    updated_products_count = updated_products.count()
 
-        deleted_products = Product.objects.filter(updated_at__lt=now)
-        deleted_products_count = deleted_products.count()
-        deleted_products.delete()
+    deleted_products = Product.objects.filter(updated_at__lt=now)
+    deleted_products_count = deleted_products.count()
+    deleted_products.delete()
 
-        update.end_time = timezone.now()
-        update.status = 'success'
-        update.new_products_count = new_products_count
-        update.updated_products_count = updated_products_count
-        update.deleted_products_count = deleted_products_count
+    update.end_time = timezone.now()
+    update.status = 'success'
+    update.new_products_count = new_products_count
+    update.updated_products_count = updated_products_count
+    update.deleted_products_count = deleted_products_count
 
-    except Exception as e:
-        print("Ocurrió un error:", e)
-        update.end_time = timezone.now()
-        update.status = 'error'
-        update.note = str(e)
-    finally:
-        seleniumDriver.quit()
-        update.save()
+    # except Exception as e:
+    #     print("Ocurrió un error:", e)
+    #     update.end_time = timezone.now()
+    #     update.status = 'error'
+    #     update.note = str(e)
+    # finally:
+    seleniumDriver.quit()
+    update.save()
 
     return {"total": 0, "deleted_products": []}
 
