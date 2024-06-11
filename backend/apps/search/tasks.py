@@ -40,7 +40,7 @@ def update_database_sm23():
 
         deleted_products = Product.objects.filter(updated_at__lt=now)
         deleted_products_count = deleted_products.count()
-        deleted_products.delete()
+        # deleted_products.delete()
 
         update.end_time = timezone.now()
         update.status = 'success'

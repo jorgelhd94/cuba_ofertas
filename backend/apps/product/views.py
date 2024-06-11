@@ -2,8 +2,8 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.exceptions import status
-from .models import Product, Manufacture, ComparisonZone
-from .serializers import ProductSerializer, ManufactureSerializer, ComparisonZoneSerializer
+from .models import Product, Manufacture, ComparisonZone, Category, Provider
+from .serializers import ProductSerializer, ManufactureSerializer, ComparisonZoneSerializer, CategorySerializer, ProviderSerializer
 from common.configuration.pagination import StandardResultsSetPagination 
 
 class ProductViewSet(viewsets.ModelViewSet):
@@ -11,14 +11,27 @@ class ProductViewSet(viewsets.ModelViewSet):
     serializer_class = ProductSerializer
     pagination_class = StandardResultsSetPagination
 
+
 class ManufactureViewSet(viewsets.ModelViewSet):
     queryset = Manufacture.objects.all()
     serializer_class = ManufactureSerializer
+    pagination_class = StandardResultsSetPagination
 
+
+class CategoryViewSet(viewsets.ModelViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+    pagination_class = StandardResultsSetPagination
+
+class ProviderViewSet(viewsets.ModelViewSet):
+    queryset = Provider.objects.all()
+    serializer_class = ProviderSerializer
+    pagination_class = StandardResultsSetPagination
 
 class ComparisonZoneViewSet(viewsets.ModelViewSet):
     queryset = ComparisonZone.objects.all()
     serializer_class = ComparisonZoneSerializer
+    pagination_class = StandardResultsSetPagination
 
     @action(detail=True, methods=['post'])
     def add_product_to_compare(self, request, pk):
