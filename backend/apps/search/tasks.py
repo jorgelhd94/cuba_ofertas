@@ -139,7 +139,7 @@ def create_or_update_products(seleniumDriver: SeleniumDriver, base_url: str, fir
 
             product_id_list.append(product_id)
 
-            print("Creando producto: " + product_id)
+            print("Procesando producto: " + product_id)
 
             create_product_and_manufacture(product_id, product_data)
             

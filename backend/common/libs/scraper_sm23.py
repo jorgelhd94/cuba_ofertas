@@ -60,9 +60,15 @@ def get_product_data(product_html: WebElement):
 
 def get_product_meta(seleniumDriver: SeleniumDriver, product_id: str):
     driver = seleniumDriver.get_driver(f"producto/{product_id}")
-    WebDriverWait(driver, 120).until(
-        EC.presence_of_element_located((By.CLASS_NAME, "product_meta"))
-        )
+
+    try:
+        WebDriverWait(driver, 120).until(
+            EC.presence_of_element_located((By.CLASS_NAME, "product_meta"))
+            )
+    except:
+        return {
+            "category": None, "provider": None
+        }
 
     categoria_elemento = driver.find_element(By.XPATH, '//span[@itemtype="https://schema.org/CategoryCode"]')
     categoria_url = categoria_elemento.find_element(By.TAG_NAME, 'a').get_attribute("href")
