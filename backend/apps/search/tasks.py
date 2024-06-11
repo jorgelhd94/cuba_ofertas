@@ -85,12 +85,10 @@ def test_auth():
         login_button.click()
 
         time.sleep(4)
-
-
     except Exception as e:
         print("Ocurrió un error:", e)
-
-    seleniumDriver.quit()
+    finally:
+        seleniumDriver.quit()
 
 
 def update_product_meta_sm23(seleniumDriver):

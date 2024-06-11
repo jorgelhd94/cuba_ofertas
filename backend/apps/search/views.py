@@ -59,5 +59,6 @@ class UpdateDatabaseView(APIView):
         return Response({"msg": update_database_sm23()})
 
 class TestAuthView(APIView):
-    def get(self, request):       
-        return Response({"msg": test_auth()})
+    def get(self, request):     
+        test_auth()  
+        return Response({"msg": "Autenticacion ok"})
