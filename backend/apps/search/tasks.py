@@ -131,6 +131,7 @@ def create_or_update_products(seleniumDriver: SeleniumDriver, base_url: str, fir
                 exists_product = count == 20
                 continue
             elif product_id in product_id_list:
+                print("Se encontro un producto repetido: " + product_id)
                 # En caso de que el producto no este en los primeros 20,
                 # pero si en la lista de productos creados o actualizados,
                 # entonces se termina el loop debido que se encontraron todos
