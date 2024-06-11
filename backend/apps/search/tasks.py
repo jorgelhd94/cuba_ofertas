@@ -11,7 +11,8 @@ from apps.statistics_spy.models import ProductsUpdateLogs
 from django.utils import timezone
 
 
-def update_database_sm23():   
+def update_database_sm23():
+    print("Iniciando...")
     seleniumDriver = SeleniumDriver()
     base_url = "productos"
 
@@ -56,6 +57,7 @@ def update_database_sm23():
     #     update.status = 'error'
     #     update.note = str(e)
     # finally:
+    print("Terminado")
     seleniumDriver.quit()
     update.save()
 
@@ -136,6 +138,8 @@ def create_or_update_products(seleniumDriver: SeleniumDriver, base_url: str, fir
                 break
 
             product_id_list.append(product_id)
+
+            print("Creando producto: " + product_id)
 
             create_product_and_manufacture(product_id, product_data)
             
