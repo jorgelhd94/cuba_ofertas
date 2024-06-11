@@ -1,6 +1,11 @@
-from django.urls import path
-from .views import ProductsUpdateLogsListAPIView
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .views import ProductsUpdateLogsViewSet
+
+router = DefaultRouter()
+router.register(r'update-logs', ProductsUpdateLogsViewSet)
 
 urlpatterns = [
-    path('products-update-logs/', ProductsUpdateLogsListAPIView.as_view(), name='products_update_logs_list'),
+    path('', include(router.urls)),
 ]
+
