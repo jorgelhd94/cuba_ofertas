@@ -157,7 +157,7 @@ def create_or_update_products(seleniumDriver: SeleniumDriver, base_url: str, fir
             continue
         
         # TODO: Cambiar a 1 al terminar
-        print("Pagina actual: " + current_page)
+        print("Pagina actual: " + str(current_page))
         current_page += 1
 
 def create_product_and_manufacture(product_id: str, product_data: dict):
