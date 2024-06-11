@@ -33,7 +33,7 @@ def update_database_sm23():
     if not total: return {"total": 0, "products": []}
 
     create_or_update_products(seleniumDriver, base_url, first_20)
-    update_product_meta(seleniumDriver)
+    # update_product_meta(seleniumDriver)
 
     new_products = Product.objects.filter(created_at__gte=now)
     new_products_count = new_products.count()
@@ -142,7 +142,7 @@ def create_or_update_products(seleniumDriver: SeleniumDriver, base_url: str, fir
                 # entonces se termina el loop debido a que se encontraron todos
                 # los productos
 
-                if(count_repeated == 3):
+                if(count_repeated == 10):
                     exists_product = True
                     break
 
