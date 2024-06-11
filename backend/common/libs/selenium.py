@@ -17,9 +17,24 @@ class SeleniumDriver:
         self.driver = webdriver.Chrome(options=chrome_options)
     
     def get_driver(self, endpoint: str):
-        # Navega a una página web
-        self.driver.get(self.base_url + endpoint)
+        try:
+            self.driver.get(self.base_url + endpoint)
+        except Exception as e:
+            print(f"Error: {e}")
+            self.restart_driver()
+            self.driver.get(self.base_url + endpoint)
+        
         return self.driver
     
     def quit(self):
         self.driver.quit()
+    
+    def restart_driver(self):
+        # Cerrar el controlador actual y reiniciarlo
+        try:
+            quit()
+        except Exception as e:
+            print(f"Error al cerrar el driver: {e}")
+
+        self.driver = self._init_driver()
+        
