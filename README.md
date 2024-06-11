@@ -113,4 +113,9 @@ git clone https://github.com/alesarmiento/spySM23.git
 
 ## Iniciar aplicaciones
 
+**Antes de empezar:** En caso de vaya a actualizar las aplicaciones y no haya espacio suficiente, utilice el siguiente comando que borra todo el contenido sin usar por Docker.
+```
+sudo docker system prune
+```
+
 Para iniciar ambas aplicaciones diríjase al archivo **./Readme** de cada una, carpeta **./frontend** y **./backend** respectivamente.
