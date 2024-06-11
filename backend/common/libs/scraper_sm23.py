@@ -59,9 +59,8 @@ def get_product_data(product_html: WebElement):
 
 
 def get_product_meta(seleniumDriver: SeleniumDriver, product_id: str):
-    driver = seleniumDriver.get_driver(f"producto/{product_id}")
-
     try:
+        driver = seleniumDriver.get_driver(f"producto/{product_id}")
         WebDriverWait(driver, 60).until(
             EC.presence_of_element_located((By.CLASS_NAME, "product_meta"))
             )

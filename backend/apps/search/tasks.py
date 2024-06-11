@@ -130,8 +130,7 @@ def create_or_update_products(seleniumDriver: SeleniumDriver, base_url: str, fir
                 count += 1
                 exists_product = count == 20
                 continue
-
-            if product_id in product_id_list:
+            elif product_id in product_id_list:
                 # En caso de que el producto no este en los primeros 20,
                 # pero si en la lista de productos creados o actualizados,
                 # entonces se termina el loop debido que se encontraron todos
@@ -157,7 +156,7 @@ def create_or_update_products(seleniumDriver: SeleniumDriver, base_url: str, fir
             continue
         
         # TODO: Cambiar a 1 al terminar
-        print("Pagina actual: " + str(current_page))
+        print("Pagina procesada: " + str(current_page))
         current_page += 1
 
 def create_product_and_manufacture(product_id: str, product_data: dict):
