@@ -116,6 +116,7 @@ def create_or_update_products(seleniumDriver: SeleniumDriver, base_url: str, fir
 
         products_html = driver.find_elements(By.TAG_NAME, "app-product-block-v")
         count = 0
+        count_repeated = 0
 
         for product_html in products_html:
             product_id, product_data = scraper_sm23.get_product_data(product_html)
@@ -134,13 +135,18 @@ def create_or_update_products(seleniumDriver: SeleniumDriver, base_url: str, fir
                 continue
 
             if product_id in product_id_list:
+                count_repeated += 1
                 print(f"Se encontró un producto repetido: {product_id}")
                 # En caso de que el producto no esté en los primeros 20,
                 # pero sí en la lista de productos creados o actualizados,
                 # entonces se termina el loop debido a que se encontraron todos
                 # los productos
-                exists_product = True
-                break
+
+                if(count_repeated == 3):
+                    exists_product = True
+                    break
+
+                continue
 
             product_id_list.append(product_id)
 
