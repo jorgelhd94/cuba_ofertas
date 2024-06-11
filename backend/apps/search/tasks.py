@@ -109,6 +109,8 @@ def create_or_update_products(seleniumDriver: SeleniumDriver, base_url: str, fir
         # Se va a la primera pagina ordenado de menor a mayor
         driver = seleniumDriver.get_driver(f"{base_url}?pagina={str(current_page)}&orden={str(orderBy)}")
 
+        print("URL: " f"{base_url}?pagina={str(current_page)}&orden={str(orderBy)}")
+
         WebDriverWait(driver, 120).until(
             EC.presence_of_element_located((By.TAG_NAME, "app-product-block-v"))
         )
@@ -148,12 +150,14 @@ def create_or_update_products(seleniumDriver: SeleniumDriver, base_url: str, fir
         # se cambia el orden de mayor a menor
         # En caso contrario se finaliza el bucle
         if exists_product and orderBy == 0:
+            print("Cambio de orden: De mayor a menor precio")
             current_page = 1
             orderBy = 1
             exists_product = False
             continue
         
         # TODO: Cambiar a 1 al terminar
+        print("Pagina actual: " + current_page)
         current_page += 1
 
 def create_product_and_manufacture(product_id: str, product_data: dict):
