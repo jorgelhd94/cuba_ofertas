@@ -144,7 +144,7 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CRONJOBS = [
-    ('10 23 * * *', 'apps.search.tasks.update_database_sm23'),
+    ('0 4 * * *', 'apps.search.tasks.update_database_sm23'),
 ]
 
 REST_FRAMEWORK = {
