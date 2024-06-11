@@ -88,13 +88,13 @@ def create_first_20(seleniumDriver: SeleniumDriver, base_url: str):
 
 def create_or_update_products(seleniumDriver: SeleniumDriver, base_url: str, first_20: list):
     """
-    Funcion para crear o actualizar los productos haciendo Scrappin en Supermarket23.
+    Función para crear o actualizar los productos haciendo Scraping en Supermarket23.
     Debido al error que tiene el buscador general de Supermarket con las paginaciones
-    mayores a 500, se decidio usar el siguiente algoritmo:
+    mayores a 500, se decidió usar el siguiente algoritmo:
 
-    1. Guardar los primeros 20 productos de la busqueda general sin filtros (esto es sin ordenar y usando la primera pagina)
-    2. Luego se ordena la busqueda de menor a mayor precio y se crean o actualizan los productos
-    3. En caso de que la paginacion de supermarket de error(esto se sabe porque regresa automaticamente a la primera pagina)
+    1. Guardar los primeros 20 productos de la búsqueda general sin filtros (esto es sin ordenar y usando la primera página)
+    2. Luego se ordena la búsqueda de menor a mayor precio y se crean o actualizan los productos
+    3. En caso de que la paginación de supermarket de error (esto se sabe porque regresa automáticamente a la primera página)
         entonces se ordena de mayor a menor y se procede a seguir actualizando
     4. Se termina una vez se traigan todos los productos
     """
@@ -104,61 +104,64 @@ def create_or_update_products(seleniumDriver: SeleniumDriver, base_url: str, fir
     orderBy = 0
     exists_product = False
 
-
     while not exists_product:
-        # Se va a la primera pagina ordenado de menor a mayor
+        # Se va a la primera página ordenado de menor a mayor
         driver = seleniumDriver.get_driver(f"{base_url}?pagina={str(current_page)}&orden={str(orderBy)}")
 
-        print("URL: " f"{base_url}?pagina={str(current_page)}&orden={str(orderBy)}")
+        print(f"URL: {base_url}?pagina={str(current_page)}&orden={str(orderBy)}")
 
         WebDriverWait(driver, 120).until(
             EC.presence_of_element_located((By.TAG_NAME, "app-product-block-v"))
         )
-    
+
         products_html = driver.find_elements(By.TAG_NAME, "app-product-block-v")
-
         count = 0
-
 
         for product_html in products_html:
             product_id, product_data = scraper_sm23.get_product_data(product_html)
 
             if product_id in first_20:
                 # Si el producto se encuentra en los primeros 20
-                # se aumenta el contador y se verifica si SM23 regreso
-                # a la primera pagina debido al error de paginacion
+                # se aumenta el contador y se verifica si SM23 regresó
+                # a la primera página debido al error de paginación
+                print(f"Producto en los primeros 20: {product_id}")
                 count += 1
-                exists_product = count == 20
+
+                if count == 20:
+                    exists_product = True
+                    break
+
                 continue
-            elif product_id in product_id_list:
-                print("Se encontro un producto repetido: " + product_id)
-                # En caso de que el producto no este en los primeros 20,
-                # pero si en la lista de productos creados o actualizados,
-                # entonces se termina el loop debido que se encontraron todos
+
+            if product_id in product_id_list:
+                print(f"Se encontró un producto repetido: {product_id}")
+                # En caso de que el producto no esté en los primeros 20,
+                # pero sí en la lista de productos creados o actualizados,
+                # entonces se termina el loop debido a que se encontraron todos
                 # los productos
                 exists_product = True
                 break
 
             product_id_list.append(product_id)
 
-            print("Procesando producto: " + product_id)
+            print(f"Procesando producto: {product_id}")
 
             create_product_and_manufacture(product_id, product_data)
-            
-        # En caso de que esté en la primera pagina
-        # pero el orden actual sea de menor a mayor
-        # se cambia el orden de mayor a menor
-        # En caso contrario se finaliza el bucle
+
+        # En caso de que esté en la primera página
+        # pero el orden actual sea de menor a mayor,
+        # se cambia el orden de mayor a menor.
+        # En caso contrario, se finaliza el bucle.
         if exists_product and orderBy == 0:
             print("Cambio de orden: De mayor a menor precio")
             current_page = 1
             orderBy = 1
             exists_product = False
             continue
-        
-        # TODO: Cambiar a 1 al terminar
-        print("Pagina procesada: " + str(current_page))
+
+        print(f"Página procesada: {current_page}")
         current_page += 1
+
 
 def create_product_and_manufacture(product_id: str, product_data: dict):
     manufacture_data = product_data.pop("manufacture", None)
