@@ -1,42 +1,24 @@
 import React from "react";
 
-type SearchIconProps = {
-  color: "white" | "black";
-};
+type SearchIconProps = {};
 
-export const SearchIcon: React.FC<SearchIconProps> = ({ color }) => {
+export const SearchIcon: React.FC<SearchIconProps> = () => {
   const getColor = () => {
-    if (color === "white") {
-      return "text-white mb-0.5 dark:text-white/90 text-slate-200";
-    }
-
     return "text-black/75 hover:text-white mb-0.5 dark:text-white/90";
   };
   return (
     <svg
-      aria-hidden="true"
-      fill="none"
-      focusable="false"
-      height="2em"
-      role="presentation"
-      viewBox="0 0 24 24"
+      fill="currentColor"
+      viewBox="0 0 20 20"
+      xmlns="http://www.w3.org/2000/svg"
       width="1.4em"
-      className={"pointer-events-none flex-shrink-0 " + getColor()}
+      className={"w-6 h-6 pointer-events-none " + getColor()}
     >
       <path
-        d="M11.5 21C16.7467 21 21 16.7467 21 11.5C21 6.25329 16.7467 2 11.5 2C6.25329 2 2 6.25329 2 11.5C2 16.7467 6.25329 21 11.5 21Z"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="2"
-      />
-      <path
-        d="M22 22L20 20"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="2"
-      />
+        fill-rule="evenodd"
+        clip-rule="evenodd"
+        d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+      ></path>
     </svg>
   );
 };

@@ -39,7 +39,7 @@ export const SearchForm: React.FC<SearchFormProps> = (props) => {
             innerWrapper: "bg-transparent",
           }}
           placeholder="Escribe el nombre del producto..."
-          startContent={<SearchIcon color="black" />}
+          startContent={<SearchIcon />}
           isClearable
           onChange={(event) => setSearchText(event.target.value)}
           onClear={() => setSearchText("")}

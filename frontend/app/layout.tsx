@@ -6,6 +6,7 @@ import NavbarHome from "@/components/home/navbar-home/navbar-home";
 import NextTopLoader from "nextjs-toploader";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+import SideBar from "@/components/layout/SideBar/SideBar";
 
 const roboto = Roboto({
   weight: "400",
@@ -28,8 +29,13 @@ export default function RootLayout({
         <NextTopLoader />
         <ToastContainer />
         <Providers>
-          <NavbarHome />
-          {children}
+          <div>
+            <NavbarHome />
+
+            <SideBar />
+
+            <main className="md:ml-64">{children}</main>
+          </div>
         </Providers>
       </body>
     </html>

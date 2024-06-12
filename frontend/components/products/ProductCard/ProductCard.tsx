@@ -85,15 +85,17 @@ export const ProductCard: React.FC<ProductCardProps> = (props) => {
                 </b>
               </a>
 
-              <a
-                href={props.product.manufacture.url}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <p className="text-small font-medium">
-                  Marca: {props.product.manufacture.name}
-                </p>
-              </a>
+              {props.product.manufacture && (
+                <a
+                  href={props.product.manufacture.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <p className="text-small font-medium">
+                    Marca: {props.product.manufacture.name}
+                  </p>
+                </a>
+              )}
 
               <div>
                 <p
