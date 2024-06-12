@@ -10,7 +10,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from common.libs.selenium import SeleniumDriver
 from common.libs import scraper_sm23
 
-from .tasks import update_database_sm23
+from .tasks import update_database_sm23, test_auth
 
 class SearchView(APIView):
     def get(self, request):
@@ -57,3 +57,8 @@ class SearchView(APIView):
 class UpdateDatabaseView(APIView):
     def get(self, request):       
         return Response({"msg": update_database_sm23()})
+
+class TestAuthView(APIView):
+    def get(self, request):     
+        test_auth()  
+        return Response({"msg": "Autenticacion ok"})

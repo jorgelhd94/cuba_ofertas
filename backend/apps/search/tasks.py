@@ -1,4 +1,7 @@
 from common.libs.selenium import SeleniumDriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 from apps.product.models import Product
 from apps.statistics_spy.models import ProductsUpdateLogs
@@ -6,6 +9,8 @@ from apps.statistics_spy.models import ProductsUpdateLogs
 from django.utils import timezone
 
 from common.libs import scraper_sm23
+
+import time
 
 
 def update_database_sm23():
@@ -61,16 +66,40 @@ def update_database_sm23():
     return {"total": 0, "deleted_products": []}
 
 
-# def update_product_meta_sm23():
-#     print("Iniciando...")
-#     seleniumDriver = SeleniumDriver()
+def test_auth():
+    seleniumDriver = SeleniumDriver()
 
-#     try:
-#         scraper_sm23.update_product_meta(seleniumDriver)
-#     except Exception as e:
-#         print("Ocurrió un error:", e)
-#     finally:
-#         seleniumDriver.quit()
+    try:
+        driver = seleniumDriver.get_driver("autenticar")
+        WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.NAME, "username")))
+        time.sleep(2)
+
+        # Encuentra los campos de entrada y el botón de inicio de sesión
+        email_field = driver.find_element(By.NAME, "username")
+        password_field = driver.find_element(By.NAME, "password")
+        login_button = driver.find_element(By.XPATH, "//button[@type='submit']")
+
+        email_field.send_keys("jorgelhd94@gmail.com")
+        password_field.send_keys("Jlhd*940830")
+
+        login_button.click()
+
+        time.sleep(4)
+    except Exception as e:
+        print("Ocurrió un error:", e)
+    finally:
+        seleniumDriver.quit()
+
+
+def update_product_meta_sm23(seleniumDriver):
+    print("Iniciando...")
+
+    try:
+        scraper_sm23.update_product_meta(seleniumDriver)
+    except Exception as e:
+        print("Ocurrió un error:", e)
+    finally:
+        seleniumDriver.quit()
 
 
 
