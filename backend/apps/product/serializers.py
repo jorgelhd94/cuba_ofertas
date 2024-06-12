@@ -12,9 +12,15 @@ class ProviderSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'url']
 
 class CategorySerializer(serializers.ModelSerializer):
+    children = serializers.SerializerMethodField()
+
     class Meta:
         model = Category
-        fields = ['id', 'category_id', 'name', 'url']
+        fields = ['id', 'category_id', 'name', 'url', 'children']
+
+    def get_children(self, obj):
+        children = obj.children.all()
+        return CategorySerializer(children, many=True).data
 
 class ProductSerializer(serializers.ModelSerializer):
     manufacture = ManufactureSerializer()

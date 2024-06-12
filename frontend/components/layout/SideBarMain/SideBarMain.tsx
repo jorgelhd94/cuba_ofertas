@@ -12,7 +12,7 @@ import {
 
 type Props = {
   isSidebarOpen: boolean;
-  onCloseSidebar: Function;
+  onOpenSidebar: Function;
 };
 
 const customSidebarTheme: CustomFlowbiteTheme["sidebar"] = {
@@ -58,7 +58,7 @@ const SideBarMain = (props: Props) => {
     <>
       <Drawer
         open={props.isSidebarOpen}
-        onClose={() => props.onCloseSidebar(false)}
+        onClose={() => props.onOpenSidebar(false)}
       >
         <Drawer.Items className="pt-14">
           <Sidebar
@@ -75,6 +75,7 @@ const SideBarMain = (props: Props) => {
                     icon={item.icon}
                     href={item.path}
                     className="cursor-pointer"
+                    onClick={() => props.onOpenSidebar(false)}
                   >
                     {item.label}
                   </Sidebar.Item>

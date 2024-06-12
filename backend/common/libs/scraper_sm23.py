@@ -62,7 +62,7 @@ def get_product_data(product_html: WebElement):
 def get_product_meta(seleniumDriver: SeleniumDriver, product_id: str):
     try:
         driver = seleniumDriver.get_driver(f"producto/{product_id}")
-        WebDriverWait(driver, 10).until(
+        WebDriverWait(driver, 6).until(
             EC.presence_of_element_located((By.CLASS_NAME, "product_meta"))
             )
     except:
@@ -111,6 +111,55 @@ def get_total(driver: WebElement):
     
     return get_page_amount(driver)
 
+"""
+Scrapping de categorias
+"""
+def create_categories(seleniumDriver: SeleniumDriver, base_url: str):
+    driver = seleniumDriver.get_driver(base_url)
+
+    WebDriverWait(driver, 120).until(
+        EC.presence_of_element_located((By.CLASS_NAME, "category-menu"))
+    )
+
+    categories_html = driver.find_elements(By.CLASS_NAME, "c-menu-item")
+
+    for category_html in categories_html:
+        create_categories_recursive(category_html, None)
+
+    return []
+
+
+def replace_string_category_name(name: str):
+    new_name = name.replace("<!---->", '')
+    new_name = re.sub(r'<i[^>]*>.*?</i>', '', new_name)
+
+    return new_name
+
+
+def create_categories_recursive(element: WebElement, parent: None):
+    """Obtiene recursivamente las categorías y subcategorías en formato dict."""
+    category_name = element.find_element(By.TAG_NAME, 'a').get_attribute("innerHTML")
+    category_name = replace_string_category_name(category_name).strip()
+    category_url = element.find_element(By.TAG_NAME, 'a').get_attribute('href')
+    category_id =  category_url.split("/")[-1]
+
+    # Crear o actualizar la categoría en la base de datos
+    category, created = Category.objects.update_or_create(
+        category_id=category_id,
+        defaults={
+            'name': category_name,
+            'url': category_url,
+            'parent': parent,
+        }
+    )
+
+    subcategories_elements = element.find_elements(By.CSS_SELECTOR, ':scope > ul > li')
+    subcategories = []
+
+    for subcategory_element in subcategories_elements:
+        subcategories.append(create_categories_recursive(subcategory_element, category))
+
+    
 
 """
 A partir de aqui estan las funciones que se usan para
@@ -222,7 +271,7 @@ def create_or_update_products(seleniumDriver: SeleniumDriver, base_url: str, fir
             continue
 
         print(f"Página procesada: {current_page}")
-        current_page += 1
+        current_page += 200
 
 
 def create_product_and_manufacture(product_id: str, product_data: dict):
@@ -231,8 +280,8 @@ def create_product_and_manufacture(product_id: str, product_data: dict):
     Product.objects.update_or_create(product_id=product_id, manufacture=manufacture, defaults=product_data)
 
 
-def update_product_meta(seleniumDriver: SeleniumDriver):
-    products = Product.objects.all()
+def update_product_meta(seleniumDriver: SeleniumDriver, start_date):
+    products = Product.objects.all().exclude(updated_at__lt=start_date)
 
     for product in products:
         product_meta = get_product_meta(seleniumDriver, product.product_id)

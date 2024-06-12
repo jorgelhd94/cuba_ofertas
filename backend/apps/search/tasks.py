@@ -35,7 +35,6 @@ def update_database_sm23():
         if not total: return {"total": 0, "products": []}
 
         scraper_sm23.create_or_update_products(seleniumDriver, base_url, first_20)
-        scraper_sm23.update_product_meta(seleniumDriver)
 
         new_products = Product.objects.filter(created_at__gte=now)
         new_products_count = new_products.count()
@@ -91,16 +90,18 @@ def test_auth():
         seleniumDriver.quit()
 
 
-def update_product_meta_sm23(seleniumDriver):
+def update_database_sm23_by_categories():
     print("Iniciando...")
-
+    seleniumDriver = SeleniumDriver()
+    base_url = ""
+    
     try:
-        scraper_sm23.update_product_meta(seleniumDriver)
+        scraper_sm23.create_categories(seleniumDriver, base_url)
     except Exception as e:
         print("Ocurrió un error:", e)
     finally:
+        print("Terminado")
         seleniumDriver.quit()
 
-
-
+    return {"categories": "Terminado"}
 

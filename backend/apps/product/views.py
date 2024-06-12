@@ -19,7 +19,7 @@ class ManufactureViewSet(viewsets.ModelViewSet):
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
-    queryset = Category.objects.all()
+    queryset = Category.objects.filter(parent__isnull=True)
     serializer_class = CategorySerializer
     pagination_class = StandardResultsSetPagination
 

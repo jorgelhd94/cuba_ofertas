@@ -3,60 +3,49 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.exceptions import APIException
 
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+from rest_framework.pagination import PageNumberPagination
+from django.db.models import Q
+from apps.product.models import Product
+from apps.product.serializers import ProductSerializer
 
-from common.libs.selenium import SeleniumDriver
-from common.libs import scraper_sm23
 
-from .tasks import update_database_sm23, test_auth
+from .tasks import update_database_sm23_by_categories, test_auth
 
 class SearchView(APIView):
     def get(self, request):
-        total = 0
-        page_amount_text = ""
-        products = []
-
         query_params = request.query_params
-        search_text = query_params.get('search_text', None)
-        pagination = query_params.get('pagination', -1)
-        orderby = query_params.get('orderby', -1)
-        
-        # Navega a una página web
-        seleniumDriver = SeleniumDriver()
-
-        base_url = "buscar?q=" + search_text if search_text else "productos?"
-            
-        # Append pagination and orderby as query parameters
-        url_with_params = f"{base_url}&pagina={pagination}&orden={orderby}"
+        print(query_params)
+        search_text = query_params.get('search_text', '')
+        orderby = query_params.get('orderby', 'id')
 
         try:
-            driver = seleniumDriver.get_driver(url_with_params)
-            WebDriverWait(driver, 120).until(
-                EC.presence_of_element_located((By.TAG_NAME, "app-product-block-v"))
-            )
-
-            if not scraper_sm23.check_if_search_not_found(driver):
-                products_html = driver.find_elements(By.TAG_NAME, "app-product-block-v")
-                
-                page_amount_text = scraper_sm23.get_page_amount_text(driver)
-                total = scraper_sm23.get_page_amount(driver)
-
-                for product in products_html:
-                    products.append(scraper_sm23.get_product_data(product))
+            # Filtrar productos basados en search_text
+            if search_text:
+                products_queryset = Product.objects.filter(Q(name__icontains=search_text) | Q(description__icontains=search_text))
+            else:
+                products_queryset = Product.objects.all()
+            
+            # Ordenar productos
+            if orderby:
+                products_queryset = products_queryset.order_by(orderby)
+            
+            # Paginación
+            paginator = PageNumberPagination()
+            page = paginator.paginate_queryset(products_queryset, request)
+            
+            # Serializar datos de productos
+            serializer = ProductSerializer(page, many=True)
+            
+            return paginator.get_paginated_response(serializer.data)
+        
         except Exception as e:
             print("Ocurrió un error:", e)
             raise APIException({"detail": str(e)}, code=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        finally:
-            seleniumDriver.quit()
-        
-        return Response({"total": total, "page_amount_text": page_amount_text, "products": products})
 
 
 class UpdateDatabaseView(APIView):
     def get(self, request):       
-        return Response({"msg": update_database_sm23()})
+        return Response({"msg": update_database_sm23_by_categories()})
 
 class TestAuthView(APIView):
     def get(self, request):     

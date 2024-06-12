@@ -12,7 +12,7 @@ const AlertMsg = (props: Props) => {
   return (
     <Alert
       color="info"
-      className={hideMsg ? "w-max hidden" : "w-max"}
+      className={hideMsg ? "hidden" : "md:w-max"}
       onDismiss={() => setHideMsg(true)}
     >
       {props.children}

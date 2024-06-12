@@ -40,7 +40,7 @@ function NavbarMain() {
         </div>
       </nav>
 
-      <SideBarMain isSidebarOpen={isMenuOpen} onCloseSidebar={setIsMenuOpen}/>
+      <SideBarMain isSidebarOpen={isMenuOpen} onOpenSidebar={setIsMenuOpen}/>
     </>
   );
 }

@@ -21,17 +21,20 @@ class Provider(models.Model):
     class Meta:
         db_table = 'provider'
 
-
 class Category(models.Model):
     id = models.AutoField(primary_key=True)
     category_id = models.CharField(max_length=255)
     name = models.CharField(max_length=255, null=True)
     url = models.CharField(max_length=255, null=True)
+    parent = models.ForeignKey('self', null=True, blank=True, related_name='children', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = 'category'
+
+    def __str__(self):
+        return self.name
 
 
 class Product(models.Model):
