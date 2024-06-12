@@ -40,7 +40,7 @@ def update_database_sm23():
         new_products = Product.objects.filter(created_at__gte=now)
         new_products_count = new_products.count()
 
-        updated_products = Product.objects.filter(updated_at__gte=now).exclude(created_at=now)
+        updated_products = Product.objects.filter(updated_at__gte=now).exclude(created_at__gte=now)
         updated_products_count = updated_products.count()
 
         deleted_products = Product.objects.filter(updated_at__lt=now)
