@@ -1,36 +1,85 @@
 "use client";
-import { Drawer, Sidebar } from "flowbite-react";
-import Link from "next/link";
-import { HiChartPie, HiSearch } from "react-icons/hi";
+import { CustomFlowbiteTheme, Drawer, Sidebar } from "flowbite-react";
+import { usePathname, useRouter } from "next/navigation";
+import {
+  HiChartPie,
+  HiDatabase,
+  HiDocumentSearch,
+  HiSearch,
+  HiViewGridAdd,
+} from "react-icons/hi";
 
 type Props = {
   isSidebarOpen: boolean;
   onCloseSidebar: Function;
 };
 
+const customSidebarTheme: CustomFlowbiteTheme["sidebar"] = {
+  item: {
+    base: "flex items-center justify-center rounded-lg p-2 text-base font-normal text-gray-900 hover:bg-indigo-200 dark:text-white dark:hover:bg-gray-700",
+    active: "bg-indigo-100 dark:bg-gray-700",
+  },
+};
+
 const SideBarMain = (props: Props) => {
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const sidebarItems = [
+    {
+      label: "Inicio",
+      icon: HiChartPie,
+      path: "/",
+    },
+    {
+      label: "Búsqueda general",
+      icon: HiSearch,
+      path: "/search",
+    },
+    {
+      label: "Zonas de comparación",
+      icon: HiViewGridAdd,
+      path: "/comparison",
+    },
+    {
+      label: "Búsquedas guardadas",
+      icon: HiDocumentSearch,
+      path: "/saved-searches",
+    },
+    {
+      label: "Actualizaciones",
+      icon: HiDatabase,
+      path: "/updates",
+    },
+  ];
+
   return (
     <>
       <Drawer
         open={props.isSidebarOpen}
         onClose={() => props.onCloseSidebar(false)}
-        
       >
         <Drawer.Items className="pt-14">
-            <Sidebar className="[&>div]:bg-transparent [&>div]:p-0">
-              <Sidebar.Items>
-                <Sidebar.ItemGroup className="flex flex-col">
-                  <Link href="/">
-                    <Sidebar.Item icon={HiChartPie}>Inicio</Sidebar.Item>
-                  </Link>
-                  <Link href="/search">
-                    <Sidebar.Item icon={HiSearch}>
-                      Búsqueda general
-                    </Sidebar.Item>
-                  </Link>
-                </Sidebar.ItemGroup>
-              </Sidebar.Items>
-            </Sidebar>
+          <Sidebar
+            className="[&>div]:bg-transparent [&>div]:p-0"
+            theme={customSidebarTheme}
+          >
+            <Sidebar.Items>
+              <Sidebar.ItemGroup className="flex flex-col">
+                {sidebarItems.map((item, index) => (
+                  <Sidebar.Item
+                    key={index}
+                    active={pathname === item.path}
+                    icon={item.icon}
+                    onClick={() => router.push(item.path)}
+                    className="cursor-pointer"
+                  >
+                    {item.label}
+                  </Sidebar.Item>
+                ))}
+              </Sidebar.ItemGroup>
+            </Sidebar.Items>
+          </Sidebar>
         </Drawer.Items>
       </Drawer>
     </>
