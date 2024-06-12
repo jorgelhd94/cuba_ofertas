@@ -1,11 +1,23 @@
-import React from "react";
+"use client";
+import { Alert } from "flowbite-react";
+import React, { ReactNode, useState } from "react";
 
 type Props = {
-  message: string;
+  children: ReactNode;
 };
 
 const AlertMsg = (props: Props) => {
-  return <div>AlertMsg</div>;
+  const [hideMsg, setHideMsg] = useState(false);
+
+  return (
+    <Alert
+      color="info"
+      className={hideMsg ? "w-max hidden" : "w-max"}
+      onDismiss={() => setHideMsg(true)}
+    >
+      {props.children}
+    </Alert>
+  );
 };
 
 export default AlertMsg;
