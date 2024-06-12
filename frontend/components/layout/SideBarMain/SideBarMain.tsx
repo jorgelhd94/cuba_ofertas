@@ -1,5 +1,6 @@
 "use client";
 import { CustomFlowbiteTheme, Drawer, Sidebar } from "flowbite-react";
+import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
   HiChartPie,
@@ -68,10 +69,11 @@ const SideBarMain = (props: Props) => {
               <Sidebar.ItemGroup className="flex flex-col">
                 {sidebarItems.map((item, index) => (
                   <Sidebar.Item
+                    as={Link}
                     key={index}
                     active={pathname === item.path}
                     icon={item.icon}
-                    onClick={() => router.push(item.path)}
+                    href={item.path}
                     className="cursor-pointer"
                   >
                     {item.label}
