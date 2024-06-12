@@ -1,12 +1,12 @@
+import NavbarHome from "@/components/layout/NavbarMain/NavbarMain";
 import type { Metadata } from "next";
-import { Providers } from "./providers";
 import { Roboto } from "next/font/google";
-import "./globals.css";
-import NavbarHome from "@/components/home/navbar-home/navbar-home";
 import NextTopLoader from "nextjs-toploader";
-import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
-import SideBar from "@/components/layout/SideBar/SideBar";
+import "react-toastify/dist/ReactToastify.css";
+import "./globals.css";
+import { Providers } from "./providers";
+import SideBarMain from "@/components/layout/SideBarMain/SideBarMain";
 
 const roboto = Roboto({
   weight: "400",
@@ -31,10 +31,7 @@ export default function RootLayout({
         <Providers>
           <div>
             <NavbarHome />
-
-            <SideBar />
-
-            <main className="md:ml-64">{children}</main>
+            <main>{children}</main>
           </div>
         </Providers>
       </body>
