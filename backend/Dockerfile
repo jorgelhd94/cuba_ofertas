@@ -33,6 +33,3 @@ RUN wget -q --continue -P $CHROMEDRIVER_DIR "https://storage.googleapis.com/chro
 
 # Añadir ChromeDriver al PATH
 ENV PATH $CHROMEDRIVER_DIR:$PATH
-
-# Asegúrate de que el comando CMD esté configurado para iniciar tu aplicación Django
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8080"]
