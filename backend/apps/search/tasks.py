@@ -8,7 +8,7 @@ from apps.statistics_spy.models import ProductsUpdateLogs
 
 from django.utils import timezone
 
-from common.libs import scraper_sm23
+from common.stores.sm23 import scraper_sm23
 
 import time
 
@@ -16,10 +16,10 @@ import time
 def update_database_sm23():
     print("Iniciando...")
     seleniumDriver = SeleniumDriver()
-    base_url = "productos"
+    base_url = ""
 
     now = timezone.now()
-    
+
     update = ProductsUpdateLogs(
         start_time=now,
         status='processing'
@@ -29,12 +29,14 @@ def update_database_sm23():
     try:
         new_products_count = 0
         updated_products_count = 0
+        categories = scraper_sm23.create_categories(seleniumDriver, base_url)
 
-        total, first_20 = scraper_sm23.create_first_20(seleniumDriver, base_url)
+        for category in categories:
+            base_url = "categoria/" + category.category_id
+            total, first_20 = scraper_sm23.create_first_20(seleniumDriver, base_url, category)
 
-        if not total: return {"total": 0, "products": []}
-
-        scraper_sm23.create_or_update_products(seleniumDriver, base_url, first_20)
+            if(total >= 20):
+                scraper_sm23.create_or_update_products(seleniumDriver, base_url, first_20, category)
 
         new_products = Product.objects.filter(created_at__gte=now)
         new_products_count = new_products.count()
@@ -44,7 +46,6 @@ def update_database_sm23():
 
         deleted_products = Product.objects.filter(updated_at__lt=now)
         deleted_products_count = deleted_products.count()
-        # deleted_products.delete()
 
         update.end_time = timezone.now()
         update.status = 'success'
@@ -62,7 +63,7 @@ def update_database_sm23():
         seleniumDriver.quit()
         update.save()
 
-    return {"total": 0, "deleted_products": []}
+    return {"proceso": "Terminado"}
 
 
 def test_auth():
@@ -88,20 +89,4 @@ def test_auth():
         print("Ocurrió un error:", e)
     finally:
         seleniumDriver.quit()
-
-
-def update_database_sm23_by_categories():
-    print("Iniciando...")
-    seleniumDriver = SeleniumDriver()
-    base_url = ""
-    
-    try:
-        scraper_sm23.create_categories(seleniumDriver, base_url)
-    except Exception as e:
-        print("Ocurrió un error:", e)
-    finally:
-        print("Terminado")
-        seleniumDriver.quit()
-
-    return {"categories": "Terminado"}
 

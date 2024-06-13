@@ -24,7 +24,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
 class ProductSerializer(serializers.ModelSerializer):
     manufacture = ManufactureSerializer()
-    category = CategorySerializer()
+    categories = CategorySerializer(many=True)
     provider = ProviderSerializer()
 
     class Meta:

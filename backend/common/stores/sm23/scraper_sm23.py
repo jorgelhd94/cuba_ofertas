@@ -4,6 +4,7 @@ from common.libs.selenium import SeleniumDriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import re
+from django.utils import timezone
 from apps.product.models import Product, Manufacture, Category, Provider
 
 
@@ -126,7 +127,7 @@ def create_categories(seleniumDriver: SeleniumDriver, base_url: str):
     for category_html in categories_html:
         create_categories_recursive(category_html, None)
 
-    return []
+    return Category.objects.all()
 
 
 def replace_string_category_name(name: str):
@@ -150,6 +151,7 @@ def create_categories_recursive(element: WebElement, parent: None):
             'name': category_name,
             'url': category_url,
             'parent': parent,
+            'updated_at': timezone.now(),
         }
     )
 
@@ -169,13 +171,23 @@ La funcion que utiliza estas funciones esta ubicada en:
 apps.search.tasks.update_database_sm23
 """
 
-def create_first_20(seleniumDriver: SeleniumDriver, base_url: str):
+def create_first_20(seleniumDriver: SeleniumDriver, base_url: str, category: Category):
     first_20 = []
 
     driver = seleniumDriver.get_driver(base_url)
+
     WebDriverWait(driver, 120).until(
-        EC.presence_of_element_located((By.TAG_NAME, "app-product-block-v"))
+        EC.any_of(
+            EC.presence_of_element_located((By.TAG_NAME, "app-product-block-v")),
+            EC.presence_of_element_located((By.TAG_NAME, "app-empty"))
+        )
     )
+    
+    try:
+        driver.find_element(By.TAG_NAME, 'app-empty')
+        return 0, []
+    except:
+        pass
 
     total = get_total(driver)
 
@@ -186,12 +198,12 @@ def create_first_20(seleniumDriver: SeleniumDriver, base_url: str):
         
         first_20.append(product_id)
 
-        create_product_and_manufacture(product_id, product_data)
+        create_product_and_manufacture(product_id, product_data, category)
 
     return total, first_20
 
 
-def create_or_update_products(seleniumDriver: SeleniumDriver, base_url: str, first_20: list):
+def create_or_update_products(seleniumDriver: SeleniumDriver, base_url: str, first_20: list, category: Category):
     """
     Función para crear o actualizar los productos haciendo Scraping en Supermarket23.
     Debido al error que tiene el buscador general de Supermarket con las paginaciones
@@ -257,7 +269,7 @@ def create_or_update_products(seleniumDriver: SeleniumDriver, base_url: str, fir
 
             print(f"Procesando producto: {product_id}")
 
-            create_product_and_manufacture(product_id, product_data)
+            create_product_and_manufacture(product_id, product_data, category)
 
         # En caso de que esté en la primera página
         # pero el orden actual sea de menor a mayor,
@@ -271,13 +283,22 @@ def create_or_update_products(seleniumDriver: SeleniumDriver, base_url: str, fir
             continue
 
         print(f"Página procesada: {current_page}")
-        current_page += 200
+        # TODO: Revisar en caso de pasar a produccion
+        current_page += 1
 
 
-def create_product_and_manufacture(product_id: str, product_data: dict):
+def create_product_and_manufacture(product_id: str, product_data: dict, category: Category):
     manufacture_data = product_data.pop("manufacture", None)
     manufacture, created = Manufacture.objects.update_or_create(**manufacture_data)
-    Product.objects.update_or_create(product_id=product_id, manufacture=manufacture, defaults=product_data)
+
+    # Prepara los datos del producto
+    product_defaults = product_data.copy()
+    product_defaults['updated_at'] = timezone.now()
+
+    product, created = Product.objects.update_or_create(product_id=product_id, manufacture=manufacture, defaults=product_defaults)
+
+    if category not in product.categories.all():
+        product.categories.add(category)
 
 
 def update_product_meta(seleniumDriver: SeleniumDriver, start_date):
@@ -285,22 +306,17 @@ def update_product_meta(seleniumDriver: SeleniumDriver, start_date):
 
     for product in products:
         product_meta = get_product_meta(seleniumDriver, product.product_id)
-        category, provider = create_update_product_meta(product_meta)
+        provider = create_update_product_meta(product_meta)
 
-        product.category = category
         product.provider = provider
 
         product.save()
 
 
 def create_update_product_meta(product_meta: dict):
-    category = product_meta["category"]
     provider = product_meta["provider"]
 
-    if(category):
-        category, created = Category.objects.update_or_create(**product_meta["category"])
-    
     if(provider):
         provider, created = Provider.objects.update_or_create(**product_meta["provider"])
 
-    return category, provider
+    return provider

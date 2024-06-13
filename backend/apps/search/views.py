@@ -8,8 +8,7 @@ from django.db.models import Q
 from apps.product.models import Product
 from apps.product.serializers import ProductSerializer
 
-
-from .tasks import update_database_sm23_by_categories, test_auth
+from .tasks import update_database_sm23, test_auth
 
 class SearchView(APIView):
     def get(self, request):
@@ -45,7 +44,8 @@ class SearchView(APIView):
 
 class UpdateDatabaseView(APIView):
     def get(self, request):       
-        return Response({"msg": update_database_sm23_by_categories()})
+        return Response({"msg": update_database_sm23()})
+
 
 class TestAuthView(APIView):
     def get(self, request):     

@@ -42,7 +42,7 @@ class Product(models.Model):
     product_id = models.CharField(max_length=255)
     manufacture = models.ForeignKey(Manufacture, on_delete=models.CASCADE)
     provider = models.ForeignKey(Provider, on_delete=models.CASCADE, null=True)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True)
+    categories = models.ManyToManyField(Category, related_name='products')
     name = models.CharField(max_length=255, null=True)
     product_url = models.CharField(max_length=255, null=True)
     image_url = models.CharField(max_length=255, null=True)
