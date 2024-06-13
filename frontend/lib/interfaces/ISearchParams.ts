@@ -1,7 +1,7 @@
 
 export interface ISearchParams {
     searchText: string;
-    orderBy: number;
+    orderBy: string;
     pagination: number;
     productMode: string;
 }

@@ -1,5 +1,5 @@
 export type HandleSearchType = (
   searchText: string,
   pageNumber?: number,
-  order?: number
+  order?: string
 ) => void;

@@ -12,35 +12,42 @@ from .tasks import update_database_sm23, test_auth
 
 class SearchView(APIView):
     def get(self, request):
-        query_params = request.query_params
-        print(query_params)
-        search_text = query_params.get('search_text', '')
-        orderby = query_params.get('orderby', 'id')
-
         try:
+            query_params = request.query_params
+            search_text = query_params.get('q', '')
+            orderby = query_params.get('orderby', 'default')
+
             # Filtrar productos basados en search_text
             if search_text:
-                products_queryset = Product.objects.filter(Q(name__icontains=search_text) | Q(description__icontains=search_text))
+                products_queryset = Product.objects.filter(name__icontains=search_text)
             else:
                 products_queryset = Product.objects.all()
             
-            # Ordenar productos
-            if orderby:
-                products_queryset = products_queryset.order_by(orderby)
+            #Ordenar productos si se proporciona orderby
+            order_mapping = {
+                'default': 'id',               # Sin ordenar
+                'less_price': 'current_price',     # Menor precio
+                'higher_price': '-current_price',    # Mayor precio
+                'new': '-created_at',       # Más nuevo
+                'less_price_by_weight': 'price_by_weight'    # Menor precio/lb
+            }
+
+            products_queryset = products_queryset.order_by(order_mapping[orderby])
             
             # Paginación
             paginator = PageNumberPagination()
             page = paginator.paginate_queryset(products_queryset, request)
             
-            # Serializar datos de productos
+            # Serializar datos de productos paginados
             serializer = ProductSerializer(page, many=True)
             
+            # Retornar la respuesta paginada
             return paginator.get_paginated_response(serializer.data)
         
         except Exception as e:
+            # Manejo de excepciones
             print("Ocurrió un error:", e)
-            raise APIException({"detail": str(e)}, code=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
+            return Response({"detail": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class UpdateDatabaseView(APIView):
     def get(self, request):       
