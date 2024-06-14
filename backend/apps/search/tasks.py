@@ -3,10 +3,11 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-from apps.product.models import Product
+from apps.product.models import Product, Category
 from apps.statistics_spy.models import ProductsUpdateLogs
 
 from django.utils import timezone
+from django.db.models import Count
 
 from common.stores.sm23 import scraper_sm23
 
@@ -29,14 +30,19 @@ def update_database_sm23():
     try:
         new_products_count = 0
         updated_products_count = 0
-        categories = scraper_sm23.create_categories(seleniumDriver, base_url)
+        scraper_sm23.create_categories(seleniumDriver, base_url)
+
+        categories = Category.objects.annotate(num_sub_cat=Count('children')).filter(num_sub_cat=0)
 
         for category in categories:
             base_url = "categoria/" + category.category_id
-            total, first_20 = scraper_sm23.create_first_20(seleniumDriver, base_url, category)
+            total = scraper_sm23.create_or_update_products(seleniumDriver, base_url, category)
 
-            if(total >= 20):
-                scraper_sm23.create_or_update_products(seleniumDriver, base_url, first_20, category)
+            print('------------------------')
+            print(f'Categoria procesada: {category.name}')
+            print(f'Cantidad de productos: {total}')
+            print('------------------------')
+
 
         new_products = Product.objects.filter(created_at__gte=now)
         new_products_count = new_products.count()

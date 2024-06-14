@@ -1,54 +1,47 @@
 "use client";
 
+import SearchResultsText from "@/components/search/SearchResultsText/SearchResultsText";
 import { EmptyMsg } from "@/components/shared/messages/empty-msg/empty-msg";
 import { OrderBy } from "@/components/shared/selects/order-by/OrderBy";
+import { HidePinProductContext } from "@/lib/context/HidePinProductContext";
 import { IProduct } from "@/lib/interfaces/IProduct";
-import { ISearchParams } from "@/lib/interfaces/ISearchParams";
 import { ISearchProducts } from "@/lib/interfaces/ISearchProducts";
-import { HandleSearchType } from "@/lib/types/HandleSearchType";
+import { getEmptyMessageByProductMode } from "@/lib/utils/functions/common";
 import { filterProducts } from "@/lib/utils/functions/filters";
 import { Pagination } from "@nextui-org/react";
+import { useSearchParams } from "next/navigation";
 import React, { useContext, useEffect, useState } from "react";
 import { ProductModeSelect } from "../../shared/selects/product-mode-select/ProductModeSelect";
 import { ProductCard } from "../ProductCard/ProductCard";
 import { ProductsSkeleton } from "../ProductsSkeleton/ProductsSkeleton";
-import { getEmptyMessageByProductMode } from "@/lib/utils/functions/common";
-import { HidePinProductContext } from "@/lib/context/HidePinProductContext";
 
 type ProductGridProps = {
   searchResults: ISearchProducts | null;
-  searchParams: ISearchParams;
   loading: boolean;
-  handleSearch: HandleSearchType;
-  handleProductMode: (productMode: string) => void;
 };
 
 export const ProductGrid: React.FC<ProductGridProps> = ({
   searchResults,
-  searchParams,
   loading,
-  handleSearch,
-  handleProductMode,
 }) => {
   const hidePinProduct = useContext(HidePinProductContext);
 
+  const searchParams = useSearchParams();
+  const [params, setParams] = useState({
+    searchText: searchParams.get("q") || "",
+    pagination: searchParams.get("page") || "",
+    orderBy: searchParams.get("orderBy") || "",
+  });
+
   const [products, setProducts] = useState<IProduct[]>(
-    searchResults?.products || []
+    searchResults?.results || []
   );
 
-  const handleOrderBy = async (value: number) => {
-    handleSearch(searchParams.searchText, searchParams.pagination, value);
-  };
-
-  const handlePagination = async (value: number) => {
-    handleSearch(searchParams.searchText, value, searchParams.orderBy);
-  };
+  const handlePagination = (page: number) => {};
 
   useEffect(() => {
-    setProducts(
-      filterProducts(searchResults?.products, searchParams.productMode)
-    );
-  }, [searchParams.productMode, searchResults?.products]);
+    setProducts(filterProducts(searchResults?.results));
+  }, [searchResults?.results]);
 
   const showData = () => {
     if (loading) {
@@ -66,57 +59,42 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
         </div>
       );
     } else {
-      return (
-        <EmptyMsg
-          message={getEmptyMessageByProductMode(searchParams.productMode)}
-        />
-      );
+      return <EmptyMsg message={getEmptyMessageByProductMode("1")} />;
     }
   };
 
   return (
-    searchResults?.products && (
+    searchResults?.results && (
       <div className="px-4 md:px-8 flex flex-col items-center gap-8 w-full">
         <div className="flex max-md:flex-col gap-4 justify-between items-center w-full">
-          <div>
-            <h3 className="text-xl max-md:text-center">
-              Resultados de búsqueda para:{" "}
-              <b>
-                {searchParams.searchText
-                  ? searchParams.searchText
-                  : "Todos los productos"}
-              </b>
-            </h3>
-
-            {!loading && (
-              <h5 className="text-sm font-semibold max-md:text-center max-sm:mt-4">
-                {searchResults.page_amount_text}
-              </h5>
-            )}
-          </div>
+          <SearchResultsText
+            searchText={params.searchText}
+            pagination={parseInt(params.pagination) || 1}
+            resultsLength={searchResults.results.length}
+            total={searchResults.count}
+            loading={loading}
+          />
           <div className="flex gap-2 flex-grow justify-end flex-wrap">
             <ProductModeSelect
               isDisabled={loading}
-              handleProductMode={handleProductMode}
-              orderByOption={searchParams.productMode}
+              handleProductMode={() => {}}
+              orderByOption={"0"}
             />
-            <OrderBy
-              handleOrderBy={handleOrderBy}
-              isDisabled={loading}
-              orderByOption={searchParams.orderBy}
-            />
+            <OrderBy isDisabled={loading} orderByOption={"default"} />
           </div>
         </div>
 
         {showData()}
 
-        {searchResults.products.length > 0 && (
+        {searchResults.results.length > 0 && (
           <Pagination
             onChange={(pag) => handlePagination(pag)}
             color="secondary"
-            total={Math.ceil(searchResults.total / 20)}
+            total={Math.ceil(searchResults.count / 10)}
             initialPage={1}
-            page={searchParams.pagination > -1 ? searchParams.pagination : 1}
+            page={
+              parseInt(params.pagination) > -1 ? parseInt(params.pagination) : 1
+            }
             isCompact
             isDisabled={loading}
             boundaries={1}

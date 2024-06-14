@@ -1,20 +1,17 @@
 import { IProduct } from "@/lib/interfaces/IProduct";
 
-export const filterProducts = (
-  products: IProduct[] | undefined,
-  productMode: string
-) => {
+export const filterProducts = (products: IProduct[] | undefined) => {
   if (!products) {
     return [];
   }
 
-  if (productMode === "0") {
-    return filterProductsByCombo(products);
-  } else if (productMode === "1") {
-    return filterSingleProducts(products);
-  }
+  // if (productMode === "0") {
+  //   return filterProductsByCombo(products);
+  // } else if (productMode === "1") {
+  return filterSingleProducts(products);
+  // }
 
-  return products || [];
+  // return products || [];
 };
 
 export function filterProductsByCombo(products: IProduct[]) {
