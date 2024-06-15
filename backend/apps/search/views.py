@@ -36,6 +36,7 @@ class SearchView(APIView):
             
             # Paginación
             paginator = PageNumberPagination()
+
             page = paginator.paginate_queryset(products_queryset, request)
             
             # Serializar datos de productos paginados

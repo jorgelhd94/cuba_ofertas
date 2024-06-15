@@ -1,15 +1,18 @@
+import { useQueryString } from "@/lib/hooks/useQueryString";
 import { Select, SelectItem } from "@nextui-org/react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 type OrderByProps = {
   isDisabled?: boolean;
-  orderByOption: string;
 };
 
-export const OrderBy: React.FC<OrderByProps> = ({
-  isDisabled,
-  orderByOption,
-}) => {
+export const OrderBy: React.FC<OrderByProps> = ({ isDisabled }) => {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+  const { createQueryString } = useQueryString(searchParams);
+
   const options = [
     { value: "default", text: "Sin ordenar" },
     { value: "less_price", text: "Menor precio" },
@@ -20,11 +23,14 @@ export const OrderBy: React.FC<OrderByProps> = ({
 
   const [defaultOption, setDefaultOption] = useState(["default"]);
 
-  const handleOrderBy = (value: string) => {};
+  const handleOrderBy = (criteria: string) => {
+    const param = {
+      name: "orderby",
+      value: criteria,
+    };
 
-  useEffect(() => {
-    setDefaultOption([orderByOption.toString()]);
-  }, [orderByOption]);
+    router.push(pathname + "?" + createQueryString(param));
+  };
 
   return (
     <Select

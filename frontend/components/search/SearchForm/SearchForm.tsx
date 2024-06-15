@@ -26,7 +26,7 @@ export const SearchForm: React.FC<SearchFormProps> = (props) => {
       value: searchText.trim(),
     };
 
-    router.push(pathname + "?" + createQueryString(param));
+    router.push(pathname + "?" + createQueryString(param, true));
   };
 
   return (
