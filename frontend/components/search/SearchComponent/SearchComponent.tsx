@@ -1,12 +1,12 @@
 "use client";
 
-import ProductGrid from "@/components/products/ProductGrid/ProductGrid";
 import { SaveBtn } from "@/components/shared/buttons/SaveBtn";
 import { ErrorMsg } from "@/components/shared/messages/ErrorMsg/ErrorMsg";
 import { ISearchProducts } from "@/lib/interfaces/ISearchProducts";
 import { usePathname, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { SearchForm } from "../SearchForm/SearchForm";
+import ProductSearchGrid from "../../products/ProductSearchGrid/ProductSearchGrid";
 
 type Props = {
   hideSaveSearch?: boolean;
@@ -32,13 +32,12 @@ export const SearchComponent: React.FC<Props> = (props) => {
           process.env.NEXT_PUBLIC_API_URL! +
             `api/v1/search/?` +
             searchParams.toString()
-        )
-          .then((response) => {
-            return response.json();
-          })
-          .catch((error) => {
-            throw error;
-          });
+        ).then((response) => {
+          if (response.status !== 200) {
+            throw new Error("Error fetching data");
+          }
+          return response.json();
+        });
 
         setSearchResults(data);
       } catch (error) {
@@ -57,9 +56,9 @@ export const SearchComponent: React.FC<Props> = (props) => {
         <SearchForm loading={loading} />
         {!props.hideSaveSearch && <SaveBtn />}
       </div>
-      <ProductGrid searchResults={searchResults} loading={loading} />
+      
 
-      {isError && <ErrorMsg />}
+      {isError ? <ErrorMsg /> : <ProductSearchGrid searchResults={searchResults} loading={loading} />}
     </div>
   );
 };
