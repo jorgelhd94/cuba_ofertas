@@ -1,5 +1,4 @@
-"use client";
-
+import SearchPagination from "@/components/search/SearchPagination/SearchPagination";
 import SearchResultsText from "@/components/search/SearchResultsText/SearchResultsText";
 import { EmptyMsg } from "@/components/shared/messages/empty-msg/empty-msg";
 import { OrderBy } from "@/components/shared/selects/order-by/OrderBy";
@@ -8,13 +7,10 @@ import { IProduct } from "@/lib/interfaces/IProduct";
 import { ISearchProducts } from "@/lib/interfaces/ISearchProducts";
 import { getEmptyMessageByProductMode } from "@/lib/utils/functions/common";
 import { filterProducts } from "@/lib/utils/functions/filters";
-import { Pagination } from "@nextui-org/react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React, { useContext, useEffect, useState } from "react";
 import { ProductModeSelect } from "../../shared/selects/product-mode-select/ProductModeSelect";
 import { ProductCard } from "../ProductCard/ProductCard";
 import { ProductsSkeleton } from "../ProductsSkeleton/ProductsSkeleton";
-import { useQueryString } from "@/lib/hooks/useQueryString";
 
 type ProductSearchGridProps = {
   searchResults: ISearchProducts | null;
@@ -27,25 +23,9 @@ export const ProductSearchGrid: React.FC<ProductSearchGridProps> = ({
 }) => {
   const hidePinProduct = useContext(HidePinProductContext);
 
-  const searchParams = useSearchParams();
-
-  const router = useRouter();
-  const pathname = usePathname();
-
-  const { createQueryString } = useQueryString(searchParams);
-
   const [products, setProducts] = useState<IProduct[]>(
     searchResults?.results || []
   );
-
-  const handlePagination = (page: number) => {
-    const param = {
-      name: "page",
-      value: page.toString(),
-    };
-
-    router.push(pathname + "?" + createQueryString(param));
-  };
 
   useEffect(() => {
     setProducts(filterProducts(searchResults?.results));
@@ -93,15 +73,9 @@ export const ProductSearchGrid: React.FC<ProductSearchGridProps> = ({
         {showData()}
 
         {searchResults.results.length > 0 && (
-          <Pagination
-            onChange={(page) => handlePagination(page)}
-            color="secondary"
+          <SearchPagination
             total={Math.ceil(searchResults.count / 10)}
-            initialPage={1}
-            page={parseInt(searchParams.get("page") || "1")}
-            isCompact
-            isDisabled={loading}
-            boundaries={1}
+            loading={loading}
           />
         )}
       </div>

@@ -7,7 +7,7 @@ import {
   getPriceByWeightStyle,
   getPriceStyle,
 } from "@/lib/utils/functions/pricesStyle";
-import { Card, CardBody, Image } from "@nextui-org/react";
+import { Card, CardBody, CardFooter, Image } from "@nextui-org/react";
 import React, { useContext, useEffect, useState } from "react";
 import { ProductDropdownMenu } from "../ProductDropdownMenu/ProductDropdownMenu";
 
@@ -50,31 +50,18 @@ export const ProductCard: React.FC<ProductCardProps> = (props) => {
         <CardBody className="overflow-visible p-0">
           <div className="grid grid-cols-12">
             <div className="relative col-span-6 md:col-span-12 max-md:my-2 max-md:ml-2">
-              <Image
-                radius="lg"
-                width="100%"
-                alt={props.product.name}
-                className="w-full object-cover h-[140px] md:h-[240px]"
-                src={props.product.image_url}
-              />
-
-              {!props.hideSetPin && (
-                <div className="absolute top-1 left-1">
-                  <PinBtn
-                    isActive={isPinActive}
-                    handleClick={handlePinProduct}
-                  />
-                </div>
-              )}
-
-              {!props.hideMenu && (
-                <div className="absolute top-1 right-1">
-                  <ProductDropdownMenu product={props.product} />
-                </div>
-              )}
+              <div className="relative overflow-hidden pb-[100%] rounded-sm">
+                <Image
+                  radius="lg"
+                  width="100%"
+                  alt={props.product.name}
+                  className="w-full h-[140px] md:h-[256px] absolute block top-0"
+                  src={props.product.image_url}
+                />
+              </div>
             </div>
 
-            <div className="col-span-6 md:col-span-12 flex flex-col items-start text-start justify-start gap-2 p-4">
+            <div className="col-span-6 md:col-span-12 flex flex-col items-start text-start justify-start gap-2 pt-1 p-4">
               <a
                 href={props.product.product_url}
                 target="_blank"
@@ -126,6 +113,16 @@ export const ProductCard: React.FC<ProductCardProps> = (props) => {
             </div>
           </div>
         </CardBody>
+
+        <CardFooter>
+          <div className="flex gap-2 justify-between w-full">
+            {!props.hideSetPin && (
+              <PinBtn isActive={isPinActive} handleClick={handlePinProduct} />
+            )}
+
+            {!props.hideMenu && <ProductDropdownMenu product={props.product} />}
+          </div>
+        </CardFooter>
       </Card>
     </>
   );

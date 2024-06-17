@@ -1,7 +1,7 @@
 "use client";
 import { SubmitBtn } from "@/components/shared/buttons/SubmitBtn/SubmitBtn";
 import { SearchIcon } from "@/components/shared/icons/SearchIcon";
-import { useQueryString } from "@/lib/hooks/useQueryString";
+import { getQueryString } from "@/lib/utils/functions/getQueryString";
 import { Input } from "@nextui-org/react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React, { useCallback, useState } from "react";
@@ -15,18 +15,17 @@ export const SearchForm: React.FC<SearchFormProps> = (props) => {
   const router = useRouter();
   const pathname = usePathname();
 
-  const { createQueryString } = useQueryString(searchParams);
-
   const [searchText, setSearchText] = useState(searchParams.get("q") || "");
   const handleSearch = (formData: FormData) => {
     setSearchText(formData.get("searchText")?.toString() || "");
-
-    const param = {
-      name: "q",
-      value: searchText.trim(),
-    };
-
-    router.push(pathname + "?" + createQueryString(param, true));
+    router.push(
+      pathname +
+        "?" +
+        getQueryString(searchParams.toString(), {
+          name: "q",
+          value: searchText.trim(),
+        })
+    );
   };
 
   return (
