@@ -1,44 +1,44 @@
+import { getQueryString } from "@/lib/utils/functions/getQueryString";
 import { Select, SelectItem } from "@nextui-org/react";
-import React, { useEffect, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import React from "react";
 
 type ProductModeSelectProps = {
-  handleProductMode: Function;
   isDisabled?: boolean;
-  orderByOption: string;
 };
 
 export const ProductModeSelect: React.FC<ProductModeSelectProps> = ({
-  handleProductMode,
   isDisabled,
-  orderByOption,
 }) => {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+
   const options = [
-    { value: "-1", text: "Mostrar todos" },
-    { value: "0", text: "Mostrar combos" },
-    { value: "1", text: "Mostrar productos simples" },
+    { value: "show_all", text: "Mostrar todos" },
+    { value: "combo", text: "Mostrar combos" },
+    { value: "simple", text: "Mostrar productos simples" },
   ];
 
-  const [defaultOption, setDefaultOption] = useState(["-1"]);
-
-  useEffect(() => {
-    setDefaultOption([orderByOption.toString()]);
-  }, [orderByOption]);
-
-  const handleChange = (value: string) => {
-    if (value) {
-      handleProductMode(value);
-    }
+  const handleMode = (criteria: string) => {
+    router.push(
+      pathname +
+        "?" +
+        getQueryString(searchParams.toString(), {
+          name: "mode",
+          value: criteria,
+        })
+    );
   };
-
   return (
     <Select
       isDisabled={isDisabled}
-      selectedKeys={defaultOption}
+      selectedKeys={[searchParams.get("mode") || "show_all"]}
       selectionMode="single"
       variant="faded"
       label="Mostrar por"
       className="max-w-64"
-      onChange={(event) => handleChange(event.target.value)}
+      onChange={(event) => handleMode(event.target.value)}
     >
       {options.map((option) => (
         <SelectItem key={option.value} value={option.value}>

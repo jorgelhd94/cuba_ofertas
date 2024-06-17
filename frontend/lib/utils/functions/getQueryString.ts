@@ -2,7 +2,7 @@ export const getQueryString = (
   searchParams: string,
   param: { name: string; value: string | null }
 ) => {
-  const paramsOrder = ["q", "page", "orderby"];
+  const paramsOrder = ["q", "page", "orderby", "mode"];
   const oldParams = new URLSearchParams(searchParams);
   const newParams = new URLSearchParams();
 
@@ -12,8 +12,8 @@ export const getQueryString = (
     paramsOrder.splice(0, 1);
   }
 
-  // Si el parámetro entrado es "q", inicializar "page" en "1"
-  if (param.name === "q") {
+  // Inicializar "page" en "1"
+  if (param.name === "q" || param.name === "mode") {
     newParams.set("page", "1");
     paramsOrder.splice(
       paramsOrder.findIndex((value) => value === "page"),

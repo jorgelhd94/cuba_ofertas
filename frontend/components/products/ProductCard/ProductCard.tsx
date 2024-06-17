@@ -7,7 +7,7 @@ import {
   getPriceByWeightStyle,
   getPriceStyle,
 } from "@/lib/utils/functions/pricesStyle";
-import { Card, CardBody, CardFooter, Image } from "@nextui-org/react";
+import { Card, CardBody, CardFooter, Chip, Image } from "@nextui-org/react";
 import React, { useContext, useEffect, useState } from "react";
 import { ProductDropdownMenu } from "../ProductDropdownMenu/ProductDropdownMenu";
 
@@ -23,6 +23,21 @@ export const ProductCard: React.FC<ProductCardProps> = (props) => {
   const [isPinActive, setIsPinActive] = useState(
     pinProduct?.product_id === props.product.product_id
   );
+
+  const getPercentDifference = () => {
+    if (pinProduct) {
+      if (pinProduct?.current_price > props.product.current_price) {
+        const percent =
+          100 - (props.product.current_price / pinProduct?.current_price) * 100;
+        return <Chip color="success">{percent.toFixed(2)}%</Chip>;
+      } else if (pinProduct?.current_price < props.product.current_price) {
+        const percent =
+          100 - (pinProduct?.current_price / props.product.current_price) * 100;
+
+        return <Chip color="danger">{percent.toFixed(2)} %</Chip>;
+      }
+    }
+  };
 
   const handlePinProduct = (isActive: boolean) => {
     setIsPinActive(isActive);
@@ -86,13 +101,14 @@ export const ProductCard: React.FC<ProductCardProps> = (props) => {
 
               <div>
                 <p
-                  className={`font-bold text-lg flex items-center gap-1 ${getPriceStyle(
+                  className={`font-bold text-lg flex items-center flex-wrap gap-1 ${getPriceStyle(
                     pinProduct,
                     props.product
                   )}`}
                 >
                   {props.product.current_price} {props.product.currency}
                   <span>{getArrowIcon(pinProduct, props.product)}</span>
+                  <span>{getPercentDifference()}</span>
                 </p>
 
                 {props.product.price_by_weight && (

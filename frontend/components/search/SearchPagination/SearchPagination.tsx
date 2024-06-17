@@ -14,16 +14,19 @@ const SearchPagination = (props: Props) => {
   const pathname = usePathname();
 
   const [currentPage, setCurrentPage] = useState(
-    parseInt(searchParams.get("page") || "1")
+    parseInt(searchParams.get("page") || "1") || 1
   );
 
-  const handlePagination = useCallback((pageNumber: number) => {
-    const newQueryString = getQueryString(searchParams.toString(), {
-      name: "page",
-      value: pageNumber.toString(),
-    });
-    router.push(`${pathname}?${newQueryString}`);
-  }, [router, pathname, searchParams]);
+  const handlePagination = useCallback(
+    (pageNumber: number) => {
+      const newQueryString = getQueryString(searchParams.toString(), {
+        name: "page",
+        value: pageNumber.toString(),
+      });
+      router.push(`${pathname}?${newQueryString}`);
+    },
+    [router, pathname, searchParams]
+  );
 
   useEffect(() => {
     handlePagination(currentPage);

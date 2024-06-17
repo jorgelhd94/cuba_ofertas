@@ -63,8 +63,6 @@ export const ProductSearchGrid: React.FC<ProductSearchGridProps> = ({
           <div className="flex gap-2 flex-grow justify-end flex-wrap">
             <ProductModeSelect
               isDisabled={loading}
-              handleProductMode={() => {}}
-              orderByOption={"0"}
             />
             <OrderBy isDisabled={loading} />
           </div>
