@@ -34,6 +34,8 @@ def update_database_sm23():
 
         categories = Category.objects.annotate(num_sub_cat=Count('children')).filter(num_sub_cat=0)
 
+        print(f"Categorias a procesar: {categories.count()}\n")
+
         for category in categories:
             base_url = "categoria/" + category.category_id
             total = scraper_sm23.create_or_update_products(seleniumDriver, base_url, category)
@@ -41,7 +43,7 @@ def update_database_sm23():
             print('------------------------')
             print(f'Categoria procesada: {category.name}')
             print(f'Cantidad de productos: {total}')
-            print('------------------------')
+            print('------------------------\n')
 
 
         new_products = Product.objects.filter(created_at__gte=now)

@@ -1,4 +1,22 @@
 from django.db import models
+from django.utils import timezone
+from django.utils.text import slugify
+
+
+class Shop(models.Model):
+    name = models.CharField(max_length=255)
+    url = models.URLField(max_length=200)
+    slug = models.SlugField(max_length=255, unique=True, blank=True)
+
+    def __str__(self):
+        return self.name
+
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+
 
 class Manufacture(models.Model):
     id = models.AutoField(primary_key=True)
@@ -40,16 +58,26 @@ class Category(models.Model):
 class Product(models.Model):
     id = models.AutoField(primary_key=True)
     product_id = models.CharField(max_length=255)
+    
+    shop = models.ForeignKey(Shop, on_delete=models.CASCADE, null=True, related_name='products')
     manufacture = models.ForeignKey(Manufacture, on_delete=models.CASCADE)
     provider = models.ForeignKey(Provider, on_delete=models.CASCADE, null=True)
     categories = models.ManyToManyField(Category, related_name='products')
+    
     name = models.CharField(max_length=255, null=True)
     product_url = models.CharField(max_length=255, null=True)
     image_url = models.CharField(max_length=255, null=True)
+
     current_price = models.FloatField(null=True)
+    previous_price = models.FloatField(null=True)
     currency = models.CharField(max_length=255, null=True)
+
+    old_price = models.FloatField(null=True, blank=True)
+    
     price_by_weight = models.FloatField(null=True)
     currency_by_weight = models.CharField(max_length=255, null=True)
+    previous_price_by_weight = models.FloatField(null=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -58,6 +86,29 @@ class Product(models.Model):
         indexes = [
             models.Index(fields=['manufacture'], name='product_FK'),
         ]
+
+    def save(self, *args, **kwargs):
+        super(Product, self).save(*args, **kwargs)
+        
+        # Check if there's already a PriceHistory for today
+        today = timezone.now().date()
+        existing_history = PriceHistory.objects.filter(product=self, date__date=today).first()
+        
+        if existing_history:
+            existing_history.price = self.current_price
+            existing_history.save()
+        else:
+            PriceHistory.objects.create(product=self, price=self.current_price)
+
+
+class PriceHistory(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='price_history')
+    date = models.DateTimeField(auto_now_add=True)
+    price = models.FloatField()
+
+    class Meta:
+        db_table = 'price_history'
+        ordering = ['-date']
 
 
 class ComparisonZone(models.Model):

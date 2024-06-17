@@ -5,7 +5,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import re
 from django.utils import timezone
-from apps.product.models import Product, Manufacture, Category, Provider
+from apps.product.models import Shop, Product, Manufacture, Category, Provider
 
 
 
@@ -37,9 +37,17 @@ def get_product_data(product_html: WebElement):
     price = price.replace("\n", "").split("&nbsp;")
 
     try:
+        old_price = product_html.find_element(By.CLASS_NAME, "old_price").get_attribute("innerHTML")
+    except:
+        old_price = ""
+    
+    old_price = old_price.replace("\n", "").split("&nbsp;")
+
+    try:
         price_by_weight_text = product_html.find_element(By.CLASS_NAME, "price-by-weight").get_attribute("innerHTML")
     except:
         price_by_weight_text = ""
+
 
     if price_by_weight_text:
         price_by_weight_text = price_by_weight_text.replace("\n", "").split("&nbsp;")
@@ -54,6 +62,7 @@ def get_product_data(product_html: WebElement):
             "product_url": product_url,
             "image_url": image_url,
             "manufacture": manufacture_product,
+            "old_price": float(old_price[0].replace(" ", "").replace(".", "").replace(",", ".")) if old_price[0] else None,
             "current_price":float(price[0].replace(" ", "").replace(".", "").replace(",", ".")),
             "currency": price[1],
             "price_by_weight": price_by_weight,
@@ -243,8 +252,19 @@ def create_product_and_manufacture(product_id: str, product_data: dict, category
 
     product, created = Product.objects.update_or_create(product_id=product_id, manufacture=manufacture, defaults=product_defaults)
 
+    # Obtener o crear la tienda "Supermarket 23" con la URL asociada
+    shop_name = "Supermarket 23"
+    shop_url = "https://www.supermarket23.com/es/"
+    shop_slug = "sm23"
+    shop, shop_created = Shop.objects.get_or_create(name=shop_name, defaults={'url': shop_url, 'slug': shop_slug})
+
     if category not in product.categories.all():
         product.categories.add(category)
+    
+    # Asociar la tienda al producto si aún no está asociada
+    if product.shop is None:
+        product.shop = shop
+        product.save()
 
 
 def update_product_meta(seleniumDriver: SeleniumDriver, start_date):
