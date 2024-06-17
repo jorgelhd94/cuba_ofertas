@@ -1,18 +1,21 @@
 "use client";
 
+import { ProductCard } from "@/components/products/ProductCard/ProductCard";
 import { SaveBtn } from "@/components/shared/buttons/SaveBtn";
 import { ErrorMsg } from "@/components/shared/messages/ErrorMsg/ErrorMsg";
+import { PinProductContext } from "@/lib/context/PinProductContext";
 import { ISearchProducts } from "@/lib/interfaces/ISearchProducts";
-import { usePathname, useSearchParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
-import { SearchForm } from "../SearchForm/SearchForm";
+import { useSearchParams } from "next/navigation";
+import React, { useContext, useEffect, useState } from "react";
 import ProductSearchGrid from "../../products/ProductSearchGrid/ProductSearchGrid";
+import { SearchForm } from "../SearchForm/SearchForm";
 
 type Props = {
   hideSaveSearch?: boolean;
 };
 
 export const SearchComponent: React.FC<Props> = (props) => {
+  const { pinProduct, setPinProduct } = useContext(PinProductContext);
   const searchParams = useSearchParams();
 
   const [loading, setLoading] = useState(false);
@@ -56,9 +59,28 @@ export const SearchComponent: React.FC<Props> = (props) => {
         <SearchForm loading={loading} />
         {!props.hideSaveSearch && <SaveBtn />}
       </div>
-      
 
-      {isError ? <ErrorMsg /> : <ProductSearchGrid searchResults={searchResults} loading={loading} />}
+      <div className="flex max-md:flex-col justify-between px-4 gap-4 w-full">
+        {pinProduct && (
+          <div className="h-max sticky top-16 lg:top-20 z-50 flex md:flex-col justify-center">
+            <h3 className="text-xl font-medium pb-4 max-md:hidden">
+              Producto fijado
+            </h3>
+            <ProductCard product={pinProduct} />
+          </div>
+        )}
+
+        <div className="flex justify-center w-full">
+          {isError ? (
+            <ErrorMsg />
+          ) : (
+            <ProductSearchGrid
+              searchResults={searchResults}
+              loading={loading}
+            />
+          )}
+        </div>
+      </div>
     </div>
   );
 };

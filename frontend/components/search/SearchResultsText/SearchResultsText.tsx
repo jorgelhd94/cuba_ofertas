@@ -11,7 +11,7 @@ const SearchResultsText = (props: Props) => {
   const searchParams = useSearchParams();
 
   const searchText = searchParams.get("q") || "";
-  const pagination = parseInt(searchParams.get("page") || "1");
+  const pagination = parseInt(searchParams.get("page") || "1") || 1;
 
   const initialNumber = props.total ? 1 + 10 * (pagination - 1) : 0;
   const finalNumber = 10 * (pagination - 1) + props.resultsLength;
