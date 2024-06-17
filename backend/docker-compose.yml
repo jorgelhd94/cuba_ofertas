@@ -8,11 +8,16 @@ services:
     ports:
       - "8080:8080"
     command: >
-      bash -c "service cron start &&
-               python manage.py makemigrations &&
-               python manage.py migrate &&
-               python manage.py crontab add &&
-               python manage.py runserver 0.0.0.0:8080"
+      bash -c "
+        until pg_isready -h db -p 5432; do
+          echo 'Waiting for Postgres to be ready...';
+          sleep 5;
+        done;
+        service cron start &&
+        python manage.py makemigrations &&
+        python manage.py migrate &&
+        python manage.py crontab add &&
+        python manage.py runserver 0.0.0.0:8080"
     env_file:
       - ./.env
     depends_on:
@@ -25,4 +30,3 @@ services:
       - postgres_data:/var/lib/postgresql/data/
 volumes:
   postgres_data:
-
