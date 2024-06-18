@@ -13,7 +13,7 @@ export const getQueryString = (
   }
 
   // Inicializar "page" en "1"
-  if (param.name === "q" || param.name === "mode") {
+  if (oldParams.get("page") && (param.name === "q" || param.name === "mode")) {
     newParams.set("page", "1");
     paramsOrder.splice(
       paramsOrder.findIndex((value) => value === "page"),

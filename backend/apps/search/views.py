@@ -12,26 +12,13 @@ from .tasks import update_database_sm23, test_auth
 
 
 #Ordenar productos si se proporciona orderby
-order_mapping = {
+ORDER_MAPPING = {
     'default': 'id',               # Sin ordenar
     'less_price': 'current_price',     # Menor precio
     'higher_price': '-current_price',    # Mayor precio
     'new': '-created_at',       # Más nuevo
     'less_price_by_weight': 'price_by_weight'    # Menor precio/lb
 }
-
-def get_valid_page(request, query_params, paginator, products_queryset_count):
-     # Validar página proporcionada
-    page_number = query_params.get(paginator.page_query_param, 1)
-    page_number = int(page_number) if page_number.isdigit() and int(page_number) > 0 else 1
-    page_size = paginator.get_page_size(request)
-    total_items = products_queryset_count
-    total_pages = (total_items + page_size - 1) // page_size
-
-    if page_number > total_pages:
-        return 1
-    
-    return page_number
         
 
 class SearchView(APIView):
@@ -54,7 +41,7 @@ class SearchView(APIView):
                 products_queryset = Product.objects.all()
             
             # Order By
-            products_queryset = products_queryset.order_by(order_mapping.get(orderby, 'id'))
+            products_queryset = products_queryset.order_by(ORDER_MAPPING.get(orderby, 'id'))
 
             # Mode
             if mode == 'combo':
@@ -66,12 +53,6 @@ class SearchView(APIView):
             paginator = PageNumberPagination()
 
              # Validar página proporcionada
-            page_number = get_valid_page(request, query_params, paginator, products_queryset.count())
-
-            request.query_params._mutable = True
-            request.query_params[paginator.page_query_param] = str(page_number)
-            request.query_params._mutable = False
-
             page = paginator.paginate_queryset(products_queryset, request)
             
             # Serializar datos de productos paginados
