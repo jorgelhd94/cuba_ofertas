@@ -70,12 +70,9 @@ export const ProductSearchGrid: React.FC<ProductSearchGridProps> = ({
   const pathname = usePathname();
 
   const cleanFilters = () => {
-    const searchText = searchParams.get("q");
-    const newParams = new URLSearchParams();
-
-    if (searchText) {
-      newParams.set("q", searchText);
-    }
+    const newParams = new URLSearchParams(searchParams.toString());
+    newParams.delete("orderby");
+    newParams.delete("mode");
 
     router.push(pathname + "?" + newParams.toString());
   };
@@ -94,9 +91,11 @@ export const ProductSearchGrid: React.FC<ProductSearchGridProps> = ({
               color="secondary"
               startContent={<HiAdjustments />}
               endContent={
-                (countFilters > 0 && <Chip radius="sm" color="primary" size="sm">
-                  {countFilters}
-                </Chip>)
+                countFilters > 0 && (
+                  <Chip radius="sm" color="primary" size="sm">
+                    {countFilters}
+                  </Chip>
+                )
               }
               onClick={() => setIsFilterOpen(true)}
               variant="ghost"

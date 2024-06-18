@@ -1,5 +1,10 @@
 from rest_framework import serializers
-from .models import Product, Manufacture, ComparisonZone, Provider, Category
+from .models import Product, Manufacture, ComparisonZone, Provider, Category, Shop
+
+class ShopSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Shop
+        fields = ['id', 'name', 'url', 'slug']
 
 class ManufactureSerializer(serializers.ModelSerializer):
     class Meta:
@@ -26,6 +31,7 @@ class ProductSerializer(serializers.ModelSerializer):
     manufacture = ManufactureSerializer()
     categories = CategorySerializer(many=True)
     provider = ProviderSerializer()
+    shop = ShopSerializer()
 
     class Meta:
         model = Product

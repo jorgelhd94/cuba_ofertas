@@ -1,9 +1,0 @@
-<<<<<<< HEAD
-# Supabase
-.branches
-.temp
-.env
-=======
-/.branches/
-/.temp/
->>>>>>> 8cec031 (add gitignore)

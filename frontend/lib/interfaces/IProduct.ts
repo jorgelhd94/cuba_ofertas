@@ -1,3 +1,4 @@
+import { IShop } from "./IChop";
 import { IManufacture } from "./IManufacture";
 
 export interface IProduct {
@@ -6,6 +7,7 @@ export interface IProduct {
   product_url: string;
   image_url: string;
   manufacture: IManufacture;
+  shop: IShop;
   current_price: number;
   old_price: number | null;
   currency: string;

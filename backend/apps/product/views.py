@@ -4,18 +4,34 @@ from rest_framework.decorators import action
 from rest_framework.exceptions import status
 from .models import Product, Manufacture, ComparisonZone, Category, Provider
 from .serializers import ProductSerializer, ManufactureSerializer, ComparisonZoneSerializer, CategorySerializer, ProviderSerializer
-from common.configuration.pagination import StandardResultsSetPagination 
+from common.configuration.pagination import StandardResultsSetPagination
+from django.db.models.functions import Trim, Replace
+from django.db.models import F, Value
 
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     pagination_class = StandardResultsSetPagination
 
-
 class ManufactureViewSet(viewsets.ModelViewSet):
-    queryset = Manufacture.objects.all()
+    queryset = Manufacture.objects.all().order_by('name')
     serializer_class = ManufactureSerializer
     pagination_class = StandardResultsSetPagination
+
+    def get_queryset(self):
+        # Elimina tabulaciones, retornos de carro y nuevas líneas
+        queryset = Manufacture.objects.annotate(
+            cleaned_name=Trim(
+                Replace(
+                    Replace(
+                        Replace(F('name'), Value('\t'), Value('')),
+                        Value('\r'), Value('')
+                    ),
+                    Value('\n'), Value('')
+                )
+            )
+        ).order_by('cleaned_name')
+        return queryset
 
 
 class CategoryViewSet(viewsets.ModelViewSet):

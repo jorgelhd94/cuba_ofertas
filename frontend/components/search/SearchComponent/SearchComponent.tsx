@@ -67,7 +67,7 @@ export const SearchComponent: React.FC<Props> = (props) => {
 
       <div className="flex max-md:flex-col justify-between px-4 gap-4 w-full">
         {pinProduct && (
-          <div className="h-max sticky top-16 lg:top-20 z-50 flex md:flex-col justify-center">
+          <div className="h-max sticky top-16 lg:top-20 z-30 flex md:flex-col justify-center">
             <h3 className="text-xl font-medium pb-4 max-md:hidden">
               Producto fijado
             </h3>

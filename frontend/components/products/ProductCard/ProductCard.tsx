@@ -10,6 +10,7 @@ import {
 import { Card, CardBody, CardFooter, Chip, Image } from "@nextui-org/react";
 import React, { useContext, useEffect, useState } from "react";
 import { ProductDropdownMenu } from "../ProductDropdownMenu/ProductDropdownMenu";
+import ShopImage from "@/components/shared/images/ShopImage/ShopImage";
 
 type ProductCardProps = {
   product: IProduct;
@@ -154,10 +155,12 @@ export const ProductCard: React.FC<ProductCardProps> = (props) => {
         </CardBody>
 
         <CardFooter>
-          <div className="flex gap-2 justify-between w-full">
+          <div className="flex gap-2 justify-between items-center w-full">
             {!props.hideSetPin && (
               <PinBtn isActive={isPinActive} handleClick={handlePinProduct} />
             )}
+
+            <ShopImage shop={props.product.shop} />
 
             {!props.hideMenu && <ProductDropdownMenu product={props.product} />}
           </div>

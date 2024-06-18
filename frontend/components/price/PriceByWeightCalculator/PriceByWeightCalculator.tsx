@@ -34,7 +34,7 @@ export const PriceByWeightCalculator: React.FC<PriceByWeightCalculatorProps> = (
   };
 
   return (
-    <div className="grid sm:grid-cols-2">
+    <div className="grid md:grid-cols-2 gap-8">
       <div className="flex justify-center">
         <ProductCard product={props.product} hideMenu hideSetPin />
       </div>
@@ -49,7 +49,7 @@ export const PriceByWeightCalculator: React.FC<PriceByWeightCalculatorProps> = (
             type="number"
             step={0.01}
             labelPlacement="outside"
-            endContent={getWeightName()}
+            description={"Unidad: " + getWeightName()}
             onChange={(event) => setWeight(parseFloat(event.target.value))}
           />
 
@@ -60,7 +60,7 @@ export const PriceByWeightCalculator: React.FC<PriceByWeightCalculatorProps> = (
             type="number"
             step={0.01}
             labelPlacement="outside"
-            endContent={
+            description={
               props.product.currency_by_weight
                 ? props.product.currency_by_weight
                 : ""

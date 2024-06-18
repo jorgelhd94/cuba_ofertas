@@ -20,7 +20,7 @@ export const PriceByWeightCalculatorModal: React.FC<CalculatorModalProps> = (
   props
 ) => {
   return (
-    <Modal size="3xl" placement="center" isOpen={props.isOpen} onOpenChange={props.onOpenChange}>
+    <Modal size="3xl" placement="top" scrollBehavior="outside" isOpen={props.isOpen} onOpenChange={props.onOpenChange}>
       <ModalContent>
         {(onClose) => (
           <>
