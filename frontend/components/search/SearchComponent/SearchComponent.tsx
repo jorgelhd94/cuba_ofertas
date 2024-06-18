@@ -58,8 +58,11 @@ export const SearchComponent: React.FC<Props> = (props) => {
   return (
     <div className="flex flex-col items-center gap-8 max-md:pt-4 w-full">
       <div className="flex max-md:flex-col items-center gap-2 max-w-3xl w-full">
-        <SearchForm loading={loading} handleSearchText={handleSearchText} />
-        {!props.hideSaveSearch && <SaveBtn />}
+        <SearchForm
+          loading={loading}
+          handleSearchText={handleSearchText}
+          hideSaveSearch={props.hideSaveSearch}
+        />
       </div>
 
       <div className="flex max-md:flex-col justify-between px-4 gap-4 w-full">

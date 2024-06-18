@@ -1,4 +1,5 @@
 "use client";
+import { SaveBtn } from "@/components/shared/buttons/SaveBtn";
 import { SubmitBtn } from "@/components/shared/buttons/SubmitBtn/SubmitBtn";
 import { SearchIcon } from "@/components/shared/icons/SearchIcon";
 import { getQueryString } from "@/lib/utils/functions/getQueryString";
@@ -8,6 +9,7 @@ import React, { useState } from "react";
 
 type SearchFormProps = {
   loading: boolean;
+  hideSaveSearch?: boolean;
   handleSearchText: Function;
 };
 
@@ -63,7 +65,10 @@ export const SearchForm: React.FC<SearchFormProps> = (props) => {
         value={searchText}
       />
 
-      <SubmitBtn loading={props.loading} />
+      <div className="flex gap-2 items-center">
+        <SubmitBtn loading={props.loading} />
+        {!props.hideSaveSearch && <SaveBtn />}
+      </div>
     </form>
   );
 };

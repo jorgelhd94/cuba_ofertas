@@ -1,11 +1,13 @@
+import FilterDrawer from "@/components/search/FilterDrawer/FilterDrawer";
 import SearchPagination from "@/components/search/SearchPagination/SearchPagination";
 import SearchResultsText from "@/components/search/SearchResultsText/SearchResultsText";
 import { EmptyMsg } from "@/components/shared/messages/empty-msg/empty-msg";
-import { OrderBy } from "@/components/shared/selects/order-by/OrderBy";
 import { HidePinProductContext } from "@/lib/context/HidePinProductContext";
 import { ISearchProducts } from "@/lib/interfaces/ISearchProducts";
-import React, { useContext } from "react";
-import { ProductModeSelect } from "../../shared/selects/product-mode-select/ProductModeSelect";
+import { Button, Chip } from "@nextui-org/react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import React, { useContext, useEffect, useState } from "react";
+import { HiAdjustments, HiTrash } from "react-icons/hi";
 import { ProductCard } from "../ProductCard/ProductCard";
 import { ProductsSkeleton } from "../ProductsSkeleton/ProductsSkeleton";
 
@@ -19,6 +21,10 @@ export const ProductSearchGrid: React.FC<ProductSearchGridProps> = ({
   loading,
 }) => {
   const hidePinProduct = useContext(HidePinProductContext);
+  const searchParams = useSearchParams();
+
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+
   const showData = () => {
     if (loading) {
       return <ProductsSkeleton />;
@@ -39,6 +45,41 @@ export const ProductSearchGrid: React.FC<ProductSearchGridProps> = ({
     }
   };
 
+  const [countFilters, setCountFilters] = useState(0);
+
+  const handleCountFilters = () => {
+    let newCount = 0;
+
+    if (
+      searchParams.get("orderby") &&
+      searchParams.get("orderby") !== "default"
+    ) {
+      newCount += 1;
+    }
+
+    if (searchParams.get("mode") && searchParams.get("mode") !== "show_all") {
+      newCount += 1;
+    }
+
+    setCountFilters(newCount);
+  };
+
+  useEffect(() => handleCountFilters(), [searchParams]);
+
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const cleanFilters = () => {
+    const searchText = searchParams.get("q");
+    const newParams = new URLSearchParams();
+
+    if (searchText) {
+      newParams.set("q", searchText);
+    }
+
+    router.push(pathname + "?" + newParams.toString());
+  };
+
   return (
     searchResults?.results && (
       <div className="px-4 md:px-8 flex flex-col items-center gap-8 w-full">
@@ -49,8 +90,34 @@ export const ProductSearchGrid: React.FC<ProductSearchGridProps> = ({
             loading={loading}
           />
           <div className="flex max-md:w-full gap-2 flex-grow justify-center md:justify-end flex-wrap">
-            <ProductModeSelect isDisabled={loading} />
-            <OrderBy isDisabled={loading} />
+            <Button
+              color="secondary"
+              startContent={<HiAdjustments />}
+              endContent={
+                <Chip radius="sm" color="primary" size="sm">
+                  {countFilters}
+                </Chip>
+              }
+              onClick={() => setIsFilterOpen(true)}
+              variant="ghost"
+            >
+              Filtros
+            </Button>
+            <FilterDrawer
+              isOpen={isFilterOpen}
+              handleClose={() => setIsFilterOpen(false)}
+              isLoading={loading}
+            />
+
+            {countFilters > 0 && (
+              <Button
+                color="danger"
+                startContent={<HiTrash />}
+                onClick={() => cleanFilters()}
+              >
+                Limpiar
+              </Button>
+            )}
           </div>
         </div>
 

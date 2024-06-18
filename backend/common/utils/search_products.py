@@ -32,7 +32,7 @@ def get_descendant_category_ids(category_name):
 
 
 def filter_products_by_combo_name(products_queryset):
-    regex = re.compile(r'\(\b\d+ x\b')
+    regex = re.compile(r'\(\b\d+ x +\b\d* +[a-zA-Z]*\)')
     filtered_products = []
 
     for product in products_queryset:

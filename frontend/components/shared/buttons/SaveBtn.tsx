@@ -15,7 +15,7 @@ export const SaveBtn: React.FC<SaveBtnProps> = ({ onClick, loading }) => {
     <Button
       color="primary"
       variant="ghost"
-      type="submit"
+      type="button"
       isLoading={pending || loading}
       disabled={pending || loading}
       className="w-max text-black dark:text-white "
