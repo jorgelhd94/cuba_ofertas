@@ -42,13 +42,13 @@ export const ProductSearchGrid: React.FC<ProductSearchGridProps> = ({
   return (
     searchResults?.results && (
       <div className="px-4 md:px-8 flex flex-col items-center gap-8 w-full">
-        <div className="flex max-md:flex-col gap-4 justify-between items-center w-full">
+        <div className="flex max-md:flex-col gap-4 justify-between w-full">
           <SearchResultsText
             resultsLength={searchResults.results.length}
             total={searchResults.count}
             loading={loading}
           />
-          <div className="flex gap-2 flex-grow justify-end flex-wrap">
+          <div className="flex max-md:w-full gap-2 flex-grow justify-center md:justify-end flex-wrap">
             <ProductModeSelect isDisabled={loading} />
             <OrderBy isDisabled={loading} />
           </div>

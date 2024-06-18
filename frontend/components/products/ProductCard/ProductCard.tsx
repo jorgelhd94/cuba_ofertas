@@ -29,12 +29,20 @@ export const ProductCard: React.FC<ProductCardProps> = (props) => {
       if (pinProduct?.current_price > props.product.current_price) {
         const percent =
           100 - (props.product.current_price / pinProduct?.current_price) * 100;
-        return <Chip color="success">{percent.toFixed(2)}%</Chip>;
+        return (
+          <Chip color="success" size="sm">
+            {percent.toFixed(2)}%
+          </Chip>
+        );
       } else if (pinProduct?.current_price < props.product.current_price) {
         const percent =
           100 - (pinProduct?.current_price / props.product.current_price) * 100;
 
-        return <Chip color="danger">{percent.toFixed(2)} %</Chip>;
+        return (
+          <Chip color="danger" size="sm">
+            {percent.toFixed(2)} %
+          </Chip>
+        );
       }
     }
   };
@@ -66,11 +74,20 @@ export const ProductCard: React.FC<ProductCardProps> = (props) => {
           <div className="grid grid-cols-12">
             <div className="relative col-span-6 md:col-span-12 max-md:my-2 max-md:ml-2">
               <div className="relative overflow-hidden pb-[100%] rounded-sm">
+                {props.product.old_price && (
+                  <Chip
+                    color="danger"
+                    size="sm"
+                    className="absolute top-2 left-2 z-20"
+                  >
+                    Oferta
+                  </Chip>
+                )}
                 <Image
                   radius="lg"
                   width="100%"
                   alt={props.product.name}
-                  className="w-full h-[140px] md:h-[256px] absolute block top-0"
+                  className="w-full h-[140px] md:h-[256px] absolute block top-0 z-10"
                   src={props.product.image_url}
                 />
               </div>
@@ -100,8 +117,8 @@ export const ProductCard: React.FC<ProductCardProps> = (props) => {
               )}
 
               <div>
-                <p
-                  className={`font-bold text-lg flex items-center flex-wrap gap-1 ${getPriceStyle(
+                <div
+                  className={`font-bold text-lg flex items-center flex-wrap gap-x-1 ${getPriceStyle(
                     pinProduct,
                     props.product
                   )}`}
@@ -109,11 +126,17 @@ export const ProductCard: React.FC<ProductCardProps> = (props) => {
                   {props.product.current_price} {props.product.currency}
                   <span>{getArrowIcon(pinProduct, props.product)}</span>
                   <span>{getPercentDifference()}</span>
-                </p>
+                </div>
+
+                {props.product.old_price && (
+                  <p className="font-semibold text-lg text-gray-400 line-through flex items-center">
+                    {props.product.old_price} {props.product.currency}
+                  </p>
+                )}
 
                 {props.product.price_by_weight && (
                   <p
-                    className={`font-bold text-sm flex items-center ${getPriceByWeightStyle(
+                    className={`font-bold text-sm flex items-center mt-2 ${getPriceByWeightStyle(
                       pinProduct,
                       props.product
                     )}`}
