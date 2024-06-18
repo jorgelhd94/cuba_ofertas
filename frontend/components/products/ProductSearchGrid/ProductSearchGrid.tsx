@@ -94,9 +94,9 @@ export const ProductSearchGrid: React.FC<ProductSearchGridProps> = ({
               color="secondary"
               startContent={<HiAdjustments />}
               endContent={
-                <Chip radius="sm" color="primary" size="sm">
+                (countFilters > 0 && <Chip radius="sm" color="primary" size="sm">
                   {countFilters}
-                </Chip>
+                </Chip>)
               }
               onClick={() => setIsFilterOpen(true)}
               variant="ghost"
