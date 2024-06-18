@@ -53,6 +53,14 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
+    
+    def get_descendants(self):
+        descendants = []
+        children = self.children.all()
+        for child in children:
+            descendants.append(child)
+            descendants.extend(child.get_descendants())
+        return descendants
 
 
 class Product(models.Model):

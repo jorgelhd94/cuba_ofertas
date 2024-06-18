@@ -3,11 +3,8 @@ import SearchResultsText from "@/components/search/SearchResultsText/SearchResul
 import { EmptyMsg } from "@/components/shared/messages/empty-msg/empty-msg";
 import { OrderBy } from "@/components/shared/selects/order-by/OrderBy";
 import { HidePinProductContext } from "@/lib/context/HidePinProductContext";
-import { IProduct } from "@/lib/interfaces/IProduct";
 import { ISearchProducts } from "@/lib/interfaces/ISearchProducts";
-import { getEmptyMessageByProductMode } from "@/lib/utils/functions/common";
-import { filterProducts } from "@/lib/utils/functions/filters";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import { ProductModeSelect } from "../../shared/selects/product-mode-select/ProductModeSelect";
 import { ProductCard } from "../ProductCard/ProductCard";
 import { ProductsSkeleton } from "../ProductsSkeleton/ProductsSkeleton";
@@ -22,22 +19,13 @@ export const ProductSearchGrid: React.FC<ProductSearchGridProps> = ({
   loading,
 }) => {
   const hidePinProduct = useContext(HidePinProductContext);
-
-  const [products, setProducts] = useState<IProduct[]>(
-    searchResults?.results || []
-  );
-
-  useEffect(() => {
-    setProducts(filterProducts(searchResults?.results));
-  }, [searchResults?.results]);
-
   const showData = () => {
     if (loading) {
       return <ProductsSkeleton />;
-    } else if (products.length) {
+    } else if (searchResults && searchResults.results.length) {
       return (
         <div className="gap-4 flex flex-col sm:flex-row justify-evenly flex-wrap lg:columns-4">
-          {products.map((item, index) => (
+          {searchResults.results.map((item, index) => (
             <ProductCard
               key={item.product_id + "-" + index}
               product={item}
@@ -47,7 +35,7 @@ export const ProductSearchGrid: React.FC<ProductSearchGridProps> = ({
         </div>
       );
     } else {
-      return <EmptyMsg message={getEmptyMessageByProductMode("1")} />;
+      return <EmptyMsg />;
     }
   };
 
@@ -61,9 +49,7 @@ export const ProductSearchGrid: React.FC<ProductSearchGridProps> = ({
             loading={loading}
           />
           <div className="flex gap-2 flex-grow justify-end flex-wrap">
-            <ProductModeSelect
-              isDisabled={loading}
-            />
+            <ProductModeSelect isDisabled={loading} />
             <OrderBy isDisabled={loading} />
           </div>
         </div>

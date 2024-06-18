@@ -7,12 +7,13 @@ from rest_framework.pagination import PageNumberPagination
 from django.db.models import Q
 from apps.product.models import Product
 from apps.product.serializers import ProductSerializer
+from common.utils.search_products import get_descendant_category_ids, get_valid_page, filter_products_by_combo_name
 
 from .tasks import update_database_sm23, test_auth
 
 
 #Ordenar productos si se proporciona orderby
-ORDER_MAPPING = {
+order_mapping = {
     'default': 'id',               # Sin ordenar
     'less_price': 'current_price',     # Menor precio
     'higher_price': '-current_price',    # Mayor precio
@@ -41,18 +42,32 @@ class SearchView(APIView):
                 products_queryset = Product.objects.all()
             
             # Order By
-            products_queryset = products_queryset.order_by(ORDER_MAPPING.get(orderby, 'id'))
+            products_queryset = products_queryset.order_by(order_mapping.get(orderby, 'id'))
 
             # Mode
-            if mode == 'combo':
-                products_queryset = products_queryset.filter(categories__name='Combos')
-            elif mode == 'simple':
-                products_queryset = products_queryset.exclude(categories__name='Combos')
+            if mode in ['combo', 'simple']:
+                descendant_category_ids = get_descendant_category_ids('Combos')
+                if mode == 'combo':
+                    combo_name_filtered_ids = filter_products_by_combo_name(products_queryset)
+                    products_queryset = products_queryset.filter(
+                        Q(categories__id__in=descendant_category_ids) | Q(id__in=combo_name_filtered_ids)
+                    )
+                elif mode == 'simple':
+                    combo_name_filtered_ids = filter_products_by_combo_name(products_queryset)
+                    products_queryset = products_queryset.exclude(
+                        Q(categories__id__in=descendant_category_ids) | Q(id__in=combo_name_filtered_ids)
+                    )
             
             # Paginación
             paginator = PageNumberPagination()
 
              # Validar página proporcionada
+            page_number = get_valid_page(request, query_params, paginator, products_queryset.count())
+
+            request.query_params._mutable = True
+            request.query_params[paginator.page_query_param] = str(page_number)
+            request.query_params._mutable = False
+
             page = paginator.paginate_queryset(products_queryset, request)
             
             # Serializar datos de productos paginados

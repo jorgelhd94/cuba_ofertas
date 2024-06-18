@@ -1,10 +1,14 @@
 export const getQueryString = (
   searchParams: string,
-  param: { name: string; value: string | null }
+  param: { name: string; value: string | null } | null = null
 ) => {
   const paramsOrder = ["q", "page", "orderby", "mode"];
   const oldParams = new URLSearchParams(searchParams);
   const newParams = new URLSearchParams();
+
+  if (!param) {
+    return oldParams;
+  }
 
   // Si el parámetro entrado es "q" y está vacío, eliminarlo
   if (param.name === "q" && (!param.value || param.value.trim() === "")) {
@@ -30,6 +34,12 @@ export const getQueryString = (
       newParams.set(paramType, oldParams.get(paramType) || "");
     }
   });
+
+  if (newParams.get("page") !== null) {
+    if (Number.isNaN(parseInt(newParams.get("page") || "0"))) {
+      newParams.delete("page");
+    }
+  }
 
   return newParams.toString();
 };

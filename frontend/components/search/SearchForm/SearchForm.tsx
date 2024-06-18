@@ -4,10 +4,11 @@ import { SearchIcon } from "@/components/shared/icons/SearchIcon";
 import { getQueryString } from "@/lib/utils/functions/getQueryString";
 import { Input } from "@nextui-org/react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 
 type SearchFormProps = {
   loading: boolean;
+  handleSearchText: Function;
 };
 
 export const SearchForm: React.FC<SearchFormProps> = (props) => {
@@ -16,7 +17,14 @@ export const SearchForm: React.FC<SearchFormProps> = (props) => {
   const pathname = usePathname();
 
   const [searchText, setSearchText] = useState(searchParams.get("q") || "");
+
   const handleSearch = (formData: FormData) => {
+    const inputText = formData.get("searchText")?.toString() || "";
+
+    if (searchText === inputText) {
+      props.handleSearchText(searchText);
+    }
+
     setSearchText(formData.get("searchText")?.toString() || "");
     router.push(
       pathname +

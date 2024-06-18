@@ -6,7 +6,7 @@ import { ErrorMsg } from "@/components/shared/messages/ErrorMsg/ErrorMsg";
 import { PinProductContext } from "@/lib/context/PinProductContext";
 import { ISearchProducts } from "@/lib/interfaces/ISearchProducts";
 import { useSearchParams } from "next/navigation";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import ProductSearchGrid from "../../products/ProductSearchGrid/ProductSearchGrid";
 import { SearchForm } from "../SearchForm/SearchForm";
 
@@ -25,38 +25,40 @@ export const SearchComponent: React.FC<Props> = (props) => {
     null
   );
 
-  useEffect(() => {
-    async function handleSearchProducts() {
-      setLoading(true);
-      setIsError(false);
+  const handleSearchProducts = useCallback(async () => {
+    setLoading(true);
+    setIsError(false);
 
-      try {
-        const data = await fetch(
-          process.env.NEXT_PUBLIC_API_URL! +
-            `api/v1/search/?` +
-            searchParams.toString()
-        ).then((response) => {
-          if (response.status !== 200) {
-            throw new Error("Error fetching data");
-          }
-          return response.json();
-        });
-
-        setSearchResults(data);
-      } catch (error) {
-        setIsError(true);
-      } finally {
-        setLoading(false);
+    try {
+      const response = await fetch(
+        `${
+          process.env.NEXT_PUBLIC_API_URL
+        }api/v1/search/?${searchParams.toString()}`
+      );
+      if (response.status !== 200) {
+        throw new Error("Error fetching data");
       }
+      const data = await response.json();
+      setSearchResults(data);
+    } catch (error) {
+      setIsError(true);
+    } finally {
+      setLoading(false);
     }
+  }, [searchParams]);
 
+  const handleSearchText = async () => {
+    await handleSearchProducts();
+  };
+
+  useEffect(() => {
     handleSearchProducts();
   }, [searchParams]);
 
   return (
     <div className="flex flex-col items-center gap-8 max-md:pt-4 w-full">
       <div className="flex max-md:flex-col items-center gap-2 max-w-3xl w-full">
-        <SearchForm loading={loading} />
+        <SearchForm loading={loading} handleSearchText={handleSearchText} />
         {!props.hideSaveSearch && <SaveBtn />}
       </div>
 
