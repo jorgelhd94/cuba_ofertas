@@ -17,6 +17,9 @@ RUN apt-get -y install cron
 RUN apt-get install -y postgresql-client && \
     apt-get clean
 
+FROM library/postgres
+COPY init.sql /docker-entrypoint-initdb.d/
+
 ENV CHROME_VERSION 125.0.6422.76
 
 RUN wget --no-verbose -O /tmp/chrome.deb https://mirror.cs.uchicago.edu/google-chrome/pool/main/g/google-chrome-stable/google-chrome-stable_${CHROME_VERSION}-1_amd64.deb \
