@@ -47,9 +47,6 @@ export const SearchComponent: React.FC<Props> = (props) => {
     }
   }, [searchParams]);
 
-  const handleSearchText = async () => {
-    await handleSearchProducts();
-  };
 
   useEffect(() => {
     handleSearchProducts();
@@ -60,7 +57,6 @@ export const SearchComponent: React.FC<Props> = (props) => {
       <div className="flex max-md:flex-col items-center gap-2 max-w-3xl w-full">
         <SearchForm
           loading={loading}
-          handleSearchText={handleSearchText}
           hideSaveSearch={props.hideSaveSearch}
         />
       </div>

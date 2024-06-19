@@ -1,5 +1,18 @@
-from apps.product.models import Category
+from apps.product.models import Category, Product
+from django.db.models import Q
 import re
+
+
+def search_products(query):
+    search_words = query.split()
+    query = Q()
+    for word in search_words:
+        query &= Q(name__icontains=word)
+
+    products_queryset = Product.objects.filter(query)
+
+    return products_queryset
+
 
 def get_valid_page(request, query_params, paginator, products_queryset_count):
      # Validar página proporcionada

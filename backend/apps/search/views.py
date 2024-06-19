@@ -1,13 +1,13 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.exceptions import APIException
+
 
 from rest_framework.pagination import PageNumberPagination
 from django.db.models import Q
 from apps.product.models import Product
 from apps.product.serializers import ProductSerializer
-from common.utils.search_products import get_descendant_category_ids, get_valid_page, filter_products_by_combo_name
+from common.utils.search_products import get_descendant_category_ids, get_valid_page, filter_products_by_combo_name, search_products
 
 from .tasks import update_database_sm23, test_auth
 
@@ -31,15 +31,7 @@ class SearchView(APIView):
             mode = query_params.get('mode', 'show_all')
 
             # Filtrar productos basados en search_text
-            if search_text:
-                search_words = search_text.split()
-                query = Q()
-                for word in search_words:
-                    query &= Q(name__icontains=word)
-
-                products_queryset = Product.objects.filter(query)
-            else:
-                products_queryset = Product.objects.all()
+            products_queryset = search_products(search_text) if search_text else Product.objects.all()
             
             # Order By
             products_queryset = products_queryset.order_by(order_mapping.get(orderby, 'id'))

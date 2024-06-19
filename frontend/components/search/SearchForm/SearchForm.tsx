@@ -10,7 +10,6 @@ import React, { useState } from "react";
 type SearchFormProps = {
   loading: boolean;
   hideSaveSearch?: boolean;
-  handleSearchText: Function;
 };
 
 export const SearchForm: React.FC<SearchFormProps> = (props) => {
@@ -24,7 +23,7 @@ export const SearchForm: React.FC<SearchFormProps> = (props) => {
     const inputText = formData.get("searchText")?.toString() || "";
 
     if (searchText === inputText) {
-      props.handleSearchText(searchText);
+      router.refresh();
     }
 
     setSearchText(formData.get("searchText")?.toString() || "");
