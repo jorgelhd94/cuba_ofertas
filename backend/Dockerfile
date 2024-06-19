@@ -36,6 +36,3 @@ RUN wget -q --continue -P $CHROMEDRIVER_DIR "https://storage.googleapis.com/chro
 
 # Añadir ChromeDriver al PATH
 ENV PATH $CHROMEDRIVER_DIR:$PATH
-
-FROM library/postgres
-COPY init.sql /docker-entrypoint-initdb.d/
