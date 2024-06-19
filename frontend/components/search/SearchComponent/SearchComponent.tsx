@@ -1,7 +1,6 @@
 "use client";
 
 import { ProductCard } from "@/components/products/ProductCard/ProductCard";
-import { SaveBtn } from "@/components/shared/buttons/SaveBtn";
 import { ErrorMsg } from "@/components/shared/messages/ErrorMsg/ErrorMsg";
 import { PinProductContext } from "@/lib/context/PinProductContext";
 import { ISearchProducts } from "@/lib/interfaces/ISearchProducts";
@@ -47,10 +46,9 @@ export const SearchComponent: React.FC<Props> = (props) => {
     }
   }, [searchParams]);
 
-
   useEffect(() => {
     handleSearchProducts();
-  }, [searchParams]);
+  }, [searchParams.toString()]);
 
   return (
     <div className="flex flex-col items-center gap-8 max-md:pt-4 w-full">
@@ -58,6 +56,7 @@ export const SearchComponent: React.FC<Props> = (props) => {
         <SearchForm
           loading={loading}
           hideSaveSearch={props.hideSaveSearch}
+          handleSearchText={handleSearchProducts}
         />
       </div>
 

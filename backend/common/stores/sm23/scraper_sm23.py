@@ -187,7 +187,7 @@ def create_or_update_products(seleniumDriver: SeleniumDriver, base_url: str, cat
     driver = seleniumDriver.get_driver(f"{base_url}?pagina={str(current_page)}")
 
     while not exists_product:
-        # Se va a la primera página ordenado de menor a mayor
+        
         driver = seleniumDriver.get_driver(f"{base_url}?pagina={str(current_page)}")
 
         print(f"URL: {base_url}?pagina={str(current_page)}")
@@ -286,3 +286,73 @@ def create_update_product_meta(product_meta: dict):
         provider, created = Provider.objects.update_or_create(**product_meta["provider"])
 
     return provider
+
+
+def process_product_provider(seleniumDriver: SeleniumDriver, provider: Provider):
+    current_page = 1
+    exists_product = False
+    procesed_products_ids = []
+
+    while not exists_product:
+        driver = seleniumDriver.get_driver(f"&pagina={str(current_page)}", provider.url)
+
+        print(f"URL: {provider.url}&pagina={str(current_page)}")
+
+        WebDriverWait(driver, 25).until(
+        EC.any_of(
+            EC.presence_of_element_located((By.TAG_NAME, "app-product-block-v")),
+            EC.presence_of_element_located((By.TAG_NAME, "app-empty"))
+            )
+        )
+    
+        try:
+            driver.find_element(By.TAG_NAME, 'app-empty')
+            return 0
+        except:
+            pass
+
+        products_html = driver.find_elements(By.TAG_NAME, "app-product-block-v")
+        total = get_total(driver)
+        
+        count = 0
+
+        for product_html in products_html:
+            product_id, product_data = get_product_data(product_html)
+
+            if product_id in procesed_products_ids:
+                # Si el producto se encuentra en los primeros 20
+                # se aumenta el contador y se verifica si SM23 regresó
+                # a la primera página debido al error de paginación
+                print(f"Producto ya procesado: {product_id}")
+                count += 1
+
+                if count == 20 or count == total:
+                    exists_product = True
+                    break
+
+                continue
+
+            print(f"Procesando producto: {product_id}")
+
+            update_product_provider(product_id, provider)
+            procesed_products_ids.append(product_id)
+
+        print(f"Página procesada: {current_page}")
+        
+        if(total < 20):
+            break
+        
+        # TODO: Revisar en caso de pasar a produccion
+        current_page += 1
+
+    return total
+
+
+def update_product_provider(product_id: str, provider):
+    try:
+        product = Product.objects.get(product_id=product_id)
+        product.provider = provider
+        product.save()
+        return True  # Indicate success if the product was found and updated
+    except Product.DoesNotExist:
+        return False

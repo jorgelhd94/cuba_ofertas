@@ -1,15 +1,30 @@
 from apps.product.models import Category, Product
-from django.db.models import Q
+from django.db.models import Q, F, Value
+from django.db.models.functions import Replace, Trim
+from django.db.models.expressions import Func
+from django.db import models
+from functools import reduce
 import re
 
 
+class Unaccent(Func):
+    function = 'unaccent'
+    output_field = models.CharField()
+
 def search_products(query):
     search_words = query.split()
-    query = Q()
-    for word in search_words:
-        query &= Q(name__icontains=word)
+    # Normalizar el término de búsqueda
+    unaccented_search_words = [Unaccent(Value(word)) for word in search_words]
 
-    products_queryset = Product.objects.filter(query)
+    unaccented_query = reduce(
+        lambda q, word: q & Q(unaccent_name__icontains=word),
+        unaccented_search_words,
+        Q()
+    )
+
+    products_queryset = Product.objects.annotate(
+        unaccent_name=Unaccent(Replace(Replace(Replace(Trim(F('name')), Value('\t'), Value('')), Value('\r'), Value('')), Value('\n'), Value('')))
+    ).filter(unaccented_query)
 
     return products_queryset
 

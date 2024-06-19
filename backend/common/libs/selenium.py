@@ -16,13 +16,18 @@ class SeleniumDriver:
         # Inicializa el controlador de Chrome
         self.driver = webdriver.Chrome(options=chrome_options)
     
-    def get_driver(self, endpoint: str):
+    def get_driver(self, endpoint: str, new_url: str = ""):
+        url = self.base_url
+
+        if(new_url):
+            url = new_url
+
         try:
-            self.driver.get(self.base_url + endpoint)
+            self.driver.get(url + endpoint)
         except Exception as e:
             print(f"Error: {e}")
             self.restart_driver()
-            self.driver.get(self.base_url + endpoint)
+            self.driver.get(url + endpoint)
         
         return self.driver
     

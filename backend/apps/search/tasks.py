@@ -3,7 +3,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-from apps.product.models import Product, Category
+from apps.product.models import Product, Category, Provider
 from apps.statistics_spy.models import ProductsUpdateLogs
 
 from django.utils import timezone
@@ -55,6 +55,9 @@ def update_database_sm23():
         deleted_products = Product.objects.filter(updated_at__lt=now)
         deleted_products_count = deleted_products.count()
 
+        # Update provider
+        update_providers()
+
         update.end_time = timezone.now()
         update.status = 'success'
         update.new_products_count = new_products_count
@@ -72,6 +75,21 @@ def update_database_sm23():
         update.save()
 
     return {"proceso": "Terminado"}
+
+
+def update_providers():
+    seleniumDriver = SeleniumDriver()
+    try:
+        providers = Provider.objects.all()
+        print(f"Proveedores a procesar: {providers.count()}\n")
+
+        for provider in providers:
+            scraper_sm23.process_product_provider(seleniumDriver, provider)
+    except Exception as e:
+        print("Ocurrió un error:", e)
+    finally:
+        print("Terminado")
+        seleniumDriver.quit()
 
 
 def test_auth():
