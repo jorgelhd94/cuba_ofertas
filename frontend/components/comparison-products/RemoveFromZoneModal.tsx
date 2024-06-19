@@ -9,6 +9,7 @@ import {
   ModalFooter,
   ModalHeader,
 } from "@nextui-org/react";
+import { revalidatePath } from "next/cache";
 import React, { useContext, useState } from "react";
 import { toast } from "react-toastify";
 import { useSWRConfig } from "swr";
@@ -23,12 +24,14 @@ export const RemoveFromZoneModal: React.FC<Props> = (props) => {
   const comparisonZone = useContext(ComparisonZoneContext);
   const [isLoading, setIsLoading] = useState(false);
 
+  const apiUrl = `${process.env.NEXT_PUBLIC_API_URL!}api/v1/comparison_zones/`;
+
   const { mutate } = useSWRConfig();
 
   const removeProduct = async () => {
     setIsLoading(true);
     await postFetcher(
-      `/api/comparison-zones/${comparisonZone?.id}/comparison-product/`,
+      `${apiUrl + comparisonZone?.id}/remove_product_from_compare/`,
       {
         product: props.product,
       },
@@ -37,7 +40,8 @@ export const RemoveFromZoneModal: React.FC<Props> = (props) => {
       .then(() => {
         if (props.onOpenChange) props.onOpenChange(false);
         toast.success("El producto se ha eliminado correctamente");
-        mutate(`/api/comparison-zones/${comparisonZone?.id}/`);
+        mutate(apiUrl + comparisonZone?.id + "/");
+        mutate(apiUrl);
       })
       .catch(() => toast.error("Ha ocurrido un error al eliminar el producto"))
       .finally(() => setIsLoading(false));

@@ -15,13 +15,16 @@ type Props = {
 };
 
 export const ZoneSelect: React.FC<Props> = (props) => {
-  const { data, error, isLoading } = useSWR("/api/comparison-zones/", fetcher);
+  const { data, error, isLoading } = useSWR(
+    process.env.NEXT_PUBLIC_API_URL! + "api/v1/comparison_zones/",
+    fetcher
+  );
   const [comparisonZones, setComparisonZones] = useState<IComparisonZone[]>([]);
   const [isInComparisonZone, setIsInComparisonZone] = useState(false);
 
   useEffect(() => {
     if (data) {
-      setComparisonZones(data.comparisonZones);
+      setComparisonZones(data);
     }
   }, [data]);
 
@@ -42,7 +45,7 @@ export const ZoneSelect: React.FC<Props> = (props) => {
     }
   };
 
-  return (
+  return comparisonZones.length ? (
     <Select
       variant="bordered"
       label="Seleccione una zona"
@@ -58,5 +61,7 @@ export const ZoneSelect: React.FC<Props> = (props) => {
         </SelectItem>
       ))}
     </Select>
+  ) : (
+    <p>No se han creado Zonas de comparación.</p>
   );
 };

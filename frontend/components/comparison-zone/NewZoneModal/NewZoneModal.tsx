@@ -31,6 +31,7 @@ export const NewZoneModal: React.FC<NewZoneModalProps> = ({
   const [zoneName, setZoneName] = useState("");
   const [duplicateError, setDuplicateError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
 
   const [comparisonZone, setComparisonZone] = useState<IComparisonZone | null>(
     null
@@ -66,8 +67,9 @@ export const NewZoneModal: React.FC<NewZoneModalProps> = ({
     };
 
     setIsLoading(true);
-    await createZone(data);
-    setIsLoading(false);
+    await createZone(data)
+      .catch(() => setIsError(true))
+      .finally(() => setIsLoading(false));
   };
 
   const createZone = async (data: ICreateComparisonZone) => {
@@ -106,6 +108,11 @@ export const NewZoneModal: React.FC<NewZoneModalProps> = ({
     setComparisonZone(responseData);
   };
 
+  const getErrorMsg = () => {
+    if (duplicateError) return "Ya existe una zona con este nombre";
+    if (isError) return "Ha ocurrido un error al crear la nueva zona";
+  };
+
   return (
     <Modal
       isOpen={isOpen}
@@ -125,6 +132,8 @@ export const NewZoneModal: React.FC<NewZoneModalProps> = ({
                   <Input
                     autoFocus
                     label="Nombre de la zona"
+                    placeholder="Nombre de la zona"
+                    labelPlacement="outside"
                     variant="bordered"
                     isRequired
                     value={zoneName}
@@ -132,9 +141,7 @@ export const NewZoneModal: React.FC<NewZoneModalProps> = ({
                     onKeyUp={(event) => handleKey(event.key)}
                     isClearable
                     onClear={() => setZoneName("")}
-                    errorMessage={
-                      duplicateError && "Ya existe una zona con este nombre"
-                    }
+                    errorMessage={getErrorMsg()}
                   />
 
                   {product && (
@@ -166,10 +173,12 @@ export const NewZoneModal: React.FC<NewZoneModalProps> = ({
                   Crear
                 </Button>
               ) : (
-                <Button color="primary">
-                  <Link href={"/comparison-zones/" + comparisonZone.id}>
-                    Ver zona
-                  </Link>
+                <Button
+                  as={Link}
+                  href={"/comparison-zones/" + comparisonZone.id}
+                  color="primary"
+                >
+                  Ver zona
                 </Button>
               )}
             </ModalFooter>

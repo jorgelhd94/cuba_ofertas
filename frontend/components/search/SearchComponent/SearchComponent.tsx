@@ -8,6 +8,7 @@ import { useSearchParams } from "next/navigation";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import ProductSearchGrid from "../../products/ProductSearchGrid/ProductSearchGrid";
 import { SearchForm } from "../SearchForm/SearchForm";
+import { HidePinProductContext } from "@/lib/context/HidePinProductContext";
 
 type Props = {
   hideSaveSearch?: boolean;
@@ -15,6 +16,7 @@ type Props = {
 
 export const SearchComponent: React.FC<Props> = (props) => {
   const { pinProduct, setPinProduct } = useContext(PinProductContext);
+  const hidePinProduct = useContext(HidePinProductContext);
   const searchParams = useSearchParams();
 
   const [loading, setLoading] = useState(false);
@@ -61,7 +63,7 @@ export const SearchComponent: React.FC<Props> = (props) => {
       </div>
 
       <div className="flex max-md:flex-col justify-between px-4 gap-4 w-full">
-        {pinProduct && (
+        {pinProduct && !hidePinProduct && (
           <div className="h-max sticky top-16 lg:top-20 z-30 flex md:flex-col justify-center">
             <h3 className="text-xl font-medium pb-4 max-md:hidden">
               Producto fijado

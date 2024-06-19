@@ -21,13 +21,16 @@ export const DeleteComparisonZone: React.FC<DeleteComparisonZoneProps> = (
   const handleDelete = async () => {
     setIsLoading(true);
 
-    await fetch(`/api/comparison-zones/${props.id}/`, {
-      method: "DELETE",
-    })
+    await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL!}api/v1/comparison_zones/${props.id}/`,
+      {
+        method: "DELETE",
+      }
+    )
       .then(() => {
         toast.success("Zona eliminada correctamente");
         setIsModalOpen(false);
-        mutate("/api/comparison-zones/");
+        mutate( `${process.env.NEXT_PUBLIC_API_URL!}api/v1/comparison_zones/`);
         router.push("/comparison-zones");
       })
       .catch(() => {
@@ -36,7 +39,7 @@ export const DeleteComparisonZone: React.FC<DeleteComparisonZoneProps> = (
 
     setIsLoading(false);
   };
-  
+
   return (
     <>
       <Button

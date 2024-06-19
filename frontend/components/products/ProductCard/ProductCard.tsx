@@ -79,9 +79,19 @@ export const ProductCard: React.FC<ProductCardProps> = (props) => {
                   <Chip
                     color="danger"
                     size="sm"
-                    className="absolute top-2 left-2 z-20"
+                    className="absolute top-2 left-2 z-20 select-none"
                   >
                     Oferta
+                  </Chip>
+                )}
+
+                {props.product.provider && (
+                  <Chip
+                    color="secondary"
+                    size="sm"
+                    className="absolute top-2 right-2 z-20 select-none"
+                  >
+                    {props.product.provider.name}
                   </Chip>
                 )}
                 <Image

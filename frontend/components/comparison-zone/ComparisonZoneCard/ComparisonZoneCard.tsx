@@ -2,10 +2,9 @@
 import { ProductInfoCard } from "@/components/products/ProductInfoCard/ProductInfoCard";
 import { IComparisonZone } from "@/lib/interfaces/IComparisonZone";
 import { Card, CardBody, CardFooter, CardHeader } from "@nextui-org/react";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { ComparisonCardMenu } from "../ComparisonCardMenu/ComparisonCardMenu";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
 
 type ComparisonZoneCardProps = {
   comparisonZone: IComparisonZone;
