@@ -40,7 +40,7 @@ const SideBarMain = (props: Props) => {
     {
       label: "Zonas de comparación",
       icon: HiViewGridAdd,
-      path: "/comparison",
+      path: "/comparison-zones",
     },
     {
       label: "Búsquedas guardadas",

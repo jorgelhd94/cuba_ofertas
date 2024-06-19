@@ -34,14 +34,17 @@ export const AddToZoneModal: React.FC<Props> = (props) => {
 
     const zoneId = comparisonZone ? comparisonZone.id : comparisonZoneId;
 
-    await postFetcher(`/api/comparison-zones/${zoneId}/`, {
+    const apiUrl = `${process.env
+      .NEXT_PUBLIC_API_URL!}api/v1/comparison_zones/`;
+
+    await postFetcher(apiUrl + zoneId + '/add_product_to_compare/', {
       product: props.product,
     })
       .then(() => {
         if (props.onOpenChange) props.onOpenChange(false);
         toast.success("El producto se ha añadido correctamente");
-        mutate(`/api/comparison-zones/${zoneId}/`);
-        mutate("/api/comparison-zones/");
+        mutate(apiUrl + zoneId + '/');
+        mutate(apiUrl);
       })
       .catch(() => toast.error("Ha ocurrido un error al añadir el producto"))
       .finally(() => setIsLoading(false));

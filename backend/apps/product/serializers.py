@@ -28,22 +28,14 @@ class CategorySerializer(serializers.ModelSerializer):
         return CategorySerializer(children, many=True).data
 
 class ProductSerializer(serializers.ModelSerializer):
-    manufacture = ManufactureSerializer()
-    categories = CategorySerializer(many=True)
-    provider = ProviderSerializer()
-    shop = ShopSerializer()
+    manufacture = ManufactureSerializer(read_only=True)
+    categories = CategorySerializer(many=True, read_only=True)
+    provider = ProviderSerializer(read_only=True)
+    shop = ShopSerializer(read_only=True)
 
     class Meta:
         model = Product
         fields = '__all__'
-    
-    def create(self, validated_data):
-        manufacture_data = validated_data.pop('manufacture')
-
-        manufacture, created = Manufacture.objects.get_or_create(**manufacture_data)
-        product, created = Product.objects.get_or_create(manufacture=manufacture, **validated_data)
-        
-        return product
 
 
 class ComparisonZoneSerializer(serializers.ModelSerializer):
@@ -56,10 +48,8 @@ class ComparisonZoneSerializer(serializers.ModelSerializer):
     
     def create(self, validated_data):
         main_product_data = validated_data.pop('main_product')
-        manufacture_data = main_product_data.pop('manufacture')
 
-        manufacture, created = Manufacture.objects.get_or_create(**manufacture_data)
-        main_product, created = Product.objects.get_or_create(manufacture=manufacture, **main_product_data)
+        product = Product.objects.get(product_id=main_product_data["product_id"])
         
-        comparisonZone = ComparisonZone.objects.create(main_product=main_product, **validated_data)
+        comparisonZone = ComparisonZone.objects.create(main_product=product, **validated_data)
         return comparisonZone

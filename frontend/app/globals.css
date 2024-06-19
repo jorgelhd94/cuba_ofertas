@@ -39,6 +39,7 @@
 textarea,
 select {
   border: none;
+  padding-left: 0px;
 }
 
 [type="text"]:focus,

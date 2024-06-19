@@ -20,7 +20,9 @@ export const ComparisonProductsSearch: React.FC<Props> = (props) => {
   const router = useRouter();
 
   const { data, error, isLoading } = useSWR(
-    `/api/comparison-zones/${props.zoneId}/`,
+    `${process.env.NEXT_PUBLIC_API_URL!}api/v1/comparison_zones/${
+      props.zoneId
+    }/`,
     fetcher
   );
 
@@ -30,7 +32,7 @@ export const ComparisonProductsSearch: React.FC<Props> = (props) => {
 
   useEffect(() => {
     if (data) {
-      setComparisonZone(data.comparisonZone);
+      setComparisonZone(data);
     }
   }, [data]);
 
@@ -61,7 +63,7 @@ export const ComparisonProductsSearch: React.FC<Props> = (props) => {
         </Button>
 
         <div className="flex max-md:flex-col justify-between gap-8 w-full pt-4">
-          <div className="text-center space-y-2 sticky top-16 lg:top-20 z-50 h-max">
+          <div className="text-center space-y-2 sticky top-16 lg:top-20 z-20 h-max">
             <h3 className="text-xl font-medium max-sm:hidden">
               Producto principal
             </h3>

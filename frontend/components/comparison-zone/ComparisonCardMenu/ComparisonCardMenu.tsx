@@ -8,7 +8,7 @@ import {
   DropdownMenu,
   DropdownTrigger,
 } from "@nextui-org/react";
-import Link from "next/link";
+import { revalidatePath } from "next/cache";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
@@ -30,13 +30,18 @@ export const ComparisonCardMenu: React.FC<ComparisonCardMenuProps> = (
   const handleDelete = async () => {
     setIsLoading(true);
 
-    await fetch(`/api/comparison-zones/${props.comparisonZoneId}/`, {
-      method: "DELETE",
-    })
+    await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL!}api/v1/comparison_zones/${
+        props.comparisonZoneId
+      }/`,
+      {
+        method: "DELETE",
+      }
+    )
       .then(() => {
         toast.success("Zona eliminada correctamente");
         setOpenDeleteModal(false);
-        mutate("/api/comparison-zones/");
+        mutate(`${process.env.NEXT_PUBLIC_API_URL!}api/v1/comparison_zones/`);
       })
       .catch(() => {
         toast.error("Ha ocurrido un error al eliminar la Zona");
