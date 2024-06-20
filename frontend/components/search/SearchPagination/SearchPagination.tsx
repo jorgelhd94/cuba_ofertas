@@ -4,7 +4,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, useCallback } from "react";
 
 type Props = {
-  total: number;
+  totalProducts: number;
   loading: boolean;
 };
 
@@ -14,7 +14,11 @@ const SearchPagination = (props: Props) => {
   const pathname = usePathname();
 
   const [currentPage, setCurrentPage] = useState(
-    parseInt(searchParams.get("page") || "1") || 1
+    parseInt(searchParams.get("page") || "1")
+  );
+
+  const [pageSize, setPageSize] = useState(
+    parseInt(searchParams.get("page_size") || "50")
   );
 
   const handlePagination = useCallback(
@@ -36,13 +40,14 @@ const SearchPagination = (props: Props) => {
 
   useEffect(() => {
     setCurrentPage(parseInt(searchParams.get("page") || "1"));
+    setPageSize(parseInt(searchParams.get("page_size") || "50"));
   }, [searchParams]);
 
   return (
     <Pagination
       onChange={setCurrentPage}
       color="secondary"
-      total={props.total}
+      total={Math.ceil(props.totalProducts / pageSize)}
       page={currentPage}
       isCompact
       isDisabled={props.loading}

@@ -10,6 +10,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { HiAdjustments, HiTrash } from "react-icons/hi";
 import { ProductCard } from "../ProductCard/ProductCard";
 import { ProductsSkeleton } from "../ProductsSkeleton/ProductsSkeleton";
+import ChangeLimitSelect from "@/components/search/SearchFIlters/ChangeLimitSelect";
 
 type ProductSearchGridProps = {
   searchResults: ISearchProducts | null;
@@ -86,19 +87,19 @@ export const ProductSearchGrid: React.FC<ProductSearchGridProps> = ({
             total={searchResults.count}
             loading={loading}
           />
-          <div className="flex max-md:w-full gap-2 flex-grow justify-center md:justify-end flex-wrap">
+          <div className="flex max-md:w-full gap-2 flex-grow justify-center md:justify-end items-end flex-wrap">
+            <ChangeLimitSelect isDisabled={loading} />
             <Button
-              color="secondary"
+              color="primary"
               startContent={<HiAdjustments />}
               endContent={
                 countFilters > 0 && (
-                  <Chip radius="sm" color="primary" size="sm">
+                  <Chip radius="sm" color="default" size="sm">
                     {countFilters}
                   </Chip>
                 )
               }
               onClick={() => setIsFilterOpen(true)}
-              variant="ghost"
             >
               Filtros
             </Button>
@@ -124,7 +125,7 @@ export const ProductSearchGrid: React.FC<ProductSearchGridProps> = ({
 
         {searchResults.results.length > 0 && (
           <SearchPagination
-            total={Math.ceil(searchResults.count / 10)}
+          totalProducts={searchResults.count}
             loading={loading}
           />
         )}
