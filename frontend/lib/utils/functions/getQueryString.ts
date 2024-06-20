@@ -2,7 +2,7 @@ export const getQueryString = (
   searchParams: string,
   param: { name: string; value: string | null } | null = null
 ) => {
-  const paramsOrder = ["q", "page", "orderby", "mode"];
+  const paramsOrder = ["q", "page", "page_size", "orderby", "mode"];
   const oldParams = new URLSearchParams(searchParams);
   const newParams = new URLSearchParams();
 
@@ -15,7 +15,10 @@ export const getQueryString = (
     oldParams.delete("q");
   }
 
-  if (oldParams.get("page") && (param.name === "q" || param.name === "mode")) {
+  if (
+    oldParams.get("page") &&
+    (param.name === "q" || param.name === "mode" || param.name === "page_size")
+  ) {
     oldParams.delete("page");
   }
 

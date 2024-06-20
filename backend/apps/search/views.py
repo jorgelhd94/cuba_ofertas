@@ -6,7 +6,7 @@ from django.db.models import Q, F, Value
 from django.db.models.functions import Replace, Trim
 
 
-from rest_framework.pagination import PageNumberPagination
+from common.configuration.pagination import StandardResultsSetPagination
 from django.db.models import Q
 from apps.product.models import Product
 from apps.product.serializers import ProductSerializer
@@ -66,7 +66,7 @@ class SearchView(APIView):
                     )
             
             # Paginación
-            paginator = PageNumberPagination()
+            paginator = StandardResultsSetPagination()
 
              # Validar página proporcionada
             page_number = get_valid_page(request, query_params, paginator, products_queryset.count())

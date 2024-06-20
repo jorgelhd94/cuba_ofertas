@@ -1,10 +1,8 @@
-import CategoriesChecklist from "@/components/categories/CategoriesChecklist/CategoriesChecklist";
-import ManufacturesMultipleSelect from "@/components/manufactures/ManufacturesMultipleSelect/ManufacturesMultipleSelect";
-import { OrderBy } from "@/components/shared/selects/order-by/OrderBy";
-import { ProductModeSelect } from "@/components/shared/selects/product-mode-select/ProductModeSelect";
-import { Divider } from "@nextui-org/react";
+
 import { Drawer } from "flowbite-react";
 import { HiAdjustments } from "react-icons/hi";
+import { OrderBy } from "../SearchFIlters/OrderBy";
+import { ProductModeSelect } from "../SearchFIlters/ProductModeSelect";
 
 type Props = {
   isOpen: boolean;
