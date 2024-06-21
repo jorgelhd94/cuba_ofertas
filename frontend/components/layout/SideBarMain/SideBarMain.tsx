@@ -6,8 +6,7 @@ import {
   HiChartPie,
   HiDatabase,
   HiDocumentSearch,
-  HiSearch,
-  HiViewGridAdd,
+  HiSearch
 } from "react-icons/hi";
 
 type Props = {
@@ -23,7 +22,6 @@ const customSidebarTheme: CustomFlowbiteTheme["sidebar"] = {
 };
 
 const SideBarMain = (props: Props) => {
-  const router = useRouter();
   const pathname = usePathname();
 
   const sidebarItems = [
@@ -36,11 +34,6 @@ const SideBarMain = (props: Props) => {
       label: "Búsqueda general",
       icon: HiSearch,
       path: "/search",
-    },
-    {
-      label: "Zonas de comparación",
-      icon: HiViewGridAdd,
-      path: "/comparison-zones",
     },
     {
       label: "Búsquedas guardadas",
