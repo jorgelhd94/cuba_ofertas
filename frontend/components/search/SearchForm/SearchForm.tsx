@@ -2,10 +2,11 @@
 import { SaveBtn } from "@/components/shared/buttons/SaveBtn";
 import { SubmitBtn } from "@/components/shared/buttons/SubmitBtn/SubmitBtn";
 import { SearchIcon } from "@/components/shared/icons/SearchIcon";
+import { PinProductContext } from "@/lib/context/PinProductContext";
 import { getQueryString } from "@/lib/utils/functions/getQueryString";
 import { Input } from "@nextui-org/react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 type SearchFormProps = {
   loading: boolean;
@@ -18,7 +19,16 @@ export const SearchForm: React.FC<SearchFormProps> = (props) => {
   const router = useRouter();
   const pathname = usePathname();
 
+  const { pinProduct } = useContext(PinProductContext);
+
   const [searchText, setSearchText] = useState(searchParams.get("q") || "");
+
+  useEffect(() => {
+    if (pinProduct) {
+      setSearchText(pinProduct.name);
+      changeRoute(pinProduct.name);
+    }
+  }, [pinProduct]);
 
   const handleSearch = (formData: FormData) => {
     const inputText = formData.get("searchText")?.toString() || "";
@@ -30,7 +40,11 @@ export const SearchForm: React.FC<SearchFormProps> = (props) => {
       props.handleSearchText(searchText);
     }
 
-    setSearchText(formData.get("searchText")?.toString() || "");
+    setSearchText(inputText);
+    changeRoute(inputText);
+  };
+
+  const changeRoute = (searchText: string) => {
     router.push(
       pathname +
         "?" +

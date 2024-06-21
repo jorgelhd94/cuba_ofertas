@@ -8,10 +8,12 @@ from common.configuration.pagination import StandardResultsSetPagination
 from django.db.models.functions import Trim, Replace
 from django.db.models import F, Value
 
+
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     pagination_class = StandardResultsSetPagination
+
 
 class ManufactureViewSet(viewsets.ModelViewSet):
     queryset = Manufacture.objects.all().order_by('name')
@@ -39,10 +41,12 @@ class CategoryViewSet(viewsets.ModelViewSet):
     serializer_class = CategorySerializer
     pagination_class = StandardResultsSetPagination
 
+
 class ProviderViewSet(viewsets.ModelViewSet):
     queryset = Provider.objects.all()
     serializer_class = ProviderSerializer
-    pagination_class = StandardResultsSetPagination
+    pagination_class = None
+
 
 class ComparisonZoneViewSet(viewsets.ModelViewSet):
     queryset = ComparisonZone.objects.all()
@@ -52,29 +56,30 @@ class ComparisonZoneViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['post'])
     def add_product_to_compare(self, request, pk):
         serializer = ProductSerializer(data=request.data["product"])
-        
+
         if not serializer.is_valid():
             return Response({"detail": "The product data isn't valid"}, status=status.HTTP_400_BAD_REQUEST)
-        
-        product = Product.objects.get(product_id = serializer.validated_data["product_id"])
+
+        product = Product.objects.get(
+            product_id=serializer.validated_data["product_id"])
 
         comparison_zone = ComparisonZone.objects.get(pk=pk)
-
 
         if not comparison_zone.comparison_products.filter(id=product.id).exists():
             # If not, add the product to the comparison_products
             comparison_zone.comparison_products.add(product)
-        
+
         return Response({'pk': pk}, status=status.HTTP_201_CREATED)
-    
+
     @action(detail=True, methods=['delete'])
     def remove_product_from_compare(self, request, pk):
         serializer = ProductSerializer(data=request.data["product"])
-        
+
         if not serializer.is_valid():
             return Response({"detail": "The product data isn't valid"}, status=status.HTTP_400_BAD_REQUEST)
-        
-        product = Product.objects.get(product_id = serializer.validated_data["product_id"])
+
+        product = Product.objects.get(
+            product_id=serializer.validated_data["product_id"])
 
         comparison_zone = ComparisonZone.objects.get(pk=pk)
 
@@ -83,5 +88,3 @@ class ComparisonZoneViewSet(viewsets.ModelViewSet):
             comparison_zone.comparison_products.remove(product)
 
         return Response({'pk': pk, 'product_id': product.product_id}, status=status.HTTP_200_OK)
-        
-

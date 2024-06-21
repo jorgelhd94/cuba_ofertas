@@ -1,8 +1,9 @@
-
 import { Drawer } from "flowbite-react";
 import { HiAdjustments } from "react-icons/hi";
 import { OrderBy } from "../SearchFIlters/OrderBy";
 import { ProductModeSelect } from "../SearchFIlters/ProductModeSelect";
+import SearchByProvider from "@/components/providers/SearchByProvider";
+import { PriceByWeightSelect } from "../SearchFIlters/PriceByWeightSelect";
 
 type Props = {
   isOpen: boolean;
@@ -23,8 +24,10 @@ const FilterDrawer = (props: Props) => {
         <div className="flex flex-col items-center gap-4">
           <OrderBy isDisabled={props.isLoading} />
           <ProductModeSelect isDisabled={props.isLoading} />
+          <PriceByWeightSelect isDisabled={props.isLoading} />
 
-          
+          <SearchByProvider isDisabled={props.isLoading} />
+
           {/* <ManufacturesMultipleSelect />
 
           <h4 className="text-medium font-medium text-left w-full mt-2">

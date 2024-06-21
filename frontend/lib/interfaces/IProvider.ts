@@ -1,5 +1,5 @@
 export interface IProvider {
-  id: string;
+  id: number;
   name: string;
   url: string;
 }

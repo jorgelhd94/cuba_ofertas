@@ -11,6 +11,7 @@ import { Card, CardBody, CardFooter, Chip, Image } from "@nextui-org/react";
 import React, { useContext, useEffect, useState } from "react";
 import { ProductDropdownMenu } from "../ProductDropdownMenu/ProductDropdownMenu";
 import ShopImage from "@/components/shared/images/ShopImage/ShopImage";
+import PercentDifferenceShip from "@/components/shared/ships/PercentDifferenceShip";
 
 type ProductCardProps = {
   product: IProduct;
@@ -24,29 +25,6 @@ export const ProductCard: React.FC<ProductCardProps> = (props) => {
   const [isPinActive, setIsPinActive] = useState(
     pinProduct?.product_id === props.product.product_id
   );
-
-  const getPercentDifference = () => {
-    if (pinProduct) {
-      if (pinProduct?.current_price > props.product.current_price) {
-        const percent =
-          100 - (props.product.current_price / pinProduct?.current_price) * 100;
-        return (
-          <Chip color="success" size="sm">
-            {percent.toFixed(2)}%
-          </Chip>
-        );
-      } else if (pinProduct?.current_price < props.product.current_price) {
-        const percent =
-          100 - (pinProduct?.current_price / props.product.current_price) * 100;
-
-        return (
-          <Chip color="danger" size="sm">
-            {percent.toFixed(2)} %
-          </Chip>
-        );
-      }
-    }
-  };
 
   const handlePinProduct = (isActive: boolean) => {
     setIsPinActive(isActive);
@@ -136,7 +114,12 @@ export const ProductCard: React.FC<ProductCardProps> = (props) => {
                 >
                   {props.product.current_price} {props.product.currency}
                   <span>{getArrowIcon(pinProduct, props.product)}</span>
-                  <span>{getPercentDifference()}</span>
+                  <span>
+                    <PercentDifferenceShip
+                      pinProduct={pinProduct}
+                      product={props.product}
+                    />
+                  </span>
                 </div>
 
                 {props.product.old_price && (
@@ -146,8 +129,8 @@ export const ProductCard: React.FC<ProductCardProps> = (props) => {
                 )}
 
                 {props.product.price_by_weight && (
-                  <p
-                    className={`font-bold text-sm flex items-center mt-2 ${getPriceByWeightStyle(
+                  <div
+                    className={`font-bold text-sm flex items-center mt-2 flex-wrap gap-x-1 ${getPriceByWeightStyle(
                       pinProduct,
                       props.product
                     )}`}
@@ -157,7 +140,14 @@ export const ProductCard: React.FC<ProductCardProps> = (props) => {
                     <span>
                       {getArrowByWeightStyle(pinProduct, props.product)}
                     </span>
-                  </p>
+                    <span>
+                      <PercentDifferenceShip
+                        pinProduct={pinProduct}
+                        product={props.product}
+                        isPriceByWeight
+                      />
+                    </span>
+                  </div>
                 )}
               </div>
             </div>
