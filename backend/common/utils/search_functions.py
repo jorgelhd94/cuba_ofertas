@@ -58,18 +58,22 @@ def full_search_products(query):
 
     return products_queryset
 
+def filter_by_price_weight(products_queryset, param):
+    if not param in ['with_price_weight', 'without_price_weight']:
+        return products_queryset
+    
+    if param == 'with_price_weight':
+        products_queryset = products_queryset.filter(
+            Q(price_by_weight__isnull=False) | Q(price_by_weight__gt=0))
+
+    if param == 'without_price_weight':
+        products_queryset = products_queryset.filter(
+            Q(price_by_weight__isnull=True) | Q(price_by_weight__lt=0))
+    
+    return products_queryset
+
 
 def filter_products_by_mode(products_queryset, mode):
-    """
-    Filtra los productos según el modo especificado ('combo' o 'simple').
-
-    Args:
-        products_queryset (QuerySet): El conjunto de productos a filtrar.
-        mode (str): El modo de filtrado ('combo' o 'simple').
-
-    Returns:
-        QuerySet: El conjunto de productos filtrado.
-    """
     if mode in ['combo', 'simple']:
         # Obtén las IDs de las categorías descendientes de 'Combos'
         descendant_category_ids = get_descendant_category_ids(

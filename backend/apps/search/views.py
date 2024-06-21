@@ -27,6 +27,7 @@ class SearchView(APIView):
             search_text = query_params.get('q', '')
             orderby = query_params.get('orderby', 'default')
             mode = query_params.get('mode', 'show_all')
+            price_by_weight = query_params.get('price_by_weight', 'show_all')
             provider = query_params.get('provider', '')
 
             # Filter products based on search_text
@@ -45,6 +46,10 @@ class SearchView(APIView):
             # Mode
             products_queryset = search_functions.filter_products_by_mode(
                 products_queryset, mode)
+
+            # Price By Weight
+            products_queryset = search_functions.filter_by_price_weight(
+                products_queryset, price_by_weight)
 
             # Filter by provider
             if provider:

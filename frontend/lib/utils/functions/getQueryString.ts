@@ -2,7 +2,7 @@ export const getQueryString = (
   searchParams: string,
   param: { name: string; value: string | null } | null = null
 ) => {
-  const paramsOrder = ["q", "page", "page_size", "orderby", "mode", "provider"];
+  const paramsOrder = ["q", "page", "page_size", "orderby", "mode", "price_by_weight", "provider"];
   const oldParams = new URLSearchParams(searchParams);
   const newParams = new URLSearchParams();
 

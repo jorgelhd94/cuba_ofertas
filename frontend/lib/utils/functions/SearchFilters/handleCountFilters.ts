@@ -12,6 +12,10 @@ const handleCountFilters = (searchParams: URLSearchParams) => {
     newCount += 1;
   }
 
+  if (searchParams.get("price_by_weight") && searchParams.get("price_by_weight") !== "show_all") {
+    newCount += 1;
+  }
+
   if (searchParams.get("provider")) {
     newCount += 1;
   }
