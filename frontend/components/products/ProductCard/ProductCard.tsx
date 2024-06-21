@@ -129,7 +129,7 @@ export const ProductCard: React.FC<ProductCardProps> = (props) => {
                 )}
 
                 {props.product.price_by_weight && (
-                  <p
+                  <div
                     className={`font-bold text-sm flex items-center mt-2 flex-wrap gap-x-1 ${getPriceByWeightStyle(
                       pinProduct,
                       props.product
@@ -147,7 +147,7 @@ export const ProductCard: React.FC<ProductCardProps> = (props) => {
                         isPriceByWeight
                       />
                     </span>
-                  </p>
+                  </div>
                 )}
               </div>
             </div>

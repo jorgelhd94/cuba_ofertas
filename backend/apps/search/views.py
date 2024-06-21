@@ -30,7 +30,7 @@ class SearchView(APIView):
             provider = query_params.get('provider', '')
 
             # Filter products based on search_text
-            products_queryset = search_functions.search_products(
+            products_queryset = search_functions.full_search_products(
                 search_text) if search_text else Product.objects.all()
 
             # Clean Name
@@ -43,23 +43,8 @@ class SearchView(APIView):
                 order_mapping.get(orderby, 'cleaned_name'))
 
             # Mode
-            if mode in ['combo', 'simple']:
-                descendant_category_ids = search_functions.get_descendant_category_ids(
-                    'Combos')
-                if mode == 'combo':
-                    combo_name_filtered_ids = search_functions.filter_products_by_combo_name(
-                        products_queryset)
-                    products_queryset = products_queryset.filter(
-                        Q(categories__id__in=descendant_category_ids) | Q(
-                            id__in=combo_name_filtered_ids)
-                    )
-                elif mode == 'simple':
-                    combo_name_filtered_ids = search_functions.filter_products_by_combo_name(
-                        products_queryset)
-                    products_queryset = products_queryset.exclude(
-                        Q(categories__id__in=descendant_category_ids) | Q(
-                            id__in=combo_name_filtered_ids)
-                    )
+            products_queryset = search_functions.filter_products_by_mode(
+                products_queryset, mode)
 
             # Filter by provider
             if provider:
