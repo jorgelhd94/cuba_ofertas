@@ -1,4 +1,5 @@
 import { IManufacture } from "@/lib/interfaces/IManufacture";
+import { getApiUrl } from "@/lib/utils/api/api";
 import { fetcher } from "@/lib/utils/api/fetcher";
 import {
   Button,
@@ -9,7 +10,7 @@ import {
   ModalFooter,
   ModalHeader,
 } from "@nextui-org/react";
-import { UIEvent, useEffect, useState } from "react";
+import { useState } from "react";
 import { HiPlus } from "react-icons/hi";
 import useSWRInfinite from "swr/infinite";
 
@@ -17,7 +18,7 @@ type Props = {};
 
 const getKey = (pageIndex: number, previousPageData: IManufacture[]) => {
   if (previousPageData && !previousPageData.length) return null; // reached the end
-  return `${process.env.NEXT_PUBLIC_API_URL}api/v1/manufactures?page=${
+  return `${getApiUrl()}/manufactures?page=${
     pageIndex + 1
   }&page_size=100`; // SWR key
 };

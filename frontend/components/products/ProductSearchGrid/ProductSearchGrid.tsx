@@ -11,6 +11,8 @@ import { HiAdjustments, HiTrash } from "react-icons/hi";
 import { ProductCard } from "../ProductCard/ProductCard";
 import { ProductsSkeleton } from "../ProductsSkeleton/ProductsSkeleton";
 import ChangeLimitSelect from "@/components/search/SearchFIlters/ChangeLimitSelect";
+import handleCountFilters from "@/lib/utils/functions/SearchFilters/handleCountFilters";
+import getCleanUrlFilters from "@/lib/utils/functions/SearchFilters/getCleanUrlFilters";
 
 type ProductSearchGridProps = {
   searchResults: ISearchProducts | null;
@@ -48,34 +50,15 @@ export const ProductSearchGrid: React.FC<ProductSearchGridProps> = ({
 
   const [countFilters, setCountFilters] = useState(0);
 
-  const handleCountFilters = () => {
-    let newCount = 0;
-
-    if (
-      searchParams.get("orderby") &&
-      searchParams.get("orderby") !== "default"
-    ) {
-      newCount += 1;
-    }
-
-    if (searchParams.get("mode") && searchParams.get("mode") !== "show_all") {
-      newCount += 1;
-    }
-
-    setCountFilters(newCount);
-  };
-
-  useEffect(() => handleCountFilters(), [searchParams]);
+  useEffect(() => {
+    setCountFilters(handleCountFilters(searchParams));
+  }, [searchParams]);
 
   const router = useRouter();
   const pathname = usePathname();
 
   const cleanFilters = () => {
-    const newParams = new URLSearchParams(searchParams.toString());
-    newParams.delete("orderby");
-    newParams.delete("mode");
-
-    router.push(pathname + "?" + newParams.toString());
+    router.push(pathname + "?" + getCleanUrlFilters(searchParams));
   };
 
   return (
@@ -103,11 +86,6 @@ export const ProductSearchGrid: React.FC<ProductSearchGridProps> = ({
             >
               Filtros
             </Button>
-            <FilterDrawer
-              isOpen={isFilterOpen}
-              handleClose={() => setIsFilterOpen(false)}
-              isLoading={loading}
-            />
 
             {countFilters > 0 && (
               <Button
@@ -118,6 +96,12 @@ export const ProductSearchGrid: React.FC<ProductSearchGridProps> = ({
                 Limpiar
               </Button>
             )}
+
+            <FilterDrawer
+              isOpen={isFilterOpen}
+              handleClose={() => setIsFilterOpen(false)}
+              isLoading={loading}
+            />
           </div>
         </div>
 
@@ -125,7 +109,7 @@ export const ProductSearchGrid: React.FC<ProductSearchGridProps> = ({
 
         {searchResults.results.length > 0 && (
           <SearchPagination
-          totalProducts={searchResults.count}
+            totalProducts={searchResults.count}
             loading={loading}
           />
         )}

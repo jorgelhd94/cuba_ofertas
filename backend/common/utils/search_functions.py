@@ -11,6 +11,7 @@ class Unaccent(Func):
     function = 'unaccent'
     output_field = models.CharField()
 
+
 def search_products(query):
     search_words = query.split()
     # Normalizar el término de búsqueda
@@ -23,16 +24,17 @@ def search_products(query):
     )
 
     products_queryset = Product.objects.annotate(
-        unaccent_name=Unaccent(Replace(Replace(Replace(Trim(F('name')), Value('\t'), Value('')), Value('\r'), Value('')), Value('\n'), Value('')))
+        unaccent_name=Unaccent(Replace(Replace(Replace(Trim(F('name')), Value(
+            '\t'), Value('')), Value('\r'), Value('')), Value('\n'), Value('')))
     ).filter(unaccented_query)
 
     return products_queryset
 
 
 def get_valid_page(request, query_params, paginator, products_queryset_count):
-     # Validar página proporcionada
+    # Validar página proporcionada
     page_number = query_params.get(paginator.page_query_param, 1)
-    
+
     try:
         page_number = int(page_number) if int(page_number) > 0 else 1
     except:
@@ -44,7 +46,7 @@ def get_valid_page(request, query_params, paginator, products_queryset_count):
 
     if page_number > total_pages:
         return 1
-    
+
     return page_number
 
 
@@ -52,7 +54,8 @@ def get_descendant_category_ids(category_name):
     try:
         category = Category.objects.get(name=category_name)
         descendant_categories = category.get_descendants()
-        descendant_category_ids = [category.id for category in descendant_categories]
+        descendant_category_ids = [
+            category.id for category in descendant_categories]
         descendant_category_ids.append(category.id)
         return descendant_category_ids
     except Category.DoesNotExist:
@@ -60,7 +63,7 @@ def get_descendant_category_ids(category_name):
 
 
 def filter_products_by_combo_name(products_queryset):
-    regex = re.compile(r'\(\b\d+ x +\b\d* +[a-zA-Z]*\)')
+    regex = re.compile(r'\(\b\d+ x +\b\d* +[a-zA-Z]*', re.IGNORECASE)
     filtered_products = []
 
     for product in products_queryset:
@@ -68,3 +71,17 @@ def filter_products_by_combo_name(products_queryset):
             filtered_products.append(product.id)
 
     return filtered_products
+
+
+def get_products_cleaned_name(products_queryset: models.QuerySet):
+    return products_queryset.annotate(
+        cleaned_name=Trim(
+            Replace(
+                Replace(
+                    Replace(F('name'), Value('\t'), Value('')),
+                    Value('\r'), Value('')
+                ),
+                Value('\n'), Value(''),
+            )
+        )
+    )
