@@ -11,6 +11,6 @@ router.register(r'providers', ProviderViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('product-rank/<int:product_id>/',
-         ProductRankView.as_view(), name='product-rank'),
+    path('product-ranking/<int:product_id>/',
+         ProductRankView.as_view(), name='product-ranking'),
 ]

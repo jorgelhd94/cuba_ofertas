@@ -59,3 +59,34 @@ textarea:focus,
 select:focus {
   box-shadow: none !important;
 }
+
+
+/* Scrollbar */
+
+:root {
+  --scrollbar-bg: #f1f1f1; /* Color de fondo de la pista */
+  --scrollbar-thumb: #888; /* Color del thumb */
+  --scrollbar-thumb-hover: #555; /* Color del thumb al pasar el mouse */
+}
+
+.scrollbar-custom {
+  scrollbar-width: thin; /* Firefox: tamaño de la barra de desplazamiento */
+}
+
+/* Chrome, Edge, Safari, y Opera */
+.scrollbar-custom::-webkit-scrollbar {
+  width: 12px; /* Ancho de la barra de desplazamiento vertical */
+  height: 12px; /* Altura de la barra de desplazamiento horizontal */
+}
+
+.scrollbar-custom::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-thumb); /* Color del thumb */
+  border-radius: 10px; /* Bordes redondeados del thumb */
+}
+
+.scrollbar-custom::-webkit-scrollbar-track {
+  background: var(--scrollbar-bg); /* Color de la pista */
+  border-radius: 10px; /* Bordes redondeados de la pista */
+}
+
+

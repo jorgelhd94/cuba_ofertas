@@ -19,8 +19,10 @@ const ProductRanking = (props: Props) => {
   const getRankingComponents = () => {
     return (
       <>
-        <RankingByPrice />
-        {props.product.price_by_weight && <RankingByPriceWeight />}
+        <RankingByPrice product={props.product} />
+        {props.product.price_by_weight && (
+          <RankingByPriceWeight product={props.product} />
+        )}
       </>
     );
   };

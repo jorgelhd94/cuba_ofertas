@@ -3,13 +3,14 @@ from .models import Product, Manufacture, Category, Provider
 from .serializers import ProductSerializer, ManufactureSerializer, CategorySerializer, ProviderSerializer
 from common.configuration.pagination import StandardResultsSetPagination
 from django.db.models.functions import Trim, Replace
-from django.db.models import F, Value
+from django.db.models import Q, F, Value
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
 from common.utils import search_functions
+
 
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
@@ -20,24 +21,43 @@ class ProductViewSet(viewsets.ModelViewSet):
 class ProductRankView(APIView):
     def get(self, request, product_id):
         try:
+            query_params = request.query_params
+            filterByPriceByWeight = query_params.get('filter', None)
+
             product = Product.objects.get(id=product_id)
         except Product.DoesNotExist:
             return Response({"error": "Product not found"}, status=status.HTTP_404_NOT_FOUND)
-        
-        # Obtener todos los productos ordenados por precio de menor a mayor
-        products = search_functions.full_search_products(product.name).order_by('current_price')
+
+        products = search_functions.full_search_products(
+            product.name).order_by('current_price', 'price_by_weight')
 
         # Clean Name
         products = search_functions.get_products_cleaned_name(
-                products
+            products
+        )
+
+        print(search_functions.is_combo_product(product))
+
+        if search_functions.is_combo_product(product):
+            products = search_functions.filter_products_by_mode(
+                products,
+                'combo'
             )
-        
+        else:
+            products = search_functions.filter_products_by_mode(
+                products,
+                'simple'
+            )
+
+        if filterByPriceByWeight == 'price_by_weight':
+            products = products.exclude(price_by_weight=None)
+
         # Buscar la posición del producto
         position = list(products).index(product) + 1
 
         serializer = ProductSerializer(products, many=True)
 
-        return Response({"product_id": product_id, "rank": position, "products": serializer.data}, status=status.HTTP_200_OK)
+        return Response({"product_id": product.id, "rank": position, "products": serializer.data}, status=status.HTTP_200_OK)
 
 
 class ManufactureViewSet(viewsets.ModelViewSet):

@@ -117,7 +117,10 @@ export const ProductCard: React.FC<ProductCardProps> = (props) => {
                 className="text-small text-primary-800"
                 onClick={() => setShowFullText(!showFullText)}
               >
-                {getTruncateName()}
+                <span className="max-md:hidden">{props.product.name}</span>
+                <span className="md:hidden cursor-pointer">
+                  {getTruncateName()}
+                </span>
               </b>
 
               {props.product.manufacture && (
