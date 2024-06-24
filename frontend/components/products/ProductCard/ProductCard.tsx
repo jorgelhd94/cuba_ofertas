@@ -7,11 +7,21 @@ import {
   getPriceByWeightStyle,
   getPriceStyle,
 } from "@/lib/utils/functions/pricesStyle";
-import { Card, CardBody, CardFooter, Chip, Image } from "@nextui-org/react";
+import {
+  Card,
+  CardBody,
+  CardFooter,
+  Chip,
+  Divider,
+  Image,
+} from "@nextui-org/react";
 import React, { useContext, useEffect, useState } from "react";
 import { ProductDropdownMenu } from "../ProductDropdownMenu/ProductDropdownMenu";
 import ShopImage from "@/components/shared/images/ShopImage/ShopImage";
 import PercentDifferenceShip from "@/components/shared/ships/PercentDifferenceShip";
+import RankingByPrice from "../ProductRanking/RankingByPrice";
+import RankingByPriceWeight from "../ProductRanking/RankingByPriceWeight";
+import Link from "next/link";
 
 type ProductCardProps = {
   product: IProduct;
@@ -46,6 +56,31 @@ export const ProductCard: React.FC<ProductCardProps> = (props) => {
     }
   }, [pinProduct?.product_id, props.product.product_id]);
 
+  const getRankingByPrice = () => {
+    if (pinProduct?.product_id === props.product.product_id) {
+      return (
+        <div className="flex flex-col gap-2">
+          <Divider />
+          <RankingByPrice />
+          <RankingByPriceWeight />
+        </div>
+      );
+    }
+  };
+
+  const [showFullText, setShowFullText] = useState(false);
+
+  const getTruncateName = () => {
+    if (
+      pinProduct?.product_id === props.product.product_id &&
+      props.product.name.length > 40 &&
+      !showFullText
+    ) {
+      return props.product.name.slice(0, 40) + "...";
+    }
+    return props.product.name;
+  };
+
   return (
     <>
       <Card shadow="sm" className="w-full sm:w-72 md:w-64">
@@ -72,26 +107,29 @@ export const ProductCard: React.FC<ProductCardProps> = (props) => {
                     {props.product.provider.name}
                   </Chip>
                 )}
-                <Image
-                  radius="lg"
-                  width="100%"
-                  alt={props.product.name}
-                  className="w-full h-[140px] md:h-[256px] absolute block top-0 z-10"
-                  src={props.product.image_url}
-                />
+                <a
+                  href={props.product.product_url}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <Image
+                    radius="lg"
+                    width="100%"
+                    alt={props.product.name}
+                    className="w-full h-[140px] md:h-[256px] absolute block top-0 z-10"
+                    src={props.product.image_url}
+                  />
+                </a>
               </div>
             </div>
 
             <div className="col-span-6 md:col-span-12 flex flex-col items-start text-start justify-start gap-2 pt-1 p-4">
-              <a
-                href={props.product.product_url}
-                target="_blank"
-                rel="noopener noreferrer"
+              <b
+                className="text-small text-primary-800"
+                onClick={() => setShowFullText(!showFullText)}
               >
-                <b className="text-small text-primary-800">
-                  {props.product.name}
-                </b>
-              </a>
+                {getTruncateName()}
+              </b>
 
               {props.product.manufacture && (
                 <a
@@ -99,15 +137,19 @@ export const ProductCard: React.FC<ProductCardProps> = (props) => {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <p className="text-small font-medium">
-                    Marca: {props.product.manufacture.name}
+                  <p className="text-small font-bold">
+                    Marca:{" "}
+                    <span className="font-normal">
+                      {props.product.manufacture.name}
+                    </span>
                   </p>
                 </a>
               )}
 
+              {/* Product Price Details */}
               <div>
                 <div
-                  className={`font-bold text-lg flex items-center flex-wrap gap-x-1 ${getPriceStyle(
+                  className={`font-bold md:text-lg flex items-center flex-wrap gap-x-1 ${getPriceStyle(
                     pinProduct,
                     props.product
                   )}`}

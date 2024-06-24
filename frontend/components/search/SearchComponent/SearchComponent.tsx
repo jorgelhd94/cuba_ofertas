@@ -2,13 +2,14 @@
 
 import { ProductCard } from "@/components/products/ProductCard/ProductCard";
 import { ErrorMsg } from "@/components/shared/messages/ErrorMsg/ErrorMsg";
+import { HidePinProductContext } from "@/lib/context/HidePinProductContext";
 import { PinProductContext } from "@/lib/context/PinProductContext";
 import { ISearchProducts } from "@/lib/interfaces/ISearchProducts";
+import { getApiUrl } from "@/lib/utils/api/api";
 import { useSearchParams } from "next/navigation";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import ProductSearchGrid from "../../products/ProductSearchGrid/ProductSearchGrid";
 import { SearchForm } from "../SearchForm/SearchForm";
-import { HidePinProductContext } from "@/lib/context/HidePinProductContext";
 
 type Props = {
   hideSaveSearch?: boolean;
@@ -32,9 +33,7 @@ export const SearchComponent: React.FC<Props> = (props) => {
 
     try {
       const response = await fetch(
-        `${
-          process.env.NEXT_PUBLIC_API_URL
-        }api/v1/search/?${searchParams.toString()}`
+        `${getApiUrl()}/search/?${searchParams.toString()}`
       );
       if (response.status !== 200) {
         throw new Error("Error fetching data");
