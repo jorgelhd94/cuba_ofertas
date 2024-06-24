@@ -36,8 +36,6 @@ class ProductRankView(APIView):
             products
         )
 
-        print(search_functions.is_combo_product(product))
-
         if search_functions.is_combo_product(product):
             products = search_functions.filter_products_by_mode(
                 products,
@@ -50,7 +48,8 @@ class ProductRankView(APIView):
             )
 
         if filterByPriceByWeight == 'price_by_weight':
-            products = products.exclude(price_by_weight=None)
+            products = products.exclude(
+                price_by_weight=None).order_by('price_by_weight')
 
         # Buscar la posición del producto
         position = list(products).index(product) + 1
