@@ -73,3 +73,40 @@ sudo docker-compose down
 # Reconstruye la imagen y vuelve a desplegar la aplicación
 sudo docker-compose up -d --build
 ```
+
+## Crear backup de la base de datos PostgreSQL
+
+### 1. Identificar el contenedor de PostgreSQL
+
+Primero, asegúrate de conocer el nombre o el ID del contenedor donde se está ejecutando PostgreSQL. Puedes listar todos los contenedores en ejecución con:
+
+```
+docker ps
+```
+
+### 2. Crear un backup de la base de datos
+
+Usa el comando **docker exec** para ejecutar **pg_dump** dentro del contenedor y redirigir la salida a un archivo en el sistema de archivos del contenedor. Supongamos que el nombre del contenedor es **backend_db_1** y queremos hacer un backup de una base de datos llamada **postgres**.
+
+```
+sudo docker exec -t backend_db_1 pg_dump -U postgres postgres -F c -b -v -f /var/lib/postgresql/data/backup.dump
+```
+
+* -U postgres especifica el usuario de PostgreSQL. Ajusta este comando si tu usuario de PostgreSQL es diferente.
+* /var/lib/postgresql/data/backup.dump es la ruta dentro del contenedor donde se guardará el backup temporalmente.
+
+### 3. Copiar el backup a tu máquina host
+
+Usa el comando **docker cp** para copiar el archivo de backup desde el contenedor a una carpeta en tu máquina host. Supongamos que queremos copiarlo a la carpeta **spySM23**.
+
+```
+ sudo docker cp backend_db_1:/var/lib/postgresql/data/backup.dump ~/spySM23/backup.dump
+```
+
+### 4. Eliminar el archivo de backup temporal del contenedor
+
+ Es una buena práctica limpiar el archivo de backup temporal del contenedor una vez que lo hayas copiado.
+
+ ```
+ sudo docker exec backend_db_1 rm /var/lib/postgresql/data/backup.dump
+ ```

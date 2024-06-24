@@ -7,6 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import "./globals.css";
 import { Providers } from "./providers";
 import SideBarMain from "@/components/layout/SideBarMain/SideBarMain";
+import ScrollToTopButton from "@/components/shared/buttons/ScrollToTopButton";
 
 const roboto = Roboto({
   weight: "400",
@@ -29,11 +30,13 @@ export default function RootLayout({
         <NextTopLoader />
         <ToastContainer />
         <Providers>
-          <div>
+          <div className="relative">
             <NavbarHome />
             <main className="mt-10 py-8 min-h-max lg:min-h-screen bg-gradient-to-tr from-white to-slate-200 dark:bg-gradient-to-b dark:from-slate-800 via-transparent dark:to-black">
               {children}
             </main>
+
+            <ScrollToTopButton />
           </div>
         </Providers>
       </body>

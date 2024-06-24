@@ -40,7 +40,7 @@ def full_search_products(query):
     filtered_words = [word for word in query.split() if len(
         word) >= 4 and not re.search(r'\d', word)]
 
-    if filtered_words:
+    if len(filtered_words) > 2:
         search_query = SearchQuery(filtered_words[0], config='spanish')
         for word in filtered_words[1:]:
             search_query |= SearchQuery(word, config='spanish')

@@ -2,7 +2,6 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from common.configuration.pagination import StandardResultsSetPagination
-from django.db.models import Q
 from apps.product.models import Product, Provider
 from apps.product.serializers import ProductSerializer
 from common.utils import search_functions
