@@ -39,6 +39,11 @@ export const ProductModeSelect: React.FC<ProductModeSelectProps> = ({
       label="Mostrar por"
       className="max-w-64"
       onChange={(event) => handleMode(event.target.value)}
+      color={
+        searchParams.get("mode") && searchParams.get("mode") !== "show_all"
+          ? "primary"
+          : "default"
+      }
     >
       {options.map((option) => (
         <SelectItem key={option.value} value={option.value}>

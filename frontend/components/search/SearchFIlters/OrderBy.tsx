@@ -40,6 +40,11 @@ export const OrderBy: React.FC<OrderByProps> = ({ isDisabled }) => {
       label="Ordenar por"
       className="max-w-64"
       onChange={(event) => handleOrderBy(event.target.value)}
+      color={
+        searchParams.get("orderby") && searchParams.get("orderby") !== "default"
+          ? "primary"
+          : "default"
+      }
     >
       {options.map((option) => (
         <SelectItem key={option.value} value={option.value}>

@@ -22,6 +22,7 @@ const ProviderSelect = (props: Props) => {
       className="max-w-64"
       onChange={(event) => props.handleSelect(event.target.value)}
       errorMessage={props.errorMessage}
+      color={props.selectedKey ? "primary" : "default"}
     >
       {props.providers.map((provider) => (
         <SelectItem key={provider.id} value={provider.id}>

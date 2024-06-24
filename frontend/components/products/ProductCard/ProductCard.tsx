@@ -22,6 +22,7 @@ import PercentDifferenceShip from "@/components/shared/ships/PercentDifferenceSh
 import RankingByPrice from "../ProductRanking/RankingByPrice";
 import RankingByPriceWeight from "../ProductRanking/RankingByPriceWeight";
 import Link from "next/link";
+import ProductRanking from "../ProductRanking/ProductRanking";
 
 type ProductCardProps = {
   product: IProduct;
@@ -55,18 +56,6 @@ export const ProductCard: React.FC<ProductCardProps> = (props) => {
       setIsPinActive(false);
     }
   }, [pinProduct?.product_id, props.product.product_id]);
-
-  const getRankingByPrice = () => {
-    if (pinProduct?.product_id === props.product.product_id) {
-      return (
-        <div className="flex flex-col gap-2">
-          <Divider />
-          <RankingByPrice />
-          <RankingByPriceWeight />
-        </div>
-      );
-    }
-  };
 
   const [showFullText, setShowFullText] = useState(false);
 
@@ -192,6 +181,11 @@ export const ProductCard: React.FC<ProductCardProps> = (props) => {
                   </div>
                 )}
               </div>
+
+              {/* Product Ranking */}
+              {pinProduct?.product_id === props.product.product_id && (
+                <ProductRanking product={pinProduct} />
+              )}
             </div>
           </div>
         </CardBody>

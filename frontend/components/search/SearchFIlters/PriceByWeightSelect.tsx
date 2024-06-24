@@ -39,6 +39,11 @@ export const PriceByWeightSelect: React.FC<Props> = ({
       label="Precio por libra"
       className="max-w-64"
       onChange={(event) => handleMode(event.target.value)}
+      color={
+        searchParams.get("price_by_weight") && searchParams.get("price_by_weight") !== "show_all"
+          ? "primary"
+          : "default"
+      }
     >
       {options.map((option) => (
         <SelectItem key={option.value} value={option.value}>
