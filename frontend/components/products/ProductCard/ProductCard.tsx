@@ -23,6 +23,7 @@ import RankingByPrice from "../ProductRanking/RankingByPrice";
 import RankingByPriceWeight from "../ProductRanking/RankingByPriceWeight";
 import Link from "next/link";
 import ProductRanking from "../ProductRanking/ProductRanking";
+import { usePathname, useRouter } from "next/navigation";
 
 type ProductCardProps = {
   product: IProduct;
@@ -31,11 +32,17 @@ type ProductCardProps = {
 };
 
 export const ProductCard: React.FC<ProductCardProps> = (props) => {
+  const router = useRouter();
+  const pathname = usePathname();
   const { pinProduct, setPinProduct } = useContext(PinProductContext);
 
   const [isPinActive, setIsPinActive] = useState(
     pinProduct?.product_id === props.product.product_id
   );
+
+  const isPinProduct = () => {
+    return pinProduct?.product_id === props.product.product_id;
+  };
 
   const handlePinProduct = (isActive: boolean) => {
     setIsPinActive(isActive);
@@ -48,11 +55,12 @@ export const ProductCard: React.FC<ProductCardProps> = (props) => {
       setPinProduct(props.product);
     } else {
       setPinProduct(null);
+      router.push(pathname);
     }
   };
 
   useEffect(() => {
-    if (pinProduct?.product_id !== props.product.product_id) {
+    if (!isPinProduct()) {
       setIsPinActive(false);
     }
   }, [pinProduct?.product_id, props.product.product_id]);
@@ -60,11 +68,7 @@ export const ProductCard: React.FC<ProductCardProps> = (props) => {
   const [showFullText, setShowFullText] = useState(false);
 
   const getTruncateName = () => {
-    if (
-      pinProduct?.product_id === props.product.product_id &&
-      props.product.name.length > 40 &&
-      !showFullText
-    ) {
+    if (isPinProduct() && props.product.name.length > 40 && !showFullText) {
       return props.product.name.slice(0, 40) + "...";
     }
     return props.product.name;
@@ -72,7 +76,7 @@ export const ProductCard: React.FC<ProductCardProps> = (props) => {
 
   return (
     <>
-      <Card shadow="sm" className="w-full sm:w-72 md:w-64">
+      <Card shadow="sm" className={"w-full sm:w-72 md:w-64"}>
         <CardBody className="overflow-visible p-0">
           <div className="grid grid-cols-12">
             <div className="relative col-span-6 md:col-span-12 max-md:my-2 max-md:ml-2">
@@ -96,19 +100,14 @@ export const ProductCard: React.FC<ProductCardProps> = (props) => {
                     {props.product.provider.name}
                   </Chip>
                 )}
-                <a
-                  href={props.product.product_url}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <Image
-                    radius="lg"
-                    width="100%"
-                    alt={props.product.name}
-                    className="w-full h-[140px] md:h-[256px] absolute block top-0 z-10"
-                    src={props.product.image_url}
-                  />
-                </a>
+
+                <Image
+                  radius="lg"
+                  width="100%"
+                  alt={props.product.name}
+                  className="w-full h-[140px] md:h-[256px] absolute block top-0 z-10"
+                  src={props.product.image_url}
+                />
               </div>
             </div>
 
@@ -199,7 +198,10 @@ export const ProductCard: React.FC<ProductCardProps> = (props) => {
               <PinBtn isActive={isPinActive} handleClick={handlePinProduct} />
             )}
 
-            <ShopImage shop={props.product.shop} />
+            <ShopImage
+              shop={props.product.shop}
+              urlProduct={props.product.product_url}
+            />
 
             {!props.hideMenu && <ProductDropdownMenu product={props.product} />}
           </div>

@@ -6,11 +6,12 @@ import Link from "next/link";
 
 type Props = {
   shop: IShop;
+  urlProduct?: string;
 };
 
 const ShopImage = (props: Props) => {
   return (
-    <Link href={props.shop.url} target="_blank">
+    <Link href={props.urlProduct || props.shop.url} target="_blank">
       <Image src={Sm23} priority width={36} alt="Shop Image" />
     </Link>
   );

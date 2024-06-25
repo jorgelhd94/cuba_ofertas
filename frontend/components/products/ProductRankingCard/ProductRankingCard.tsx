@@ -1,4 +1,5 @@
 "use client";
+import ShopImage from "@/components/shared/images/ShopImage/ShopImage";
 import { IProduct } from "@/lib/interfaces/IProduct";
 import { Card, CardBody, Chip, Image } from "@nextui-org/react";
 import React from "react";
@@ -16,7 +17,7 @@ const ProductRankingCard = (props: Props) => {
       shadow="md"
       className={props.highlight ? "border-2 border-secondary" : ""}
     >
-      <CardBody className="flex flex-row items-center">
+      <CardBody className="flex flex-row items-center relative max-sm:px-4 py-6 sm:py-4">
         <Chip
           color={props.highlight ? "secondary" : "primary"}
           radius="full"
@@ -24,15 +25,13 @@ const ProductRankingCard = (props: Props) => {
         >
           {props.position}
         </Chip>
-        
-        <a href={props.product.product_url} target="_blank" rel="noreferrer">
-          <Image
-            radius="lg"
-            alt={props.product.name}
-            src={props.product.image_url}
-            className="max-w-20"
-          />
-        </a>
+
+        <Image
+          radius="lg"
+          alt={props.product.name}
+          src={props.product.image_url}
+          className="max-w-20"
+        />
 
         <div>
           <p className="text-xs font-bold">{props.product.name}</p>
@@ -44,6 +43,24 @@ const ProductRankingCard = (props: Props) => {
               {props.product.price_by_weight} {props.product.currency_by_weight}
             </p>
           )}
+        </div>
+
+        {props.product.provider && (
+          <Chip
+            color="primary"
+            radius="full"
+            size="sm"
+            className="absolute top-2 left-2"
+          >
+            {props.product.provider?.name}
+          </Chip>
+        )}
+
+        <div className="absolute bottom-2 right-2">
+          <ShopImage
+            shop={props.product.shop}
+            urlProduct={props.product.product_url}
+          />
         </div>
       </CardBody>
     </Card>

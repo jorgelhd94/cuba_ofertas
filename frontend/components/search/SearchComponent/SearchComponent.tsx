@@ -24,7 +24,7 @@ export const SearchComponent: React.FC<Props> = (props) => {
   const [loading, setLoading] = useState(false);
   const [isError, setIsError] = useState(false);
 
-  const { pinProduct, setPinProduct } = useContext(PinProductContext);
+  const { pinProduct } = useContext(PinProductContext);
   const hidePinProduct = useContext(HidePinProductContext);
 
   const [searchResults, setSearchResults] = useState<ISearchProducts | null>(
@@ -69,8 +69,6 @@ export const SearchComponent: React.FC<Props> = (props) => {
       });
 
       router.push(pathname + "?" + queryString);
-    } else {
-      router.push(pathname);
     }
   }, [pinProduct]);
 
