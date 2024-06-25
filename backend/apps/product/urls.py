@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import ProductViewSet, ManufactureViewSet, ProviderViewSet, CategoryViewSet, ProductRankView
+from .views import ProductViewSet, ManufactureViewSet, ProviderViewSet, CategoryViewSet, ProductRankView, PriceHistoryListView
 
 router = DefaultRouter()
 router.register(r'products', ProductViewSet)
@@ -13,4 +13,6 @@ urlpatterns = [
     path('', include(router.urls)),
     path('product-ranking/<int:product_id>/',
          ProductRankView.as_view(), name='product-ranking'),
+    path('products/<int:product_id>/price-history/',
+         PriceHistoryListView.as_view(), name='price-history-list'),
 ]

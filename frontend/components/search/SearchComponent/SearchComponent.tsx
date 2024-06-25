@@ -73,7 +73,7 @@ export const SearchComponent: React.FC<Props> = (props) => {
   }, [pinProduct]);
 
   return (
-    <div className="flex flex-col items-center gap-8 max-md:pt-4 w-full">
+    <div className="flex flex-col items-center gap-8 w-full">
       <div className="flex max-md:flex-col items-center gap-2 max-w-3xl w-full">
         <SearchForm
           loading={loading}

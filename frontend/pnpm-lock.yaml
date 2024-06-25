@@ -11,6 +11,12 @@ dependencies:
   '@theme-toggles/react':
     specifier: ^4.1.0
     version: 4.1.0(react-dom@18.2.0)(react@18.2.0)
+  ag-charts-community:
+    specifier: ^9.3.1
+    version: 9.3.1
+  ag-charts-react:
+    specifier: ^9.3.1
+    version: 9.3.1(ag-charts-community@9.3.1)(react-dom@18.2.0)(react@18.2.0)
   clsx:
     specifier: ^2.1.0
     version: 2.1.0
@@ -2962,6 +2968,23 @@ packages:
     engines: {node: '>=0.4.0'}
     hasBin: true
     dev: true
+
+  /ag-charts-community@9.3.1:
+    resolution: {integrity: sha512-/+dTQXSHbOwmynsKA32b5MmkwYM53sYuRkrL8ZPjTdwnR0uLKhSOrwMryx8U/HqN7YkprmQKtoiLNKU9MQ3hvw==}
+    dev: false
+
+  /ag-charts-react@9.3.1(ag-charts-community@9.3.1)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-9ERnn3wGXRFpLwfo1fMLKPko6EivM6B0cEOqAX2wDR/0FKuec7TTl8gUU2QAbzquHiD46+fJLfu5jFoUQThGIQ==}
+    peerDependencies:
+      ag-charts-community: 9.3.1
+      react: ^16.3.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.3.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      ag-charts-community: 9.3.1
+      prop-types: 15.8.1
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
 
   /ajv@6.12.6:
     resolution: {integrity: sha512-j3fVLgvTo527anyYyJOGTYJbG+vnnQYvE0m5mmkc1TK+nxAppkCLMIL0aZ4dblVCNoGShhm+kzE4ZUykBoMg4g==}

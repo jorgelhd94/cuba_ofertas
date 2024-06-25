@@ -1,73 +1,50 @@
-import { IProduct } from "@/lib/interfaces/IProduct";
 import { Chip } from "@nextui-org/react";
-import React from "react";
+import { UpIcon } from "../icons/UpIcon";
+import { DownIcon } from "../icons/DownIcon";
+import { FaArrowDown, FaArrowUp } from "react-icons/fa6";
 
 type Props = {
-  pinProduct: IProduct | null;
-  product: IProduct | null;
-  isPriceByWeight?: boolean;
+  price: number | null | undefined;
+  compareToPrice: number | null | undefined;
+  showArrow?: boolean;
 };
 
 const PercentDifferenceShip = (props: Props) => {
   const getPricePercentDifference = (
-    pinProduct: IProduct,
-    product: IProduct
+    price: number,
+    compareToPrice: number
   ) => {
-    if (pinProduct.current_price > product.current_price) {
-      const percent =
-        100 - (product.current_price / pinProduct.current_price) * 100;
+    if (price > compareToPrice) {
+      const percent = 100 - (compareToPrice / price) * 100;
       return (
-        <Chip color="success" size="sm">
+        <Chip
+          startContent={props.showArrow && <FaArrowDown />}
+          color="success"
+          size="sm"
+        >
           {percent.toFixed(2)}%
         </Chip>
       );
-    } else if (pinProduct.current_price < product.current_price) {
-      const percent =
-        100 - (pinProduct.current_price / product.current_price) * 100;
+    } else if (price < compareToPrice) {
+      const percent = 100 - (price / compareToPrice) * 100;
 
       return (
-        <Chip color="danger" size="sm">
+        <Chip
+          startContent={props.showArrow && <FaArrowUp />}
+          color="danger"
+          size="sm"
+        >
           {percent.toFixed(2)} %
         </Chip>
       );
     }
   };
 
-  const getWeightPercentDifference = (
-    pinProduct: IProduct,
-    product: IProduct
-  ) => {
-    if (!pinProduct.price_by_weight || !product.price_by_weight) {
-      return null;
-    }
-
-    if (pinProduct.price_by_weight > product.price_by_weight) {
-      const percent =
-        100 - (product.price_by_weight / pinProduct.price_by_weight) * 100;
-      return (
-        <Chip color="success" size="sm">
-          {percent.toFixed(2)}%
-        </Chip>
-      );
-    } else if (pinProduct.price_by_weight < product.price_by_weight) {
-      const percent =
-        100 - (pinProduct.price_by_weight / product.price_by_weight) * 100;
-
-      return (
-        <Chip color="danger" size="sm">
-          {percent.toFixed(2)} %
-        </Chip>
-      );
-    }
-  };
-
-  if (!props.pinProduct || !props.product) {
+  if (!props.price || !props.compareToPrice) {
     return;
   }
 
-  return props.isPriceByWeight
-    ? getWeightPercentDifference(props.pinProduct, props.product)
-    : getPricePercentDifference(props.pinProduct, props.product);
+  return getPricePercentDifference(props.price, props.compareToPrice);
 };
 
 export default PercentDifferenceShip;

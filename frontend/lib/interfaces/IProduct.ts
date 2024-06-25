@@ -1,3 +1,4 @@
+import { ICategory } from "./ICategory";
 import { IShop } from "./IChop";
 import { IManufacture } from "./IManufacture";
 import { IProvider } from "./IProvider";
@@ -16,4 +17,8 @@ export interface IProduct {
   currency: string;
   price_by_weight: number | null;
   currency_by_weight: string | null;
+  categories: ICategory[];
+  created_at: string;
+  updated_at: string;
+  days_since_last_update: number;
 }

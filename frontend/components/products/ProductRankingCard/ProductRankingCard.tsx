@@ -17,7 +17,7 @@ const ProductRankingCard = (props: Props) => {
       shadow="md"
       className={props.highlight ? "border-2 border-secondary" : ""}
     >
-      <CardBody className="flex flex-row items-center relative max-sm:px-4 py-6 sm:py-4">
+      <CardBody className="flex flex-row items-center relative max-sm:px-4 py-6 sm:py-4 gap-2">
         <Chip
           color={props.highlight ? "secondary" : "primary"}
           radius="full"
@@ -50,7 +50,7 @@ const ProductRankingCard = (props: Props) => {
             color="primary"
             radius="full"
             size="sm"
-            className="absolute top-2 left-2"
+            className="absolute top-2 left-2 z-30"
           >
             {props.product.provider?.name}
           </Chip>

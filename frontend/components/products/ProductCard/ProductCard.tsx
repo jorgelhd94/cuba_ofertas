@@ -1,4 +1,6 @@
 import { PinBtn } from "@/components/shared/buttons/PinBtn/PinBtn";
+import ShopImage from "@/components/shared/images/ShopImage/ShopImage";
+import PercentDifferenceShip from "@/components/shared/ships/PercentDifferenceShip";
 import { PinProductContext } from "@/lib/context/PinProductContext";
 import { IProduct } from "@/lib/interfaces/IProduct";
 import {
@@ -7,23 +9,12 @@ import {
   getPriceByWeightStyle,
   getPriceStyle,
 } from "@/lib/utils/functions/pricesStyle";
-import {
-  Card,
-  CardBody,
-  CardFooter,
-  Chip,
-  Divider,
-  Image,
-} from "@nextui-org/react";
+import { Card, CardBody, CardFooter, Chip, Image } from "@nextui-org/react";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import React, { useContext, useEffect, useState } from "react";
 import { ProductDropdownMenu } from "../ProductDropdownMenu/ProductDropdownMenu";
-import ShopImage from "@/components/shared/images/ShopImage/ShopImage";
-import PercentDifferenceShip from "@/components/shared/ships/PercentDifferenceShip";
-import RankingByPrice from "../ProductRanking/RankingByPrice";
-import RankingByPriceWeight from "../ProductRanking/RankingByPriceWeight";
-import Link from "next/link";
 import ProductRanking from "../ProductRanking/ProductRanking";
-import { usePathname, useRouter } from "next/navigation";
 
 type ProductCardProps = {
   product: IProduct;
@@ -101,13 +92,15 @@ export const ProductCard: React.FC<ProductCardProps> = (props) => {
                   </Chip>
                 )}
 
-                <Image
-                  radius="lg"
-                  width="100%"
-                  alt={props.product.name}
-                  className="w-full h-[140px] md:h-[256px] absolute block top-0 z-10"
-                  src={props.product.image_url}
-                />
+                <Link href={`/product/${props.product.id}`}>
+                  <Image
+                    radius="lg"
+                    width="100%"
+                    alt={props.product.name}
+                    className="w-full h-[140px] md:h-[256px] absolute block top-0 z-10"
+                    src={props.product.image_url}
+                  />
+                </Link>
               </div>
             </div>
 
@@ -123,18 +116,12 @@ export const ProductCard: React.FC<ProductCardProps> = (props) => {
               </b>
 
               {props.product.manufacture && (
-                <a
-                  href={props.product.manufacture.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <p className="text-small font-bold">
-                    Marca:{" "}
-                    <span className="font-normal">
-                      {props.product.manufacture.name}
-                    </span>
-                  </p>
-                </a>
+                <p className="text-small font-bold">
+                  Marca:{" "}
+                  <span className="font-normal">
+                    {props.product.manufacture.name}
+                  </span>
+                </p>
               )}
 
               {/* Product Price Details */}
@@ -149,8 +136,8 @@ export const ProductCard: React.FC<ProductCardProps> = (props) => {
                   <span>{getArrowIcon(pinProduct, props.product)}</span>
                   <span>
                     <PercentDifferenceShip
-                      pinProduct={pinProduct}
-                      product={props.product}
+                      price={pinProduct?.current_price}
+                      compareToPrice={props.product.current_price}
                     />
                   </span>
                 </div>
@@ -175,9 +162,8 @@ export const ProductCard: React.FC<ProductCardProps> = (props) => {
                     </span>
                     <span>
                       <PercentDifferenceShip
-                        pinProduct={pinProduct}
-                        product={props.product}
-                        isPriceByWeight
+                        price={pinProduct?.price_by_weight}
+                        compareToPrice={props.product.price_by_weight}
                       />
                     </span>
                   </div>

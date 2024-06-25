@@ -1,9 +1,10 @@
 from rest_framework import viewsets
-from .models import Product, Manufacture, Category, Provider
-from .serializers import ProductSerializer, ManufactureSerializer, CategorySerializer, ProviderSerializer
+from .models import Product, Manufacture, Category, Provider, PriceHistory
+from .serializers import ProductSerializer, ManufactureSerializer, CategorySerializer, ProviderSerializer, PriceHistorySerializer
 from common.configuration.pagination import StandardResultsSetPagination
 from django.db.models.functions import Trim, Replace
-from django.db.models import Q, F, Value
+from django.db.models import F, Value, Subquery
+from rest_framework import generics
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -57,6 +58,16 @@ class ProductRankView(APIView):
         serializer = ProductSerializer(products, many=True)
 
         return Response({"product_id": product.id, "rank": position, "products": serializer.data}, status=status.HTTP_200_OK)
+
+
+class PriceHistoryListView(generics.ListAPIView):
+    serializer_class = PriceHistorySerializer
+    pagination_class = None  # Deshabilitar la paginación
+
+    def get_queryset(self):
+        product_id = self.kwargs.get('product_id')
+        latest_90_ids = PriceHistory.objects.filter(product__id=product_id).order_by('-date').values_list('id', flat=True)[:90]
+        return PriceHistory.objects.filter(id__in=Subquery(latest_90_ids)).order_by('date')
 
 
 class ManufactureViewSet(viewsets.ModelViewSet):
