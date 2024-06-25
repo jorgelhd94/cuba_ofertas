@@ -6,22 +6,26 @@ import { HidePinProductContext } from "@/lib/context/HidePinProductContext";
 import { PinProductContext } from "@/lib/context/PinProductContext";
 import { ISearchProducts } from "@/lib/interfaces/ISearchProducts";
 import { getApiUrl } from "@/lib/utils/api/api";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import ProductSearchGrid from "../../products/ProductSearchGrid/ProductSearchGrid";
 import { SearchForm } from "../SearchForm/SearchForm";
+import { getQueryString } from "@/lib/utils/functions/getQueryString";
 
 type Props = {
   hideSaveSearch?: boolean;
 };
 
 export const SearchComponent: React.FC<Props> = (props) => {
-  const { pinProduct, setPinProduct } = useContext(PinProductContext);
-  const hidePinProduct = useContext(HidePinProductContext);
+  const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
 
   const [loading, setLoading] = useState(false);
   const [isError, setIsError] = useState(false);
+
+  const { pinProduct, setPinProduct } = useContext(PinProductContext);
+  const hidePinProduct = useContext(HidePinProductContext);
 
   const [searchResults, setSearchResults] = useState<ISearchProducts | null>(
     null
@@ -50,6 +54,25 @@ export const SearchComponent: React.FC<Props> = (props) => {
   useEffect(() => {
     handleSearchProducts();
   }, [searchParams.toString()]);
+
+  /* Handle pin product change */
+  useEffect(() => {
+    if (pinProduct) {
+      let queryString = getQueryString(searchParams.toString(), {
+        name: "q",
+        value: pinProduct.name.trim(),
+      });
+
+      queryString = getQueryString(queryString.toString(), {
+        name: "orderby",
+        value: "less_price",
+      });
+
+      router.push(pathname + "?" + queryString);
+    } else {
+      router.push(pathname);
+    }
+  }, [pinProduct]);
 
   return (
     <div className="flex flex-col items-center gap-8 max-md:pt-4 w-full">
