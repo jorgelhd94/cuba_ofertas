@@ -104,7 +104,7 @@ export const ProductCard: React.FC<ProductCardProps> = (props) => {
               </div>
             </div>
 
-            <div className="col-span-6 md:col-span-12 flex flex-col items-start text-start justify-start gap-2 pt-1 p-4">
+            <div className="col-span-6 md:col-span-12 flex flex-col items-start text-start justify-start gap-2 pt-4 p-4">
               <b
                 className="text-small text-primary-800"
                 onClick={() => setShowFullText(!showFullText)}

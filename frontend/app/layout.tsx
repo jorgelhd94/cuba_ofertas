@@ -1,4 +1,5 @@
 import NavbarHome from "@/components/layout/NavbarMain/NavbarMain";
+import ScrollToTopButton from "@/components/shared/buttons/ScrollToTopButton";
 import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
@@ -6,8 +7,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./globals.css";
 import { Providers } from "./providers";
-import SideBarMain from "@/components/layout/SideBarMain/SideBarMain";
-import ScrollToTopButton from "@/components/shared/buttons/ScrollToTopButton";
+import ScrollToTop from "@/components/shared/utils/ScrollToTop";
 
 const roboto = Roboto({
   weight: "400",
@@ -37,6 +37,7 @@ export default function RootLayout({
             </main>
 
             <ScrollToTopButton />
+            <ScrollToTop />
           </div>
         </Providers>
       </body>

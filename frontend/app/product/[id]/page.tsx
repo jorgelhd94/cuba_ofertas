@@ -1,6 +1,6 @@
 import ProductCategories from "@/components/products/ProductDetails/ProductCategories";
 import ProductDetailsPrice from "@/components/products/ProductDetails/ProductDetailsPrice";
-import ProductPriceHistory from "@/components/products/ProductPriceHistory/ProductPriceHistory";
+import ProductPriceHistoryChart from "@/components/products/ProductPriceHistory/ProductPriceHistoryChart";
 import ProductRanking from "@/components/products/ProductRanking/ProductRanking";
 import { IProduct } from "@/lib/interfaces/IProduct";
 import { getApiUrl } from "@/lib/utils/api/api";
@@ -28,6 +28,8 @@ export default async function ProductDetailsPage({
   params: { id: string };
 }) {
   const product = (await getData(params.id)) as IProduct;
+
+  
 
   if (product.image_url.includes("thumbs") && product.shop.slug === "sm23") {
     product.image_url = product.image_url.replace("thumbs", "middle");
@@ -103,7 +105,7 @@ export default async function ProductDetailsPage({
           </div>
 
           <div className="w-full my-8">
-            <ProductPriceHistory product={product} />
+            <ProductPriceHistoryChart product={product} />
           </div>
         </div>
       </div>

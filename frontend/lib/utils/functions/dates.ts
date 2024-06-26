@@ -12,4 +12,13 @@ function convertToReadableDate(isoString: string): string {
   return new Intl.DateTimeFormat("es-ES", options).format(date);
 }
 
-export { convertToReadableDate };
+function convertToDayMonth(date: Date) {
+  const options: Intl.DateTimeFormatOptions = {
+    month: "short",
+    day: "numeric",
+  };
+
+  return new Intl.DateTimeFormat("es-ES", options).format(date);
+}
+
+export { convertToReadableDate, convertToDayMonth };

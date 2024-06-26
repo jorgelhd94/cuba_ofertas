@@ -7,7 +7,10 @@ import React from "react";
 import useSWR from "swr";
 import { AgChartsReact } from "ag-charts-react";
 import { AgChartOptions } from "ag-charts-community";
-import { convertToReadableDate } from "@/lib/utils/functions/dates";
+import {
+  convertToDayMonth,
+  convertToReadableDate,
+} from "@/lib/utils/functions/dates";
 
 type Props = {
   product: IProduct;
@@ -47,18 +50,8 @@ const ProductPriceHistory = (props: Props) => {
         title: "Precio",
         tooltip: {
           renderer: (params) => {
-            const options: Intl.DateTimeFormatOptions = {
-              month: "short",
-              day: "numeric",
-            };
-
-            const formattedDate = new Intl.DateTimeFormat(
-              "es-ES",
-              options
-            ).format(params.datum.date);
-
             return {
-              title: formattedDate,
+              title: convertToDayMonth(params.datum.date),
               content: `${params.datum.price} ${props.product.currency}`,
             };
           },
@@ -71,6 +64,9 @@ const ProductPriceHistory = (props: Props) => {
         position: "bottom",
         title: {
           text: "Fecha",
+        },
+        label: {
+          formatter: (params) => convertToDayMonth(new Date(params.value)),
         },
       },
       {
