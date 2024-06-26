@@ -13,6 +13,8 @@ urlpatterns = [
     path('', include(router.urls)),
     path('product-ranking/<int:product_id>/',
          views.ProductRankView.as_view(), name='product-ranking'),
+    path('products/<int:pk>/related/',
+         views.RelatedProductsView.as_view(), name='product-related'),
     path('products/<int:product_id>/price-history/',
          views.PriceHistoryListView.as_view(), name='price-history-list'),
     path('products-test/',

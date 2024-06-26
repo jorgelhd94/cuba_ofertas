@@ -3,6 +3,8 @@ import ProductCategories from "@/components/products/ProductDetails/ProductCateg
 import ProductDetailsPrice from "@/components/products/ProductDetails/ProductDetailsPrice";
 import ProductPriceHistoryChart from "@/components/products/ProductPriceHistory/ProductPriceHistoryChart";
 import ProductRanking from "@/components/products/ProductRanking/ProductRanking";
+import { ProductsSkeleton } from "@/components/products/ProductsSkeleton/ProductsSkeleton";
+import RelatedProducts from "@/components/products/RelatedProducts/RelatedProducts";
 import { IProduct } from "@/lib/interfaces/IProduct";
 import { getApiUrl } from "@/lib/utils/api/api";
 import { convertToReadableDate } from "@/lib/utils/functions/dates";
@@ -37,7 +39,7 @@ export default async function ProductDetailsPage({
   return (
     <section className=" body-font overflow-hidden mt-8">
       <div className="container px-5 mx-auto">
-        <div className="lg:w-4/5 mx-auto flex flex-wrap">
+        <div className="w-[4/5] max-w-screen-xl mx-auto flex flex-wrap">
           <div className="md:w-1/2 w-full md:h-auto object-cover object-center rounded relative">
             <Image radius="lg" alt={product.name} src={product.image_url} />
 
@@ -110,6 +112,8 @@ export default async function ProductDetailsPage({
           <div className="w-full my-8">
             <ProductPriceHistoryChart product={product} />
           </div>
+
+          <RelatedProducts product={product} />
         </div>
       </div>
     </section>

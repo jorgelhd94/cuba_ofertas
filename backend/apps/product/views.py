@@ -4,7 +4,7 @@ from .models import Product, Manufacture, Category, Provider, PriceHistory
 from .serializers import ProductSerializer, ManufactureSerializer, CategorySerializer, ProviderSerializer, PriceHistorySerializer
 from common.configuration.pagination import StandardResultsSetPagination
 from django.db.models.functions import Trim, Replace
-from django.db.models import F, Value, Subquery
+from django.db.models import Q, F, Value, Subquery
 from rest_framework import generics
 
 from rest_framework.views import APIView
@@ -59,6 +59,22 @@ class ProductRankView(APIView):
         serializer = ProductSerializer(products, many=True)
 
         return Response({"product_id": product.id, "rank": position, "products": serializer.data}, status=status.HTTP_200_OK)
+
+
+class RelatedProductsView(APIView):
+    def get(self, request, pk):
+        try:
+            product = Product.objects.get(pk=pk)
+        except Product.DoesNotExist:
+            return Response({"error": "Product not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        related_products = Product.objects.filter(
+            Q(name__icontains=product.name) |
+            Q(categories__in=product.categories.all())
+        ).exclude(pk=product.pk).distinct().order_by('current_price')[:20]
+
+        serializer = ProductSerializer(related_products, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class PriceHistoryListView(generics.ListAPIView):
