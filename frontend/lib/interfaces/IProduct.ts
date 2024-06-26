@@ -21,4 +21,5 @@ export interface IProduct {
   created_at: string;
   updated_at: string;
   days_since_last_update: number;
+  days_on_sale: number | null;
 }

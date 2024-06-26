@@ -109,31 +109,6 @@ class ProductTestView(generics.ListAPIView):
     serializer_class = ProductSerializer
 
     def get_queryset(self):
-        product_id = 335
-        try:
-            product = Product.objects.get(id=product_id)
-        except Product.DoesNotExist:
-            product = Product(id=product_id)
-
-        # Simular un cambio en el precio actual (para prueba)
-        if product.pk:
-            # Simular cambio de precio
-            new_price = 26.00 # Aumentar el precio en 10 para prueba
-            product.current_price = new_price
-            product.save()  # El método save modificado manejará el cambio de previous_price si es necesario
-
-            message = f"Producto actualizado: ID {product_id}. Precio anterior: {product.previous_price}. Nuevo precio: {product.current_price}"
-        else:
-            # Configurar datos iniciales si el producto no existía
-            product.name = "Producto de prueba"
-            product.current_price = 100.0
-            product.currency = "USD"
-            product.save()
-
-            message = f"Producto creado: ID {product_id}. Precio actual: {product.current_price}"
-
-        print(message)
-
         # Get products that have price history entries with different prices
         products_with_different_prices = Product.objects.filter(
             price_history__isnull=False

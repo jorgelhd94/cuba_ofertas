@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from .models import Product, Manufacture, ComparisonZone, Provider, Category, Shop, PriceHistory
 from apps.statistics_spy.models import ProductsUpdateLogs
+from datetime import timedelta
+from django.utils import timezone
 
 
 class ShopSerializer(serializers.ModelSerializer):
@@ -39,6 +41,7 @@ class ProductSerializer(serializers.ModelSerializer):
     provider = ProviderSerializer(read_only=True)
     shop = ShopSerializer(read_only=True)
     days_since_last_update = serializers.SerializerMethodField()
+    days_on_sale = serializers.SerializerMethodField()
 
     class Meta:
         model = Product
@@ -53,6 +56,35 @@ class ProductSerializer(serializers.ModelSerializer):
             time_difference = last_update.start_time.date() - obj.updated_at.date()
             return time_difference.days
         return None
+
+    def get_days_on_sale(self, obj):
+        start_date = timezone.now() - timedelta(days=35)
+        price_history = obj.price_history.filter(
+            date__gte=start_date).order_by('-date')
+
+        if not price_history.exists():
+            return None
+
+        current_price = obj.current_price
+        last_price_change = None
+        price_set_date = None
+
+        for record in price_history:
+            if record.price == current_price:
+                price_set_date = record.date
+
+            if record.price != current_price:
+                last_price_change = record
+                break
+
+        if last_price_change is None or current_price >= last_price_change.price:
+            return None
+
+        if price_set_date is None:
+            return None
+
+        days_on_sale = (timezone.now().date() - price_set_date.date()).days
+        return days_on_sale
 
 
 class PriceHistorySerializer(serializers.ModelSerializer):

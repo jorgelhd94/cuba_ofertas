@@ -15,6 +15,7 @@ import { usePathname, useRouter } from "next/navigation";
 import React, { useContext, useEffect, useState } from "react";
 import { ProductDropdownMenu } from "../ProductDropdownMenu/ProductDropdownMenu";
 import ProductRanking from "../ProductRanking/ProductRanking";
+import OnSaleChip from "../OnSaleChip/OnSaleChip";
 
 type ProductCardProps = {
   product: IProduct;
@@ -65,22 +66,26 @@ export const ProductCard: React.FC<ProductCardProps> = (props) => {
     return props.product.name;
   };
 
+  const [showOfferDays, setShowOfferDays] = useState(false);
+
   return (
     <>
-      <Card shadow="sm" className={"w-full sm:w-72 md:w-64"}>
+      <Card
+        onMouseEnter={() => setShowOfferDays(true)}
+        onMouseLeave={() => setShowOfferDays(false)}
+        shadow="sm"
+        className={"w-full sm:w-72 md:w-64"}
+      >
         <CardBody className="overflow-visible p-0">
           <div className="grid grid-cols-12">
             <div className="relative col-span-6 md:col-span-12 max-md:my-2 max-md:ml-2">
               <div className="relative overflow-hidden pb-[100%] rounded-sm">
-                {props.product.old_price && (
-                  <Chip
-                    color="danger"
-                    size="sm"
-                    className="absolute top-2 left-2 z-20 select-none"
-                  >
-                    Oferta
-                  </Chip>
-                )}
+                <div className="absolute top-2 left-2 z-20 select-none">
+                  <OnSaleChip
+                    product={props.product}
+                    showOfferDays={showOfferDays}
+                  />
+                </div>
 
                 {props.product.provider && (
                   <Chip

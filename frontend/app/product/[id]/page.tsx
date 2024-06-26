@@ -1,3 +1,4 @@
+import OnSaleChip from "@/components/products/OnSaleChip/OnSaleChip";
 import ProductCategories from "@/components/products/ProductDetails/ProductCategories";
 import ProductDetailsPrice from "@/components/products/ProductDetails/ProductDetailsPrice";
 import ProductPriceHistoryChart from "@/components/products/ProductPriceHistory/ProductPriceHistoryChart";
@@ -5,7 +6,7 @@ import ProductRanking from "@/components/products/ProductRanking/ProductRanking"
 import { IProduct } from "@/lib/interfaces/IProduct";
 import { getApiUrl } from "@/lib/utils/api/api";
 import { convertToReadableDate } from "@/lib/utils/functions/dates";
-import { Button, Image } from "@nextui-org/react";
+import { Button, Chip, Image } from "@nextui-org/react";
 import Link from "next/link";
 import { FaShare } from "react-icons/fa6";
 
@@ -29,8 +30,6 @@ export default async function ProductDetailsPage({
 }) {
   const product = (await getData(params.id)) as IProduct;
 
-  
-
   if (product.image_url.includes("thumbs") && product.shop.slug === "sm23") {
     product.image_url = product.image_url.replace("thumbs", "middle");
   }
@@ -39,8 +38,12 @@ export default async function ProductDetailsPage({
     <section className=" body-font overflow-hidden mt-8">
       <div className="container px-5 mx-auto">
         <div className="lg:w-4/5 mx-auto flex flex-wrap">
-          <div className="md:w-1/2 w-full md:h-auto object-cover object-center rounded">
+          <div className="md:w-1/2 w-full md:h-auto object-cover object-center rounded relative">
             <Image radius="lg" alt={product.name} src={product.image_url} />
+
+            <div className="absolute top-2 left-2 z-30">
+              <OnSaleChip product={product} showOfferDays />
+            </div>
           </div>
 
           <div className="md:w-1/2 w-full md:pl-10 md:py-6 mt-6 md:mt-0 space-y-4">
