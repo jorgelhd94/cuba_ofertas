@@ -97,6 +97,11 @@ class Product(models.Model):
         ]
 
     def save(self, *args, **kwargs):
+        if self.pk is not None:  # Only if the product already exists
+            previous = Product.objects.get(pk=self.pk)
+            if previous.current_price != self.current_price:
+                self.previous_price = previous.current_price
+
         super(Product, self).save(*args, **kwargs)
         
         # Check if there's already a PriceHistory for today

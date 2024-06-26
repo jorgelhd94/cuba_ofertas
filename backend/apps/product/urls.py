@@ -1,18 +1,20 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import ProductViewSet, ManufactureViewSet, ProviderViewSet, CategoryViewSet, ProductRankView, PriceHistoryListView
+from . import views
 
 router = DefaultRouter()
-router.register(r'products', ProductViewSet)
-router.register(r'manufactures', ManufactureViewSet)
-router.register(r'categories', CategoryViewSet)
-router.register(r'providers', ProviderViewSet)
+router.register(r'products', views.ProductViewSet)
+router.register(r'manufactures', views.ManufactureViewSet)
+router.register(r'categories', views.CategoryViewSet)
+router.register(r'providers', views.ProviderViewSet)
 # router.register(r'comparison_zones', ComparisonZoneViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
     path('product-ranking/<int:product_id>/',
-         ProductRankView.as_view(), name='product-ranking'),
+         views.ProductRankView.as_view(), name='product-ranking'),
     path('products/<int:product_id>/price-history/',
-         PriceHistoryListView.as_view(), name='price-history-list'),
+         views.PriceHistoryListView.as_view(), name='price-history-list'),
+    path('products-test/',
+         views.ProductTestView.as_view(), name='product-test'),
 ]

@@ -1,3 +1,4 @@
+from django.db.models import Count
 from rest_framework import viewsets
 from .models import Product, Manufacture, Category, Provider, PriceHistory
 from .serializers import ProductSerializer, ManufactureSerializer, CategorySerializer, ProviderSerializer, PriceHistorySerializer
@@ -66,7 +67,8 @@ class PriceHistoryListView(generics.ListAPIView):
 
     def get_queryset(self):
         product_id = self.kwargs.get('product_id')
-        latest_90_ids = PriceHistory.objects.filter(product__id=product_id).order_by('-date').values_list('id', flat=True)[:90]
+        latest_90_ids = PriceHistory.objects.filter(product__id=product_id).order_by(
+            '-date').values_list('id', flat=True)[:90]
         return PriceHistory.objects.filter(id__in=Subquery(latest_90_ids)).order_by('date')
 
 
@@ -101,6 +103,46 @@ class ProviderViewSet(viewsets.ModelViewSet):
     queryset = Provider.objects.all()
     serializer_class = ProviderSerializer
     pagination_class = None
+
+
+class ProductTestView(generics.ListAPIView):
+    serializer_class = ProductSerializer
+
+    def get_queryset(self):
+        product_id = 335
+        try:
+            product = Product.objects.get(id=product_id)
+        except Product.DoesNotExist:
+            product = Product(id=product_id)
+
+        # Simular un cambio en el precio actual (para prueba)
+        if product.pk:
+            # Simular cambio de precio
+            new_price = 26.00 # Aumentar el precio en 10 para prueba
+            product.current_price = new_price
+            product.save()  # El método save modificado manejará el cambio de previous_price si es necesario
+
+            message = f"Producto actualizado: ID {product_id}. Precio anterior: {product.previous_price}. Nuevo precio: {product.current_price}"
+        else:
+            # Configurar datos iniciales si el producto no existía
+            product.name = "Producto de prueba"
+            product.current_price = 100.0
+            product.currency = "USD"
+            product.save()
+
+            message = f"Producto creado: ID {product_id}. Precio actual: {product.current_price}"
+
+        print(message)
+
+        # Get products that have price history entries with different prices
+        products_with_different_prices = Product.objects.filter(
+            price_history__isnull=False
+        ).annotate(
+            num_different_prices=Count('price_history__price', distinct=True)
+        ).filter(
+            num_different_prices__gt=1
+        )
+        return products_with_different_prices
 
 
 # class ComparisonZoneViewSet(viewsets.ModelViewSet):
