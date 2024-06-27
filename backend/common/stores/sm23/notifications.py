@@ -79,9 +79,8 @@ def notify_higher_ranked_products_sm23():
             notification.nr_products.all().delete()
         else:
             # Crear una nueva notificación si no existe
-            notification = NotificationNewInRanking.objects.create(
-                message="Hay nuevos productos con mejores precios que los nuestros."
-            )
+            notification.message = "Hay nuevos productos con mejores precios que los nuestros. Hay en total {} de nuestros productos afectados.".format(
+                len(all_higher_ranked_products))
 
         for hrp in all_higher_ranked_products:
             hrp.notification = notification

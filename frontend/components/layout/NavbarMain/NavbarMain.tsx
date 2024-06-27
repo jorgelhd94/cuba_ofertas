@@ -10,6 +10,7 @@ import { ThemeSwitcher } from "../../shared/theme-switcher";
 import SideBarMain from "../SideBarMain/SideBarMain";
 import { SearchForm } from "@/components/search/SearchForm/SearchForm";
 import { usePathname, useRouter } from "next/navigation";
+import NotificationMenu from "@/components/notifications/NotificationMenu/NotificationMenu";
 
 function NavbarMain() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -19,8 +20,7 @@ function NavbarMain() {
   const handleSearchText = (searchText: string) => {
     if (!searchText.trim()) {
       router.push(`/search`);
-    }
-    else {
+    } else {
       router.push(`/search?q=${searchText}`);
     }
   };
@@ -53,6 +53,7 @@ function NavbarMain() {
           </div>
 
           <div className="flex items-center lg:order-2 gap-4">
+            <NotificationMenu />
             <ThemeSwitcher />
           </div>
         </div>
