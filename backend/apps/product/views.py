@@ -1,4 +1,4 @@
-from common.utils.sm_23.notifications import notify_higher_ranked_products_sm23
+from common.stores.sm23.notifications import notify_higher_ranked_products_sm23
 from rest_framework import viewsets
 from .models import Product, Manufacture, Category, Provider, PriceHistory
 from .serializers import ProductSerializer, ManufactureSerializer, CategorySerializer, ProviderSerializer, PriceHistorySerializer
