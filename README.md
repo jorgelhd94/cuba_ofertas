@@ -1,5 +1,5 @@
 # 🕵️‍♂️ SPY-SM23
-Repositorio para obtener información de Supermarket23. El frontend de la aplicación está desarrollado usando NextJS 14 y el backend con FastAPI. Este proyecto está desplegado temporalmente en http://35.198.54.12/.
+Repositorio para obtener información de Supermarket23. El frontend de la aplicación está desarrollado usando NextJS 14 y el backend con Django y Django Rest Framework. Este proyecto está desplegado temporalmente en http://35.198.54.12/.
 
 # Producción
 
