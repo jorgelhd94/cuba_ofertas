@@ -1,20 +1,19 @@
 "use client";
 
-import { SearchIcon } from "@/components/shared/icons/SearchIcon";
+import NotificationMenu from "@/components/notifications/NotificationMenu/NotificationMenu";
+import { SearchForm } from "@/components/search/SearchForm/SearchForm";
 import { Button } from "flowbite-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Suspense, useState } from "react";
 import { HiMenu } from "react-icons/hi";
 import Logo from "../../shared/logo";
 import { ThemeSwitcher } from "../../shared/theme-switcher";
 import SideBarMain from "../SideBarMain/SideBarMain";
-import { SearchForm } from "@/components/search/SearchForm/SearchForm";
-import { usePathname, useRouter } from "next/navigation";
-import NotificationMenu from "@/components/notifications/NotificationMenu/NotificationMenu";
+import SearchFormSkeleton from "@/components/shared/skeletons/SearchFormSkeleton";
 
 function NavbarMain() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const pathname = usePathname();
   const router = useRouter();
 
   const handleSearchText = (searchText: string) => {
@@ -45,11 +44,13 @@ function NavbarMain() {
           </div>
 
           <div className="md:w-1/2">
-            <SearchForm
-              handleSearchText={handleSearchText}
-              loading={false}
-              standalone
-            />
+            <Suspense fallback={<SearchFormSkeleton />}>
+              <SearchForm
+                handleSearchText={handleSearchText}
+                loading={false}
+                standalone
+              />
+            </Suspense>
           </div>
 
           <div className="flex items-center lg:order-2 gap-4">
