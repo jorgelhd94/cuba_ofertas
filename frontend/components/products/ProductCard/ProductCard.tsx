@@ -110,6 +110,19 @@ export const ProductCard: React.FC<ProductCardProps> = (props) => {
             </div>
 
             <div className="col-span-6 md:col-span-12 flex flex-col items-start text-start justify-start gap-2 pt-4 p-4">
+              <p
+                className={
+                  "text-xs w-full " +
+                  (props.product.days_since_last_update > 0
+                    ? "text-danger"
+                    : "text-success")
+                }
+              >
+                {!props.product.days_since_last_update
+                  ? "Actualizado hoy"
+                  : `Actualizado hace ${props.product.days_since_last_update} día(s)`}
+              </p>
+
               <b
                 className="text-small text-primary-800"
                 onClick={() => setShowFullText(!showFullText)}

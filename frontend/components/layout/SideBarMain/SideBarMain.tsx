@@ -36,11 +36,6 @@ const SideBarMain = (props: Props) => {
       path: "/search",
     },
     {
-      label: "Búsquedas guardadas",
-      icon: HiDocumentSearch,
-      path: "/saved-searches",
-    },
-    {
       label: "Actualizaciones",
       icon: HiDatabase,
       path: "/updates",
@@ -53,7 +48,7 @@ const SideBarMain = (props: Props) => {
         open={props.isSidebarOpen}
         onClose={() => props.onOpenSidebar(false)}
       >
-        <Drawer.Items className="pt-14">
+        <Drawer.Items className="pt-16">
           <Sidebar
             className="[&>div]:bg-transparent [&>div]:p-0"
             theme={customSidebarTheme}

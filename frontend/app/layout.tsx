@@ -32,7 +32,7 @@ export default function RootLayout({
         <Providers>
           <div className="relative">
             <NavbarHome />
-            <main className="mt-10 py-8 min-h-max lg:min-h-screen bg-gradient-to-tr from-white to-slate-200 dark:bg-gradient-to-b dark:from-slate-800 via-transparent dark:to-black">
+            <main className="py-8 min-h-max lg:min-h-screen bg-gradient-to-tr from-white to-slate-200 dark:bg-gradient-to-b dark:from-slate-800 via-transparent dark:to-black">
               {children}
             </main>
 

@@ -17,7 +17,7 @@ const FilterDrawer = (props: Props) => {
       open={props.isOpen}
       onClose={() => props.handleClose()}
       position="right"
-      className="mt-14 max-sm:w-full z-50"
+      className="mt-16 max-sm:w-full z-40"
     >
       <Drawer.Header title="Filtros" titleIcon={HiAdjustments} />
       <Drawer.Items>

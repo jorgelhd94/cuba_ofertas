@@ -1,4 +1,4 @@
-from django.db.models import Count
+from common.utils.sm_23.notifications import notify_higher_ranked_products_sm23
 from rest_framework import viewsets
 from .models import Product, Manufacture, Category, Provider, PriceHistory
 from .serializers import ProductSerializer, ManufactureSerializer, CategorySerializer, ProviderSerializer, PriceHistorySerializer
@@ -12,6 +12,7 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from common.utils import search_functions
+from apps.statistics_spy.models import ProductsUpdateLogs
 
 
 class ProductViewSet(viewsets.ModelViewSet):
@@ -127,19 +128,11 @@ class ProviderViewSet(viewsets.ModelViewSet):
     pagination_class = None
 
 
-class ProductTestView(generics.ListAPIView):
-    serializer_class = ProductSerializer
+class ProductTestView(APIView):
+    def get(self, request):
+        notify_higher_ranked_products_sm23()
 
-    def get_queryset(self):
-        # Get products that have price history entries with different prices
-        products_with_different_prices = Product.objects.filter(
-            price_history__isnull=False
-        ).annotate(
-            num_different_prices=Count('price_history__price', distinct=True)
-        ).filter(
-            num_different_prices__gt=1
-        )
-        return products_with_different_prices
+        return Response({'msg': 'ok'}, status=status.HTTP_200_OK)
 
 
 # class ComparisonZoneViewSet(viewsets.ModelViewSet):

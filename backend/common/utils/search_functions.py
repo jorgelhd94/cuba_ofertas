@@ -1,6 +1,3 @@
-from django.contrib.postgres.search import TrigramWordDistance
-from django.contrib.postgres.search import TrigramWordSimilarity
-from django.contrib.postgres.search import TrigramSimilarity
 from apps.product.models import Category, Product
 from django.db.models import Q, F, Value
 from django.db.models.functions import Replace, Trim

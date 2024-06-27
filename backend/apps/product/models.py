@@ -77,8 +77,10 @@ class Product(models.Model):
     image_url = models.CharField(max_length=255, null=True)
 
     current_price = models.FloatField(null=True)
-    previous_price = models.FloatField(null=True)
     currency = models.CharField(max_length=255, null=True)
+
+    previous_price = models.FloatField(null=True)
+    previous_price_updated_at = models.DateTimeField(null=True)
 
     old_price = models.FloatField(null=True, blank=True)
     
@@ -101,6 +103,7 @@ class Product(models.Model):
             previous = Product.objects.get(pk=self.pk)
             if previous.current_price != self.current_price:
                 self.previous_price = previous.current_price
+                self.previous_price_updated_at = timezone.now()
 
         super(Product, self).save(*args, **kwargs)
         

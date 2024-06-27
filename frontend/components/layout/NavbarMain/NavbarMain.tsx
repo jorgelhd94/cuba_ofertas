@@ -27,14 +27,13 @@ function NavbarMain() {
 
   return (
     <>
-      <nav className="bg-white border-b border-gray-200 px-4 py-2.5 dark:bg-gray-800 dark:border-gray-700 fixed left-0 right-0 top-0 z-50">
+      <nav className="bg-white border-b border-gray-200 px-4 py-2.5 dark:bg-gray-800 dark:border-gray-700 sticky left-0 right-0 top-0 z-50">
         <div className="flex max-sm:gap-2 sm:flex-wrap justify-around sm:justify-between items-center">
-          <div className="flex justify-start items-center">
+          <div className="flex justify-start items-center gap-2">
             <Button
               size="xs"
               outline={!isMenuOpen}
               gradientDuoTone="purpleToBlue"
-              className="mr-4"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
               <HiMenu className="h-6 w-6" />

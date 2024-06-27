@@ -38,12 +38,17 @@ export default async function ProductDetailsPage({
   }
 
   return (
-    <section className=" body-font overflow-hidden mt-8">
+    <section className=" body-font overflow-hidden">
       <PriceFixedCard product={product} />
       <div className="container px-5 mx-auto">
         <div className="w-[4/5] max-w-screen-xl mx-auto flex flex-wrap">
           <div className="md:w-1/2 w-full md:h-auto object-cover object-center rounded relative">
-            <Image radius="lg" alt={product.name} src={product.image_url} />
+            <Image
+              radius="lg"
+              alt={product.name}
+              src={product.image_url}
+              className="object-cover object-center rounded"
+            />
 
             <div className="absolute top-2 left-2 z-30">
               <OnSaleChip product={product} showOfferDays />
