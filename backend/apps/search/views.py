@@ -39,8 +39,15 @@ class SearchView(APIView):
             )
 
             # Order By
-            products_queryset = products_queryset.order_by(
-                order_mapping.get(orderby, 'cleaned_name'))
+            try:
+                if orderby == 'default':
+                    products_queryset = products_queryset.order_by('-rank')
+                else:
+                    products_queryset = products_queryset.order_by(
+                        order_mapping.get(orderby, 'cleaned_name'))
+            except:
+                products_queryset = products_queryset.order_by(
+                    order_mapping.get(orderby, 'cleaned_name'))
 
             # Mode
             products_queryset = search_functions.filter_products_by_mode(

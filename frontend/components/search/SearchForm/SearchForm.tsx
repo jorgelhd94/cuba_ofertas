@@ -1,6 +1,5 @@
 "use client";
-import { SubmitBtn } from "@/components/shared/buttons/SubmitBtn/SubmitBtn";
-import { SearchIcon } from "@/components/shared/icons/SearchIcon";
+import { SearchBtn } from "@/components/shared/buttons/SubmitBtn/SearchBtn";
 import { getQueryString } from "@/lib/utils/functions/getQueryString";
 import { Input } from "@nextui-org/react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -10,6 +9,7 @@ type SearchFormProps = {
   loading: boolean;
   hideSaveSearch?: boolean;
   handleSearchText: Function;
+  standalone?: boolean;
 };
 
 export const SearchForm: React.FC<SearchFormProps> = (props) => {
@@ -24,13 +24,16 @@ export const SearchForm: React.FC<SearchFormProps> = (props) => {
 
     if (
       searchParams.get("q") === inputText ||
-      (searchParams.get("q") === null && inputText === "")
+      (searchParams.get("q") === null && inputText === "") ||
+      props.standalone
     ) {
       props.handleSearchText(searchText);
     }
 
-    setSearchText(inputText);
-    changeRoute(inputText);
+    if (!props.standalone) {
+      setSearchText(inputText);
+      changeRoute(inputText);
+    }
   };
 
   const changeRoute = (searchText: string) => {
@@ -50,9 +53,10 @@ export const SearchForm: React.FC<SearchFormProps> = (props) => {
     <>
       <form
         action={handleSearch}
-        className="w-full flex max-md:flex-col max-md:px-4 gap-4 items-center"
+        className="w-full flex gap-4 items-center"
       >
         <Input
+          size="sm"
           name="searchText"
           variant="bordered"
           autoFocus
@@ -66,14 +70,13 @@ export const SearchForm: React.FC<SearchFormProps> = (props) => {
             ],
             innerWrapper: "bg-transparent",
           }}
-          placeholder="Escribe el nombre del producto..."
-          startContent={<SearchIcon />}
+          placeholder="Buscar producto..."
           isClearable
           onChange={(event) => setSearchText(event.target.value)}
           onClear={() => setSearchText("")}
           value={searchText}
         />
-        <SubmitBtn loading={props.loading} />
+        <SearchBtn loading={props.loading} />
       </form>
 
       {/* <div className="flex gap-2 items-center">

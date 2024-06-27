@@ -1,4 +1,5 @@
 import OnSaleChip from "@/components/products/OnSaleChip/OnSaleChip";
+import PriceFixedCard from "@/components/products/PriceFixedCard/PriceFixedCard";
 import ProductCategories from "@/components/products/ProductDetails/ProductCategories";
 import ProductDetailsPrice from "@/components/products/ProductDetails/ProductDetailsPrice";
 import ProductPriceHistoryChart from "@/components/products/ProductPriceHistory/ProductPriceHistoryChart";
@@ -38,6 +39,7 @@ export default async function ProductDetailsPage({
 
   return (
     <section className=" body-font overflow-hidden mt-8">
+      <PriceFixedCard product={product} />
       <div className="container px-5 mx-auto">
         <div className="w-[4/5] max-w-screen-xl mx-auto flex flex-wrap">
           <div className="md:w-1/2 w-full md:h-auto object-cover object-center rounded relative">
@@ -53,8 +55,13 @@ export default async function ProductDetailsPage({
               {product.name}
             </h1>
 
-            <div className="flex gap-2">
+            <div className="flex flex-col gap-2">
               <ProductDetailsPrice product={product} />
+              {product.price_by_weight !== null && (
+                <p className="text-xl">
+                  {product.price_by_weight} {product.currency_by_weight}
+                </p>
+              )}
             </div>
 
             <div className="flex gap-2 flex-col">

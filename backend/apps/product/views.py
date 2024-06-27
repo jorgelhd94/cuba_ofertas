@@ -68,12 +68,18 @@ class RelatedProductsView(APIView):
         except Product.DoesNotExist:
             return Response({"error": "Product not found"}, status=status.HTTP_404_NOT_FOUND)
 
-        related_products = Product.objects.filter(
-            Q(name__icontains=product.name) |
-            Q(categories__in=product.categories.all())
-        ).exclude(pk=product.pk).distinct().order_by('current_price')[:20]
+        related_products = search_functions.full_search_products(product.name)
 
-        serializer = ProductSerializer(related_products, many=True)
+        related_products_by_categories = related_products.filter(
+            Q(categories__in=product.categories.all())
+        )
+
+        if related_products_by_categories.count() > 0:
+            related_products = related_products_by_categories
+
+        serializer = ProductSerializer(
+            related_products.exclude(pk=product.pk).distinct().order_by('current_price')[:20], many=True)
+
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 

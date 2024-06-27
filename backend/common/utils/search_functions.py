@@ -58,10 +58,11 @@ def full_search_products(query):
 
     return products_queryset
 
+
 def filter_by_price_weight(products_queryset, param):
     if not param in ['with_price_weight', 'without_price_weight']:
         return products_queryset
-    
+
     if param == 'with_price_weight':
         products_queryset = products_queryset.filter(
             Q(price_by_weight__isnull=False) | Q(price_by_weight__gt=0))
@@ -69,26 +70,27 @@ def filter_by_price_weight(products_queryset, param):
     if param == 'without_price_weight':
         products_queryset = products_queryset.filter(
             Q(price_by_weight__isnull=True) | Q(price_by_weight__lt=0))
-    
+
     return products_queryset
 
 
 def is_combo_product(product):
-    
+
     regex = re.compile(r'\(\b\d+ x +\b\d* +[a-zA-Z]*', re.IGNORECASE)
 
     if regex.search(product.name):
         return True
-    
+
     if 'combo' in product.name.lower():
         return True
-    
+
     descendant_category_ids = get_descendant_category_ids('Combos')
-    
+
     if product.categories.filter(id__in=descendant_category_ids).exists():
         return True
 
     return False
+
 
 def filter_products_by_mode(products_queryset, mode):
     if mode in ['combo', 'simple']:

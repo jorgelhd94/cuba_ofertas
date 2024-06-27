@@ -74,17 +74,9 @@ export const SearchComponent: React.FC<Props> = (props) => {
 
   return (
     <div className="flex flex-col items-center gap-8 w-full">
-      <div className="flex max-md:flex-col items-center gap-2 max-w-3xl w-full">
-        <SearchForm
-          loading={loading}
-          hideSaveSearch={props.hideSaveSearch}
-          handleSearchText={handleSearchProducts}
-        />
-      </div>
-
       <div className="flex max-md:flex-col justify-between px-4 gap-4 w-full">
         {pinProduct && !hidePinProduct && (
-          <div className="h-max sticky top-16 lg:top-20 z-30 flex md:flex-col justify-center">
+          <div className="h-max sticky pt-2 top-16 lg:top-20 z-30 flex md:flex-col justify-center">
             <h3 className="text-xl font-medium pb-4 max-md:hidden">
               Producto fijado
             </h3>

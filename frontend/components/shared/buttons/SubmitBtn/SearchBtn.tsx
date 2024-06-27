@@ -2,13 +2,14 @@
 import { Button } from "@nextui-org/react";
 import React from "react";
 import { useFormStatus } from "react-dom";
+import { SearchIcon } from "../../icons/SearchIcon";
 
-type SubmitBtnProps = {
+type SearchBtnProps = {
   onClick?: React.MouseEventHandler;
   loading?: boolean;
 };
 
-export const SubmitBtn: React.FC<SubmitBtnProps> = ({ onClick, loading }) => {
+export const SearchBtn: React.FC<SearchBtnProps> = ({ onClick, loading }) => {
   const { pending } = useFormStatus();
 
   return (
@@ -17,8 +18,9 @@ export const SubmitBtn: React.FC<SubmitBtnProps> = ({ onClick, loading }) => {
       type="submit"
       isLoading={pending || loading}
       disabled={pending || loading}
+      isIconOnly
     >
-      {pending || loading ? "Buscando" : "Buscar"}
+      {pending || loading ? "Buscando" : <SearchIcon />}
     </Button>
   );
 };

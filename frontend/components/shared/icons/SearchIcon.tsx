@@ -1,11 +1,16 @@
 import React from "react";
 
-type SearchIconProps = {};
+type SearchIconProps = {
+  isBlack?: boolean;
+};
 
-export const SearchIcon: React.FC<SearchIconProps> = () => {
+export const SearchIcon: React.FC<SearchIconProps> = ({ isBlack = false }) => {
   const getColor = () => {
-    return "text-black/75 hover:text-white mb-0.5 dark:text-white/90";
+    if (isBlack)
+      return "text-black/75 hover:text-black/90 mb-0.5 dark:text-white/90";
+    return "text-white hover:text-white/80 mb-0.5";
   };
+  
   return (
     <svg
       fill="currentColor"

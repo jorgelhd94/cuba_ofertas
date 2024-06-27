@@ -8,10 +8,10 @@ type Props = {
 
 const ProductDetailsPrice: React.FC<Props> = ({ product }) => {
   return (
-    <>
-      <span className="title-font font-medium text-2xl">
+    <div className="flex gap-2">
+      <p className="title-font font-medium text-2xl">
         {`${product.current_price} ${product.currency}`}
-      </span>
+      </p>
 
       {product.old_price && (
         <>
@@ -26,7 +26,7 @@ const ProductDetailsPrice: React.FC<Props> = ({ product }) => {
           />
         </>
       )}
-    </>
+    </div>
   );
 };
 
