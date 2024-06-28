@@ -11,11 +11,6 @@ export default function Error({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
-  useEffect(() => {
-    // Log the error to an error reporting service
-    console.error(error);
-  }, [error]);
-
   return (
     <div className="w-full h-full flex flex-col items-center justify-center gap-8 pt-4">
       <ErrorMsg message="Ha ocurrido un error al cargar los datos del producto" />

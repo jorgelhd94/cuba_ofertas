@@ -7,6 +7,26 @@ from django.db.models import Q
 from django.utils import timezone
 
 
+def get_ranked_products_sm23(product: Product):
+    # Obtener productos ordenados
+    ranked_products = search_functions.full_search_products(
+        product.name).order_by('current_price')
+
+    # Limpiar nombres de productos
+    ranked_products = search_functions.get_products_cleaned_name(
+        ranked_products)
+
+    # Filtrar productos por modo (combo/simple)
+    if search_functions.is_combo_product(product):
+        ranked_products = search_functions.filter_products_by_mode(
+            ranked_products, 'combo')
+    else:
+        ranked_products = search_functions.filter_products_by_mode(
+            ranked_products, 'simple')
+
+    return ranked_products
+
+
 def notify_higher_ranked_products_sm23():
     # Obtener la última actualización exitosa
     last_update = ProductsUpdateLogs.objects.filter(
@@ -29,24 +49,8 @@ def notify_higher_ranked_products_sm23():
     all_higher_ranked_products = []
 
     for product in products_with_providers:
-        # Obtener productos ordenados
-        ranked_products = search_functions.full_search_products(
-            product.name).order_by('current_price')
-
-        # Limpiar nombres de productos
-        ranked_products = search_functions.get_products_cleaned_name(
-            ranked_products)
-
-        # Filtrar productos por modo (combo/simple)
-        if search_functions.is_combo_product(product):
-            ranked_products = search_functions.filter_products_by_mode(
-                ranked_products, 'combo')
-        else:
-            ranked_products = search_functions.filter_products_by_mode(
-                ranked_products, 'simple')
-
         # Convertir a lista para poder usar index()
-        ranked_products = list(ranked_products)
+        ranked_products = list(get_ranked_products_sm23(product))
 
         if product in ranked_products:
             product_position = ranked_products.index(product)
