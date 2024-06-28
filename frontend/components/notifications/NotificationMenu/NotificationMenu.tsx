@@ -11,7 +11,7 @@ type Props = {};
 
 const NotificationMenu = (props: Props) => {
   const { data, error, isLoading } = useSWR(
-    getApiUrl("/notifications"),
+    getApiUrl("/unread-notifications/"),
     fetcher
   );
 

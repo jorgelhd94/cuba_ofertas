@@ -1,4 +1,5 @@
 interface INotification {
+    id: number;
     message: string;
     created_at: string;
     was_read: boolean;

@@ -2,7 +2,7 @@
 
 import { PinProductContext } from "@/lib/context/PinProductContext";
 import { IProduct } from "@/lib/interfaces/IProduct";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { SearchComponent } from "../SearchComponent/SearchComponent";
 
 export const SearchSection = () => {
@@ -10,7 +10,7 @@ export const SearchSection = () => {
 
   return (
     <PinProductContext.Provider value={{ pinProduct, setPinProduct }}>
-        <SearchComponent />
+      <SearchComponent />
     </PinProductContext.Provider>
   );
 };
