@@ -42,8 +42,8 @@ def notify_higher_ranked_products_sm23():
 
     # Productos nuevos o actualizados
     new_or_updated_products = Product.objects.filter(
-        Q(created_at__gte=last_update_date) |
-        (Q(previous_price_updated_at__gte=last_update_date) & Q(provider__isnull=True))
+        (Q(created_at__gte=last_update_date) |
+         Q(previous_price_updated_at__gte=last_update_date)) & Q(provider__isnull=True)
     )
 
     all_higher_ranked_products = []
