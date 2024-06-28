@@ -1,6 +1,6 @@
 from apps.statistics_spy.models import ProductsUpdateLogs
 from apps.product.models import Product
-from apps.notifications.models import NotificationNewInRanking, HigherRankedProducts
+from apps.notifications.models import Notification, HigherRankedProducts
 from common.utils import search_functions
 from django.db.models import Q
 
@@ -65,7 +65,7 @@ def notify_higher_ranked_products_sm23():
     if all_higher_ranked_products:
         # Verificar si ya existe una notificación de tipo 'new_in_ranking' creada hoy
         today = timezone.now().date()
-        notification = NotificationNewInRanking.objects.filter(
+        notification = Notification.objects.filter(
             created_at__date=today,
         ).first()
 
@@ -78,6 +78,11 @@ def notify_higher_ranked_products_sm23():
             # Eliminar las instancias de HigherRankedProducts existentes asociadas a la notificación
             notification.nr_products.all().delete()
         else:
+            # Crear una notificación
+            notification = Notification.objects.create(
+                notification_type='new_in_ranking',
+            )
+
             # Crear una nueva notificación si no existe
             notification.message = "Hay nuevos productos con mejores precios que los nuestros. Hay en total {} de nuestros productos afectados.".format(
                 len(all_higher_ranked_products))
