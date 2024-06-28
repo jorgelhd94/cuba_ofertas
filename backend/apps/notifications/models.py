@@ -16,16 +16,6 @@ class Notification(models.Model):
         db_table = 'notification'
 
 
-class NotificationNewInRanking(Notification):
-    notification_type = 'new_in_ranking'
-
-    class Meta:
-        db_table = 'notification_new_in_ranking'
-
-    def __str__(self):
-        return self.message
-
-
 class HigherRankedProducts(models.Model):
     main_product = models.ForeignKey(
         Product, on_delete=models.CASCADE, related_name='nr_provider_notifications')
@@ -33,7 +23,7 @@ class HigherRankedProducts(models.Model):
         Product, related_name='nr_ranked_notifications')
 
     notification = models.ForeignKey(
-        NotificationNewInRanking, on_delete=models.CASCADE, related_name='nr_products', null=True)
+        Notification, on_delete=models.CASCADE, related_name='nr_products', null=True)
 
     class Meta:
         db_table = 'notification_higher_ranked_products'
