@@ -58,7 +58,7 @@ export const SearchComponent: React.FC<Props> = (props) => {
   /* Handle pin product change */
   useEffect(() => {
     if (pinProduct) {
-      let queryString = getQueryString(searchParams.toString(), {
+      let queryString = getQueryString("", {
         name: "q",
         value: pinProduct.name.trim(),
       });

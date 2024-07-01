@@ -2,10 +2,11 @@
 
 import NotificationMenu from "@/components/notifications/NotificationMenu/NotificationMenu";
 import { SearchForm } from "@/components/search/SearchForm/SearchForm";
+import { getQueryString } from "@/lib/utils/functions/getQueryString";
 import { Button } from "flowbite-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { Suspense, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
 import { HiMenu } from "react-icons/hi";
 import Logo from "../../shared/logo";
 import { ThemeSwitcher } from "../../shared/theme-switcher";
@@ -15,13 +16,15 @@ import SearchFormSkeleton from "@/components/shared/skeletons/SearchFormSkeleton
 function NavbarMain() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const handleSearchText = (searchText: string) => {
-    if (!searchText.trim()) {
-      router.push(`/search`);
-    } else {
-      router.push(`/search?q=${searchText}`);
-    }
+    const query = getQueryString(searchParams.toString(), {
+      name: "q",
+      value: searchText,
+    });
+
+    router.push(`/search?${query}`);
   };
 
   return (

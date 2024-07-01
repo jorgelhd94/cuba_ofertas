@@ -37,7 +37,7 @@ def full_search_products(query):
     filtered_words = [word for word in query.split() if len(
         word) >= 4 and not re.search(r'\d', word)]
 
-    if len(filtered_words) > 2:
+    if len(filtered_words) >= 2:
         search_query = SearchQuery(filtered_words[0], config='spanish')
         for word in filtered_words[1:]:
             search_query |= SearchQuery(word, config='spanish')
@@ -175,3 +175,26 @@ def get_products_cleaned_name(products_queryset: models.QuerySet):
             )
         )
     )
+
+
+def get_ranked_products_sm23(product: Product):
+    ranked_products = full_search_products(
+        product.name).order_by('current_price')
+
+    ranked_products = get_products_cleaned_name(
+        ranked_products)
+
+    if is_combo_product(product):
+        ranked_products = filter_products_by_mode(
+            ranked_products, 'combo')
+    else:
+        ranked_products = filter_products_by_mode(
+            ranked_products, 'simple')
+    
+
+    min_price = product.current_price * 0.5
+    max_price = product.current_price * 1.5
+    ranked_products = ranked_products.filter(current_price__gte=min_price, current_price__lte=max_price)
+
+    return ranked_products
+

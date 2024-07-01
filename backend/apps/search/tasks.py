@@ -75,9 +75,9 @@ def update_database_sm23():
         print("Terminado")
         seleniumDriver.quit()
         update.save()
-
     
-    notifications.notify_higher_ranked_products_sm23()
+    if update.status == 'success':
+        notifications.notify_higher_ranked_products_sm23()
 
     return {"proceso": "Terminado"}
 
