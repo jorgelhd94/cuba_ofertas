@@ -45,55 +45,53 @@ const NotificationDetails = (props: Props) => {
   };
 
   return (
-    <div className="container mx-auto max-w-screen-lg px-4">
-      <div className="w-full space-y-8 flex flex-col">
-        <div className="flex justify-between items-center">
+    <>
+      <div className="flex justify-between items-center">
+        <Button
+          color="primary"
+          variant="ghost"
+          as={Link}
+          href="/notifications"
+          startContent={<FaArrowLeft />}
+          className="w-max"
+        >
+          Todas las notificaciones
+        </Button>
+
+        <>
           <Button
-            color="primary"
-            variant="ghost"
-            as={Link}
-            href="/notifications"
-            startContent={<FaArrowLeft />}
+            color="danger"
             className="w-max"
+            isIconOnly
+            onClick={() => setisDeleteModalOpen(true)}
+            isLoading={isLoading}
           >
-            Todas las notificaciones
+            <FaTrash />
           </Button>
 
-          <>
-            <Button
-              color="danger"
-              className="w-max"
-              isIconOnly
-              onClick={() => setisDeleteModalOpen(true)}
-              isLoading={isLoading}
-            >
-              <FaTrash />
-            </Button>
-
-            <DeleteModal
-              isOpen={isDeleteModalOpen}
-              handleDelete={handleDelete}
-              isLoading={isLoading}
-              onOpenChange={setisDeleteModalOpen}
-            />
-          </>
-        </div>
-
-        <div className="space-y-4">
-          <Chip color="primary">
-            {convertToReadableDate(props.notification.created_at)}
-          </Chip>
-
-          <Card className="lg:w-max">
-            <CardBody>{props.notification.message}</CardBody>
-          </Card>
-        </div>
-
-        {props.notification.notification_type === "new_in_ranking" && (
-          <MainProductList notification={props.notification} />
-        )}
+          <DeleteModal
+            isOpen={isDeleteModalOpen}
+            handleDelete={handleDelete}
+            isLoading={isLoading}
+            onOpenChange={setisDeleteModalOpen}
+          />
+        </>
       </div>
-    </div>
+
+      <div className="space-y-4">
+        <Chip color="primary">
+          {convertToReadableDate(props.notification.created_at)}
+        </Chip>
+
+        <Card className="lg:w-max">
+          <CardBody>{props.notification.message}</CardBody>
+        </Card>
+      </div>
+
+      {props.notification.notification_type === "new_in_ranking" && (
+        <MainProductList notification={props.notification} />
+      )}
+    </>
   );
 };
 

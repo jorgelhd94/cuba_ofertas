@@ -8,6 +8,8 @@ import "react-toastify/dist/ReactToastify.css";
 import "./globals.css";
 import { Providers } from "./providers";
 import ScrollToTop from "@/components/shared/utils/ScrollToTop";
+import { Suspense } from "react";
+import { Skeleton } from "@nextui-org/react";
 
 const roboto = Roboto({
   weight: "400",
@@ -31,7 +33,15 @@ export default function RootLayout({
         <ToastContainer />
         <Providers>
           <div className="relative">
-            <NavbarHome />
+            <Suspense
+              fallback={
+                <Skeleton>
+                  <div className="w-full h-12"></div>
+                </Skeleton>
+              }
+            >
+              <NavbarHome />
+            </Suspense>
             <main className="py-8 min-h-max lg:min-h-screen bg-gradient-to-tr from-white to-slate-200 dark:bg-gradient-to-b dark:from-slate-800 via-transparent dark:to-black">
               {children}
             </main>

@@ -22,5 +22,11 @@ export default async function NotificationDetailsPage({
 }) {
   const notification = (await getData(params.id)) as INotification;
 
-  return <NotificationDetails notification={notification} />;
+  return (
+    <div className="container mx-auto max-w-screen-lg px-4">
+      <div className="w-full space-y-8 flex flex-col">
+        <NotificationDetails notification={notification} />
+      </div>
+    </div>
+  );
 }
