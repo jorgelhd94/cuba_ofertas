@@ -31,24 +31,7 @@ class ProductRankView(APIView):
         except Product.DoesNotExist:
             return Response({"error": "Product not found"}, status=status.HTTP_404_NOT_FOUND)
 
-        products = search_functions.full_search_products(
-            product.name).order_by('current_price', 'price_by_weight')
-
-        # Clean Name
-        products = search_functions.get_products_cleaned_name(
-            products
-        )
-
-        if search_functions.is_combo_product(product):
-            products = search_functions.filter_products_by_mode(
-                products,
-                'combo'
-            )
-        else:
-            products = search_functions.filter_products_by_mode(
-                products,
-                'simple'
-            )
+        products = search_functions.get_ranked_products_sm23(product)
 
         if filterByPriceByWeight == 'price_by_weight':
             products = products.exclude(

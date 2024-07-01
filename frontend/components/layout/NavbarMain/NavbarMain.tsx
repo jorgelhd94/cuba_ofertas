@@ -1,28 +1,29 @@
 "use client";
 
-import { SearchIcon } from "@/components/shared/icons/SearchIcon";
+import NotificationMenu from "@/components/notifications/NotificationMenu/NotificationMenu";
+import { SearchForm } from "@/components/search/SearchForm/SearchForm";
+import { getQueryString } from "@/lib/utils/functions/getQueryString";
 import { Button } from "flowbite-react";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { HiMenu } from "react-icons/hi";
 import Logo from "../../shared/logo";
 import { ThemeSwitcher } from "../../shared/theme-switcher";
 import SideBarMain from "../SideBarMain/SideBarMain";
-import { SearchForm } from "@/components/search/SearchForm/SearchForm";
-import { usePathname, useRouter } from "next/navigation";
-import NotificationMenu from "@/components/notifications/NotificationMenu/NotificationMenu";
 
 function NavbarMain() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const pathname = usePathname();
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const handleSearchText = (searchText: string) => {
-    if (!searchText.trim()) {
-      router.push(`/search`);
-    } else {
-      router.push(`/search?q=${searchText}`);
-    }
+    const query = getQueryString(searchParams.toString(), {
+      name: "q",
+      value: searchText,
+    });
+
+    router.push(`/search?${query}`);
   };
 
   return (

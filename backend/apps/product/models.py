@@ -11,7 +11,6 @@ class Shop(models.Model):
     def __str__(self):
         return self.name
 
-
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.name)
@@ -39,12 +38,14 @@ class Provider(models.Model):
     class Meta:
         db_table = 'provider'
 
+
 class Category(models.Model):
     id = models.AutoField(primary_key=True)
     category_id = models.CharField(max_length=255)
     name = models.CharField(max_length=255, null=True)
     url = models.CharField(max_length=255, null=True)
-    parent = models.ForeignKey('self', null=True, blank=True, related_name='children', on_delete=models.CASCADE)
+    parent = models.ForeignKey(
+        'self', null=True, blank=True, related_name='children', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -53,7 +54,7 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
-    
+
     def get_descendants(self):
         descendants = []
         children = self.children.all()
@@ -66,12 +67,14 @@ class Category(models.Model):
 class Product(models.Model):
     id = models.AutoField(primary_key=True)
     product_id = models.CharField(max_length=255)
-    
-    shop = models.ForeignKey(Shop, on_delete=models.CASCADE, null=True, related_name='products')
-    manufacture = models.ForeignKey(Manufacture, on_delete=models.CASCADE)
+
+    shop = models.ForeignKey(
+        Shop, on_delete=models.CASCADE, null=True, related_name='products')
+    manufacture = models.ForeignKey(
+        Manufacture, on_delete=models.CASCADE, null=True)
     provider = models.ForeignKey(Provider, on_delete=models.CASCADE, null=True)
     categories = models.ManyToManyField(Category, related_name='products')
-    
+
     name = models.CharField(max_length=255, null=True)
     product_url = models.CharField(max_length=255, null=True)
     image_url = models.CharField(max_length=255, null=True)
@@ -83,14 +86,13 @@ class Product(models.Model):
     previous_price_updated_at = models.DateTimeField(null=True)
 
     old_price = models.FloatField(null=True, blank=True)
-    
+
     price_by_weight = models.FloatField(null=True)
     currency_by_weight = models.CharField(max_length=255, null=True)
     previous_price_by_weight = models.FloatField(null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    
 
     class Meta:
         db_table = 'product'
@@ -106,11 +108,12 @@ class Product(models.Model):
                 self.previous_price_updated_at = timezone.now()
 
         super(Product, self).save(*args, **kwargs)
-        
+
         # Check if there's already a PriceHistory for today
         today = timezone.now().date()
-        existing_history = PriceHistory.objects.filter(product=self, date__date=today).first()
-        
+        existing_history = PriceHistory.objects.filter(
+            product=self, date__date=today).first()
+
         if existing_history:
             existing_history.price = self.current_price
             existing_history.save()
@@ -119,7 +122,8 @@ class Product(models.Model):
 
 
 class PriceHistory(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='price_history')
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, related_name='price_history')
     date = models.DateTimeField(auto_now_add=True)
     price = models.FloatField()
 
@@ -132,9 +136,10 @@ class ComparisonZone(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255, null=True, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    main_product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='main_comparison_zones')
-    comparison_products = models.ManyToManyField(Product, related_name='comparison_zones')
+    main_product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, related_name='main_comparison_zones')
+    comparison_products = models.ManyToManyField(
+        Product, related_name='comparison_zones')
 
     class Meta:
         db_table = 'comparison_zone'
-
