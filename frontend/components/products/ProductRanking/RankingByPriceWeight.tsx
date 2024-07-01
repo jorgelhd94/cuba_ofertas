@@ -7,7 +7,7 @@ import { Chip } from "@nextui-org/react";
 import { useEffect, useRef, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import useSWR from "swr";
-import ProductRankingCard from "../ProductRankingCard/ProductRankingCard";
+import { ProductInfoCard } from "../ProductInfoCard/ProductInfoCard";
 
 type Props = {
   product: IProduct;
@@ -67,18 +67,25 @@ const RankingByPriceWeight = (props: Props) => {
         setShowModal={setShowModal}
         title="Ranking por precio/lb"
       >
-        <div className="max-h-72 space-y-4 overflow-y-auto p-2 scrollbar-custom">
+        <div className="max-h-96 space-y-4 overflow-y-auto p-2 scrollbar-custom">
           {data.products.map((product: IProduct, index: number) => {
             const isHighlighted = product.id === props.product.id;
             return (
               <div
                 key={product.id}
                 ref={isHighlighted ? highlightedProductRef : null}
+                className={
+                  product.id === props.product.id
+                    ? "sticky top-0 z-30 bottom-0"
+                    : ""
+                }
               >
-                <ProductRankingCard
+                <ProductInfoCard
                   position={index + 1}
                   product={product}
                   highlight={product.id === props.product.id}
+                  compareToProduct={props.product}
+                  hidePricePercent
                 />
               </div>
             );

@@ -1,4 +1,5 @@
 import { ProductInfoCard } from "@/components/products/ProductInfoCard/ProductInfoCard";
+import SimpleModal from "@/components/shared/modals/SimpleModal";
 import { IProduct } from "@/lib/interfaces/IProduct";
 import {
   Button,
@@ -34,41 +35,24 @@ const HighRankedProductsModal: React.FC<Props> = ({
   };
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onOpenChange={onOpenChange}
-      placement="auto"
-      isDismissable={false}
-      className="mx-2"
+    <SimpleModal
+      showModal={isOpen}
+      setShowModal={(showModal) =>
+        onOpenChange ? onOpenChange(showModal) : null
+      }
+      title={`Productos con mejor precio: ${mainProduct?.current_price} 
+    ${mainProduct?.currency}`}
     >
-      <ModalContent>
-        {(onClose) => (
-          <>
-            <ModalHeader className="flex flex-col gap-1">
-              Productos con mejor precio - {mainProduct?.current_price}{" "}
-              {mainProduct?.currency}
-            </ModalHeader>
-            <ModalBody>
-              <div className="space-y-2 max-h-96 overflow-y-auto pb-2">
-                {sortedProducts().map((product, index) => (
-                  <ProductInfoCard
-                    key={product.product_id + "-" + index}
-                    product={product}
-                    mainProduct={mainProduct}
-                  />
-                ))}
-              </div>
-            </ModalBody>
-
-            <ModalFooter>
-              <Button color="danger" variant="bordered" onPress={onClose}>
-                Cerrar
-              </Button>
-            </ModalFooter>
-          </>
-        )}
-      </ModalContent>
-    </Modal>
+      <div className="max-h-96 space-y-4 overflow-y-auto p-2 scrollbar-custom">
+        {sortedProducts().map((product, index) => (
+          <ProductInfoCard
+            key={product.product_id + "-" + index}
+            product={product}
+            compareToProduct={mainProduct}
+          />
+        ))}
+      </div>
+    </SimpleModal>
   );
 };
 
