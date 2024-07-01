@@ -51,6 +51,8 @@ const NotificationList = (props: Props) => {
   const [isDeleting, setIsDeleting] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
+  swrConfig.mutate(getApiUrl("/unread-notifications/"));
+
   const deleteAll = async () => {
     setIsDeleting(true);
     try {

@@ -8,7 +8,6 @@ import { useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import { FaTrash } from "react-icons/fa6";
 import { toast } from "react-toastify";
-import { useSWRConfig } from "swr";
 
 type Props = {
   notification: INotification;

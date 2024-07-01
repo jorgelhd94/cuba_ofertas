@@ -35,7 +35,7 @@ const NotificationDrawer = (props: Props) => {
     >
       <Drawer.Header title="Alertas" titleIcon={FaBell} />
       <Drawer.Items className="relative">
-        <div className="flex flex-col items-center gap-4">
+        <div className="flex flex-col items-center gap-4 pb-16">
           {props.isError && (
             <p className="text-danger">Error al cargar las alertas</p>
           )}
@@ -58,7 +58,7 @@ const NotificationDrawer = (props: Props) => {
           <div
             className={
               notifications && notifications.length > 20
-                ? "fixed bottom-2 z-50"
+                ? "fixed bottom-4 z-50"
                 : ""
             }
           >
