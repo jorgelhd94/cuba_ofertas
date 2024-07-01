@@ -1,4 +1,6 @@
 from datetime import timedelta
+import random
+from apps.notifications.models import Notification
 from common.stores.sm23.notifications import notify_higher_ranked_products_sm23
 from rest_framework import viewsets
 from .models import Product, Manufacture, Category, Provider, PriceHistory
@@ -148,7 +150,21 @@ class ProviderViewSet(viewsets.ModelViewSet):
 
 class ProductTestView(APIView):
     def get(self, request):
-        notify_higher_ranked_products_sm23()
+        messages = [
+            'Notification message {}'.format(i) for i in range(1, 2001)
+        ]
+        notification_types = ['info', 'success',
+                              'warning', 'error', 'new_in_ranking']
+
+        notifications = [
+            Notification(
+                message=message,
+                notification_type=random.choice(notification_types)
+            )
+            for message in messages
+        ]
+
+        Notification.objects.bulk_create(notifications)
 
         return Response({'msg': 'ok'}, status=status.HTTP_200_OK)
 

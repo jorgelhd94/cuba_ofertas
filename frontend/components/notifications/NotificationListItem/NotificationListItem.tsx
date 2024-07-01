@@ -1,18 +1,23 @@
 import { DeleteModal } from "@/components/shared/modals/DeleteModal";
 import INotification from "@/lib/interfaces/INotification";
+import { getApiUrl } from "@/lib/utils/api/api";
 import { convertToReadableDate } from "@/lib/utils/functions/dates";
 import { Button, Card, CardBody } from "@nextui-org/react";
 import Link from "next/link";
-import React from "react";
+import { useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import { FaTrash } from "react-icons/fa6";
+import { toast } from "react-toastify";
+import { useSWRConfig } from "swr";
 
 type Props = {
   notification: INotification;
+  onDelete?: Function;
 };
 
 const NotificationListItem = (props: Props) => {
-  const [isOpen, setIsOpen] = React.useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const getColor = () => {
     if (props.notification.notification_type === "new_in_ranking") {
@@ -21,6 +26,27 @@ const NotificationListItem = (props: Props) => {
 
     return "primary";
   };
+
+  const handleDelete = async () => {
+    setIsLoading(true);
+
+    await fetch(getApiUrl("/notifications/" + props.notification.id), {
+      method: "DELETE",
+    })
+      .then(() => {
+        toast.success("Alerta eliminada correctamente");
+        setIsOpen(false);
+        if (props.onDelete) {
+          props.onDelete();
+        }
+      })
+      .catch(() => {
+        toast.error("Ha ocurrido un error al eliminar");
+      });
+
+    setIsLoading(false);
+  };
+
   return (
     <>
       <Card
@@ -47,14 +73,24 @@ const NotificationListItem = (props: Props) => {
               </Button>
             )}
 
-            <Button isIconOnly color="danger" onClick={() => setIsOpen(true)}>
+            <Button
+              isLoading={isLoading}
+              isIconOnly
+              color="danger"
+              onClick={() => setIsOpen(true)}
+            >
               <FaTrash />
             </Button>
           </div>
         </CardBody>
       </Card>
 
-      <DeleteModal isOpen={isOpen} onOpenChange={setIsOpen} />
+      <DeleteModal
+        isOpen={isOpen}
+        onOpenChange={setIsOpen}
+        handleDelete={handleDelete}
+        isLoading={isLoading}
+      />
     </>
   );
 };

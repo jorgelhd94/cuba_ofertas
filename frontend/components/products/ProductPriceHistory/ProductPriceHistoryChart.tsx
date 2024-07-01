@@ -68,11 +68,6 @@ const ProductPriceHistory = (props: Props) => {
           .lastIndexOf(minPriceValue);
 
         setMinPriceIndex(minPriceIndexValue);
-      } else {
-        // Reset if no valid prices are found
-        setMaxPrice(Infinity);
-        setMinPrice(Infinity);
-        setMinPriceIndex(Infinity);
       }
     }
   }, [data]);

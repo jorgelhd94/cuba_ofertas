@@ -6,14 +6,20 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
+from rest_framework.decorators import action
+
+from common.configuration.pagination import StandardResultsSetPagination
 
 
 class NotificationViewSet(viewsets.ModelViewSet):
-    queryset = Notification.objects.all()
+    queryset = Notification.objects.all().order_by('-created_at')
     serializer_class = NotificationSerializer
+    pagination_class = StandardResultsSetPagination
 
-    def get_queryset(self):
-        return Notification.objects.order_by('-created_at')
+    @action(detail=False, methods=['delete'])
+    def delete_all(self, request):
+        deleted_count, _ = Notification.objects.all().delete()
+        return Response({'message': f'Deleted {deleted_count} notifications.'}, status=status.HTTP_204_NO_CONTENT)
 
 
 class UnreadNotificationsViewSet(viewsets.ReadOnlyModelViewSet):
