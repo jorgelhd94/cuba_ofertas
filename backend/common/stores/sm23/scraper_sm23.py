@@ -278,8 +278,12 @@ def create_or_update_products(seleniumDriver: SeleniumDriver, base_url: str, cat
 
 def create_product_and_manufacture(product_id: str, product_data: dict, category: Category):
     manufacture_data = product_data.pop("manufacture", None)
-    manufacture, created = Manufacture.objects.update_or_create(
-        **manufacture_data)
+
+    if manufacture_data:
+        manufacture, created = Manufacture.objects.update_or_create(
+            **manufacture_data)
+    else:
+        manufacture = None
 
     # Prepara los datos del producto
     product_defaults = product_data.copy()

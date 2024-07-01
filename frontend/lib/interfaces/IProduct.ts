@@ -9,7 +9,7 @@ export interface IProduct {
   name: string;
   product_url: string;
   image_url: string;
-  manufacture: IManufacture;
+  manufacture: IManufacture | null;
   provider: IProvider | null;
   shop: IShop;
   current_price: number;
