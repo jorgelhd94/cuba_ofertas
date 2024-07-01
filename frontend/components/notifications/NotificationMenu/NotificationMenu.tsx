@@ -40,10 +40,11 @@ const NotificationMenu = (props: Props) => {
         variant="flat"
       >
         <Badge
-          content={data?.length}
+          content={data?.length > 99 ? "99+" : data?.length}
           shape="circle"
           color="danger"
           isInvisible={error || data?.length === 0}
+          size="sm"
         >
           <FaBell size={24} />
         </Badge>

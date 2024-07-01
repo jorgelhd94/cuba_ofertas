@@ -1,43 +1,37 @@
 "use client";
+import { EmptyMsg } from "@/components/shared/messages/empty-msg/empty-msg";
 import { ErrorMsg } from "@/components/shared/messages/ErrorMsg/ErrorMsg";
 import NotificationsSkeleton from "@/components/shared/skeletons/NotificationsSkeleton";
 import INotification from "@/lib/interfaces/INotification";
 import { getApiUrl } from "@/lib/utils/api/api";
 import { fetcher } from "@/lib/utils/api/fetcher";
-import React, { useEffect, useState } from "react";
-import useSWR from "swr";
-import NotificationListItem from "../NotificationListItem/NotificationListItem";
 import { Button } from "@nextui-org/react";
+import { useEffect, useState } from "react";
+import useSWRInfinite from "swr/infinite";
+import NotificationListItem from "../NotificationListItem/NotificationListItem";
+import { toast } from "react-toastify";
+import { DeleteModal } from "@/components/shared/modals/DeleteModal";
+import { useSWRConfig } from "swr";
 
 type Props = {};
 
-const NotificationList = (props: Props) => {
-  const [page, setPage] = useState(1);
-  const [notifications, setNotifications] = useState<INotification[]>([]);
-  const [isLoadingMore, setIsLoadingMore] = useState(false);
+interface Data {
+  next: string | null;
+  results: INotification[];
+}
 
-  const { data, error } = useSWR(
-    getApiUrl(`/notifications/?page=${page}`),
+const getKey = (pageIndex: number, previousPageData: Data) => {
+  if (previousPageData && !previousPageData.next) return null; // reached the end
+  return getApiUrl(`/notifications?page=${pageIndex + 1}&page_size=100`); // SWR key
+};
+
+const NotificationList = (props: Props) => {
+  const { data, size, setSize, error, isLoading, mutate } = useSWRInfinite(
+    getKey,
     fetcher
   );
 
-  const loadMore = () => {
-    if (data && data.next) {
-      setPage((prevPage) => prevPage + 1);
-      setIsLoadingMore(true);
-    }
-  };
-
-  useEffect(() => {
-    if (data) {
-      if (page === 1) {
-        setNotifications(data.results);
-      } else {
-        setNotifications((prevProducts) => [...prevProducts, ...data.results]);
-      }
-      setIsLoadingMore(false);
-    }
-  }, [data]);
+  const swrConfig = useSWRConfig();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -45,29 +39,93 @@ const NotificationList = (props: Props) => {
         window.innerHeight + document.documentElement.scrollTop ===
         document.documentElement.offsetHeight
       ) {
-        loadMore();
+        setSize(size + 1);
       }
     };
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
+  }, [size, setSize]);
+
+  const [isDataEmpty, setIsDataEmpty] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+  swrConfig.mutate(getApiUrl("/unread-notifications/"));
+
+  const deleteAll = async () => {
+    setIsDeleting(true);
+    try {
+      const response = await fetch(getApiUrl("/notifications/delete_all/"), {
+        method: "DELETE",
+      });
+
+      if (response.ok) {
+        await mutate();
+
+        swrConfig.mutate(getApiUrl("/unread-notifications/"));
+
+        toast("Todas las alertas han sido eliminadas", { type: "success" });
+      }
+    } catch (error) {
+      toast("Ha ocurrido un error al eliminar", { type: "error" });
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  useEffect(() => {
+    setIsDataEmpty(data && data[0] && data[0].count === 0);
   }, [data]);
 
   if (error) return <ErrorMsg message="Error al cargar las alertas" />;
-  if (!data && page === 1) return <NotificationsSkeleton />;
+
+  if (!data) return <NotificationsSkeleton />;
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex justify-between">
-        <h1 className="text-2xl font-bold">Alertas</h1>
-        <Button color="danger" size="sm">Eliminar todo</Button>
+      <div className="flex justify-between mb-4">
+        <h1 className="text-2xl font-bold ">Alertas</h1>
+        {!isDataEmpty && (
+          <>
+            <Button
+              color="danger"
+              size="sm"
+              onClick={() => setIsDeleteModalOpen(true)}
+            >
+              Eliminar todo {data[0] && `(${data[0].count})`}
+            </Button>
+
+            <DeleteModal
+              isLoading={isDeleting}
+              handleDelete={deleteAll}
+              isOpen={isDeleteModalOpen}
+              onOpenChange={setIsDeleteModalOpen}
+              message="¿Desea eliminar todas las alertas?"
+            />
+          </>
+        )}
       </div>
 
-      {notifications.map((product: any) => (
-        <NotificationListItem key={product.id} notification={product} />
-      ))}
+      {data &&
+        data.map((notifications) => {
+          return notifications.results.map((item: INotification) => (
+            <NotificationListItem
+              key={item.id}
+              notification={item}
+              onDelete={() => mutate()}
+            />
+          ));
+        })}
 
-      {isLoadingMore && <NotificationsSkeleton />}
+      {isLoading && <NotificationsSkeleton />}
+
+      {isDataEmpty && (
+        <EmptyMsg
+          title="Sin resultados"
+          message="No hay alertas para mostrar"
+        />
+      )}
     </div>
   );
 };

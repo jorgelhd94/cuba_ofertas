@@ -1,6 +1,4 @@
 import { Chip } from "@nextui-org/react";
-import { UpIcon } from "../icons/UpIcon";
-import { DownIcon } from "../icons/DownIcon";
 import { FaArrowDown, FaArrowUp } from "react-icons/fa6";
 
 type Props = {

@@ -30,7 +30,7 @@ export const getPriceByWeightStyle = (
   }
 };
 
-export const getArrowIcon = (
+export const getArrowIconByPrice = (
   pinProduct: IProduct | null,
   product: IProduct
 ) => {
@@ -43,7 +43,7 @@ export const getArrowIcon = (
   }
 };
 
-export const getArrowByWeightStyle = (
+export const getArrowIconByWeight = (
   pinProduct: IProduct | null,
   product: IProduct
 ) => {

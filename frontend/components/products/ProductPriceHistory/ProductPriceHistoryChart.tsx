@@ -22,6 +22,13 @@ type Props = {
   product: IProduct;
 };
 
+interface Entry {
+  id: number | null;
+  product: number;
+  date: string;
+  price: number | null;
+}
+
 const ProductPriceHistory = (props: Props) => {
   const { data, error, isLoading } = useSWR(
     getApiUrl("/products/" + props.product.id + "/price-history/"),
@@ -37,21 +44,31 @@ const ProductPriceHistory = (props: Props) => {
 
   useEffect(() => {
     if (data && data.length > 0) {
+      // Set the current price and date from the last entry
       setCurrentPrice(data[data.length - 1].price ?? null);
       setCurrentDate(
         convertToDayMonth(new Date(data[data.length - 1].date) ?? null)
       );
 
-      const prices = data.map(
-        (entry: { date: string; price: number }) => entry.price
-      ) as number[];
+      // Filter out null prices
+      const validPrices = data
+        .filter((entry: Entry) => entry.price !== null)
+        .map((entry: Entry) => entry.price);
 
-      const minPriceValue = Math.min(...prices);
-      const maxPriceValue = Math.max(...prices);
+      if (validPrices.length > 0) {
+        const minPriceValue = Math.min(...validPrices);
+        const maxPriceValue = Math.max(...validPrices);
 
-      setMaxPrice(maxPriceValue);
-      setMinPriceIndex(prices.lastIndexOf(minPriceValue));
-      setMinPrice(minPriceValue);
+        setMaxPrice(maxPriceValue);
+        setMinPrice(minPriceValue);
+
+        // Find the index of the last occurrence of the minimum price
+        const minPriceIndexValue = data
+          .map((entry: Entry) => entry.price)
+          .lastIndexOf(minPriceValue);
+
+        setMinPriceIndex(minPriceIndexValue);
+      }
     }
   }, [data]);
 
@@ -77,8 +94,13 @@ const ProductPriceHistory = (props: Props) => {
   const handleMouseMove = (e: any) => {
     if (e && e.activePayload && e.activePayload.length > 0) {
       const price = e.activePayload[0].payload.price;
-      setCurrentPrice(price);
-      setCurrentDate(e.activeLabel);
+      if (price) {
+        setCurrentPrice(price);
+        setCurrentDate(e.activeLabel);
+      } else {
+        setCurrentPrice(chartData[chartData.length - 1].price);
+        setCurrentDate(chartData[chartData.length - 1].date);
+      }
     }
   };
 

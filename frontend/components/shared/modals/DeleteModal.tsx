@@ -13,6 +13,7 @@ type DeleteModalProps = {
   onOpenChange?: (isOpen: boolean) => void;
   handleDelete?: () => void;
   isLoading?: boolean;
+  message?: string;
 };
 
 export const DeleteModal: React.FC<DeleteModalProps> = (props) => {
@@ -31,7 +32,7 @@ export const DeleteModal: React.FC<DeleteModalProps> = (props) => {
             <ModalHeader className="flex justify-center">Eliminar</ModalHeader>
 
             <ModalBody className="text-lg text-center">
-              ¿Desea eliminar este elemento?
+              {props.message || "¿Desea eliminar este elemento?"}
             </ModalBody>
 
             <ModalFooter className="flex justify-center">

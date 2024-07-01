@@ -1,3 +1,6 @@
+from datetime import timedelta
+import random
+from apps.notifications.models import Notification
 from common.stores.sm23.notifications import notify_higher_ranked_products_sm23
 from rest_framework import viewsets
 from .models import Product, Manufacture, Category, Provider, PriceHistory
@@ -34,8 +37,11 @@ class ProductRankView(APIView):
         products = search_functions.get_ranked_products_sm23(product)
 
         if filterByPriceByWeight == 'price_by_weight':
+            min_price = product.price_by_weight * 0.5
+            max_price = product.price_by_weight * 1.5
+
             products = products.exclude(
-                price_by_weight=None).order_by('price_by_weight')
+                price_by_weight=None).order_by('price_by_weight').filter(price_by_weight__gte=min_price, price_by_weight__lte=max_price)
 
         # Buscar la posición del producto
         position = list(products).index(product) + 1
@@ -73,9 +79,40 @@ class PriceHistoryListView(generics.ListAPIView):
 
     def get_queryset(self):
         product_id = self.kwargs.get('product_id')
+
+        # Obtener los últimos 90 ids ordenados por fecha
         latest_90_ids = PriceHistory.objects.filter(product__id=product_id).order_by(
             '-date').values_list('id', flat=True)[:90]
-        return PriceHistory.objects.filter(id__in=Subquery(latest_90_ids)).order_by('date')
+
+        # Obtener los registros de PriceHistory correspondientes a esos IDs
+        price_histories = PriceHistory.objects.filter(
+            id__in=latest_90_ids).order_by('date')
+
+        if not price_histories.exists():
+            return []  # Si no hay registros, retornar una lista vacía
+
+        # Crear un diccionario de fechas a precios
+        existing_price_dict = {ph.date: ph for ph in price_histories}
+
+        # Inicializar variables
+        filled_price_history_list = []
+        previous_date = None
+
+        # Rellenar las fechas faltantes
+        for current_date in sorted(existing_price_dict.keys()):
+            if previous_date:
+                # Calcular el número de días entre la fecha actual y la anterior
+                delta = (current_date.date() - previous_date.date()).days
+                for i in range(1, delta):
+                    missing_date = previous_date + timedelta(days=i)
+                    filled_price_history_list.append(PriceHistory(
+                        date=missing_date, price=None, product_id=product_id))
+
+            # Añadir la fecha actual
+            filled_price_history_list.append(existing_price_dict[current_date])
+            previous_date = current_date
+
+        return filled_price_history_list
 
 
 class ManufactureViewSet(viewsets.ModelViewSet):
@@ -113,7 +150,21 @@ class ProviderViewSet(viewsets.ModelViewSet):
 
 class ProductTestView(APIView):
     def get(self, request):
-        notify_higher_ranked_products_sm23()
+        messages = [
+            'Notification message {}'.format(i) for i in range(1, 2001)
+        ]
+        notification_types = ['info', 'success',
+                              'warning', 'error', 'new_in_ranking']
+
+        notifications = [
+            Notification(
+                message=message,
+                notification_type=random.choice(notification_types)
+            )
+            for message in messages
+        ]
+
+        Notification.objects.bulk_create(notifications)
 
         return Response({'msg': 'ok'}, status=status.HTTP_200_OK)
 

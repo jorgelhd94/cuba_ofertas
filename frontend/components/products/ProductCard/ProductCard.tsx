@@ -4,8 +4,8 @@ import PercentDifferenceShip from "@/components/shared/ships/PercentDifferenceSh
 import { PinProductContext } from "@/lib/context/PinProductContext";
 import { IProduct } from "@/lib/interfaces/IProduct";
 import {
-  getArrowByWeightStyle,
-  getArrowIcon,
+  getArrowIconByPrice,
+  getArrowIconByWeight,
   getPriceByWeightStyle,
   getPriceStyle,
 } from "@/lib/utils/functions/pricesStyle";
@@ -151,7 +151,7 @@ export const ProductCard: React.FC<ProductCardProps> = (props) => {
                   )}`}
                 >
                   {props.product.current_price} {props.product.currency}
-                  <span>{getArrowIcon(pinProduct, props.product)}</span>
+                  <span>{getArrowIconByPrice(pinProduct, props.product)}</span>
                   <span>
                     <PercentDifferenceShip
                       price={pinProduct?.current_price}
@@ -176,7 +176,7 @@ export const ProductCard: React.FC<ProductCardProps> = (props) => {
                     {props.product.price_by_weight}{" "}
                     {props.product.currency_by_weight}
                     <span>
-                      {getArrowByWeightStyle(pinProduct, props.product)}
+                      {getArrowIconByWeight(pinProduct, props.product)}
                     </span>
                     <span>
                       <PercentDifferenceShip
