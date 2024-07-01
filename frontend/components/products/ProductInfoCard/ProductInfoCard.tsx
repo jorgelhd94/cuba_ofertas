@@ -19,9 +19,7 @@ export const ProductInfoCard: React.FC<ProductInfoCardProps> = ({
       <CardBody className="overflow-visible p-0">
         <div className="grid grid-cols-12">
           <div className="relative col-span-6 flex items-center w-full justify-center">
-            <Link
-              href={"/product/" + product.id}
-            >
+            <Link href={"/product/" + product.id}>
               <Image
                 radius="lg"
                 width="100%"
@@ -32,15 +30,15 @@ export const ProductInfoCard: React.FC<ProductInfoCardProps> = ({
             </Link>
           </div>
           <div className="col-span-6 flex flex-col items-start text-start justify-start gap-2 p-4">
-            <Link
-              href={"/product/" + product.id}
-            >
+            <Link href={"/product/" + product.id}>
               <b className="text-small text-primary-800">{product.name}</b>
             </Link>
 
-            <p className="text-small font-medium">
-              Marca: {product.manufacture.name}
-            </p>
+            {product.manufacture && (
+              <p className="text-small font-medium">
+                Marca: {product.manufacture.name}
+              </p>
+            )}
 
             <div>
               <div className={`font-bold text-lg flex items-center gap-1`}>

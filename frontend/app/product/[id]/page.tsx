@@ -74,9 +74,11 @@ export default async function ProductDetailsPage({
             </div>
 
             <div className="pt-2 space-y-1">
-              <p>
-                <b>Marca: </b> {product.manufacture?.name}
-              </p>
+              {product.manufacture && (
+                <p>
+                  <b>Marca: </b> {product.manufacture?.name}
+                </p>
+              )}
 
               {product.provider && (
                 <p>
