@@ -11,11 +11,14 @@ import { ProductInfoCard } from "../ProductInfoCard/ProductInfoCard";
 
 type Props = {
   product: IProduct;
+  isPriceByWeight?: boolean;
 };
 
 const RankingByPrice = (props: Props) => {
   const { data, isLoading, error } = useSWR(
-    `${getApiUrl()}/product-ranking/${props.product.id}`,
+    `${getApiUrl()}/product-ranking/${props.product.id}${
+      props.isPriceByWeight ? "?filter=price_by_weight" : ""
+    }`,
     fetcher
   );
   const [showModal, setShowModal] = useState(false);
@@ -44,25 +47,43 @@ const RankingByPrice = (props: Props) => {
           observer.unobserve(highlightedProductRef.current);
         }
       };
+    } else {
+      setIsSticky(false);
     }
   }, [showModal]);
 
   if (error) {
+    if (props.isPriceByWeight) {
+      return (
+        <p className="text-red-500 text-xs">
+          No se pudo cargar el ranking por libra
+        </p>
+      );
+    }
     return <p className="text-red-500 text-xs">No se pudo cargar el ranking</p>;
   }
 
   if (isLoading) {
+    if (props.isPriceByWeight) {
+      return (
+        <p className="text-gray-500 text-xs">
+          Cargando el ranking por libra...
+        </p>
+      );
+    }
     return <p className="text-gray-500 text-xs">Cargando el ranking...</p>;
   }
 
   return (
     <>
       <div className="flex gap-2 items-center flex-wrap">
-        <p className="text-xs font-bold">Ranking * precio:</p>
+        <p className="text-xs font-bold">
+          Ranking * {props.isPriceByWeight ? "precio/lb" : "precio"}:
+        </p>
         <Chip
           onClick={() => setShowModal(true)}
           className="cursor-pointer hover:bg-primary-400 pr-2"
-          color="primary"
+          color={props.isPriceByWeight ? "secondary" : "primary"}
           size="sm"
           endContent={<FaSearch />}
         >
@@ -75,7 +96,7 @@ const RankingByPrice = (props: Props) => {
       <SimpleModal
         showModal={showModal}
         setShowModal={setShowModal}
-        title="Ranking por precio"
+        title={`Ranking por ${props.isPriceByWeight ? "precio/lb" : "precio"}`}
       >
         <div className="max-h-96 space-y-4 overflow-y-auto p-2 scrollbar-custom">
           {data.products.map((product: IProduct, index: number) => {

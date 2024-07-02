@@ -4,7 +4,6 @@ import { Chip, Divider } from "@nextui-org/react";
 import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa6";
 import RankingByPrice from "./RankingByPrice";
-import RankingByPriceWeight from "./RankingByPriceWeight";
 
 type Props = {
   product: IProduct;
@@ -22,7 +21,7 @@ const ProductRanking = (props: Props) => {
       <>
         <RankingByPrice product={props.product} />
         {props.product.price_by_weight && (
-          <RankingByPriceWeight product={props.product} />
+          <RankingByPrice product={props.product} isPriceByWeight />
         )}
       </>
     );
