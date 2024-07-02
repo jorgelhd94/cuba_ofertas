@@ -25,14 +25,28 @@ class ProviderSerializer(serializers.ModelSerializer):
 
 class CategorySerializer(serializers.ModelSerializer):
     children = serializers.SerializerMethodField()
+    products_count = serializers.SerializerMethodField()
 
     class Meta:
         model = Category
-        fields = ['id', 'category_id', 'name', 'url', 'children']
+        fields = ['id', 'category_id', 'name',
+                  'url', 'children', 'products_count']
 
     def get_children(self, obj):
         children = obj.children.all()
         return CategorySerializer(children, many=True).data
+
+    def get_products_count(self, obj):
+        # Si la categoría no tiene hijos, contar los productos directamente
+        if not obj.children.exists():
+            return obj.products.count()
+
+        # Si la categoría tiene hijos, sumar los productos de todos los descendientes
+        count = 0
+        descendants = obj.get_descendants()
+        for descendant in descendants:
+            count += descendant.products.count()
+        return count
 
 
 class ProductSerializer(serializers.ModelSerializer):

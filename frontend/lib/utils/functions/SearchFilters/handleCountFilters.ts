@@ -1,26 +1,19 @@
 const handleCountFilters = (searchParams: URLSearchParams) => {
-  let newCount = 0;
+  const conditions = [
+    { param: "orderby", exclude: "default" },
+    { param: "mode", exclude: "show_all" },
+    { param: "price_by_weight", exclude: "show_all" },
+    { param: "provider" },
+    { param: "category" }
+  ];
 
-  if (
-    searchParams.get("orderby") &&
-    searchParams.get("orderby") !== "default"
-  ) {
-    newCount += 1;
-  }
-
-  if (searchParams.get("mode") && searchParams.get("mode") !== "show_all") {
-    newCount += 1;
-  }
-
-  if (searchParams.get("price_by_weight") && searchParams.get("price_by_weight") !== "show_all") {
-    newCount += 1;
-  }
-
-  if (searchParams.get("provider")) {
-    newCount += 1;
-  }
-
-  return newCount;
+  return conditions.reduce((count, { param, exclude }) => {
+    const value = searchParams.get(param);
+    if (value && (!exclude || value !== exclude)) {
+      return count + 1;
+    }
+    return count;
+  }, 0);
 };
 
 export default handleCountFilters;

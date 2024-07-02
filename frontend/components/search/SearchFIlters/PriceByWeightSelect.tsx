@@ -7,9 +7,7 @@ type Props = {
   isDisabled?: boolean;
 };
 
-export const PriceByWeightSelect: React.FC<Props> = ({
-  isDisabled,
-}) => {
+export const PriceByWeightSelect: React.FC<Props> = ({ isDisabled }) => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
@@ -32,6 +30,7 @@ export const PriceByWeightSelect: React.FC<Props> = ({
   };
   return (
     <Select
+      size="sm"
       isDisabled={isDisabled}
       selectedKeys={[searchParams.get("price_by_weight") || "show_all"]}
       selectionMode="single"
@@ -40,7 +39,8 @@ export const PriceByWeightSelect: React.FC<Props> = ({
       className="max-w-64"
       onChange={(event) => handleMode(event.target.value)}
       color={
-        searchParams.get("price_by_weight") && searchParams.get("price_by_weight") !== "show_all"
+        searchParams.get("price_by_weight") &&
+        searchParams.get("price_by_weight") !== "show_all"
           ? "primary"
           : "default"
       }

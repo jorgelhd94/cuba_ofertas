@@ -13,10 +13,7 @@ type Props = {
 };
 
 const SearchByProvider = (props: Props) => {
-  const { data, isLoading, error } = useSWR(
-    getApiUrl() + "/providers",
-    fetcher
-  );
+  const { data, isLoading, error } = useSWR(getApiUrl("/providers"), fetcher);
 
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -48,9 +45,9 @@ const SearchByProvider = (props: Props) => {
 
   return (
     <>
-      <h4 className="text-medium font-medium text-left w-full mt-2">
+      <p className="text-sm font-medium text-left w-full mt-2">
         Mis Proveedores
-      </h4>
+      </p>
       <Divider />
       <ProviderSelect
         providers={providers}

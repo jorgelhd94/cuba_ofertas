@@ -33,6 +33,7 @@ export const ProductModeSelect: React.FC<ProductModeSelectProps> = ({
   return (
     <Select
       isDisabled={isDisabled}
+      size="sm"
       selectedKeys={[searchParams.get("mode") || "show_all"]}
       selectionMode="single"
       variant="faded"

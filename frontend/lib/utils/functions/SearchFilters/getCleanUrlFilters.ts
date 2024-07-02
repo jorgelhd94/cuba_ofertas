@@ -1,9 +1,14 @@
 const getCleanUrlFilters = (searchParams: URLSearchParams) => {
+  const paramsToDelete = [
+    "orderby",
+    "mode",
+    "price_by_weight",
+    "provider",
+    "category",
+  ];
   const newParams = new URLSearchParams(searchParams.toString());
-  newParams.delete("orderby");
-  newParams.delete("mode");
-  newParams.delete("price_by_weight");
-  newParams.delete("provider");
+
+  paramsToDelete.forEach((param) => newParams.delete(param));
 
   return newParams.toString();
 };

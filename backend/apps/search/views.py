@@ -1,8 +1,9 @@
+from unicodedata import category
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from common.configuration.pagination import StandardResultsSetPagination
-from apps.product.models import Product, Provider
+from apps.product.models import Category, Product, Provider
 from apps.product.serializers import ProductSerializer
 from common.utils import search_functions
 
@@ -28,6 +29,7 @@ class SearchView(APIView):
             mode = query_params.get('mode', 'show_all')
             price_by_weight = query_params.get('price_by_weight', 'show_all')
             provider = query_params.get('provider', '')
+            category = query_params.get('category', '')
 
             # Filter products based on search_text
             products_queryset = search_functions.full_search_products(
@@ -61,6 +63,15 @@ class SearchView(APIView):
             if provider:
                 provider = Provider.objects.get(pk=provider)
                 products_queryset = products_queryset.filter(provider=provider)
+
+            # Filter by category
+            if category:
+                try:
+                    category = Category.objects.get(pk=category)
+                    categories_list = [category] + category.get_descendants()
+                    products_queryset = products_queryset.filter(categories__in=categories_list)
+                except Category.DoesNotExist:
+                    products_queryset = products_queryset.none()
 
             # Paginación
             paginator = StandardResultsSetPagination()

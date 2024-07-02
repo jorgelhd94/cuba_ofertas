@@ -32,7 +32,7 @@ export const SearchForm: React.FC<SearchFormProps> = (props) => {
       name: "q",
       value: searchText.trim(),
     });
-    console.log(path);
+
     if (path) {
       router.push(path + "?" + queryString);
     } else {

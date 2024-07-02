@@ -13,6 +13,7 @@ type Props = {
 const ProviderSelect = (props: Props) => {
   return (
     <Select
+      size="sm"
       isDisabled={props.isDisabled}
       selectedKeys={props.selectedKey ? [props.selectedKey] : []}
       selectionMode="single"

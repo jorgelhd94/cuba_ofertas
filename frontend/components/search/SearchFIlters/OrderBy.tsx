@@ -33,6 +33,7 @@ export const OrderBy: React.FC<OrderByProps> = ({ isDisabled }) => {
 
   return (
     <Select
+      size="sm"
       isDisabled={isDisabled}
       selectedKeys={[searchParams.get("orderby") || "default"]}
       selectionMode="single"

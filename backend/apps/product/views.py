@@ -7,10 +7,11 @@ from .models import Product, Manufacture, Category, Provider, PriceHistory
 from .serializers import ProductSerializer, ManufactureSerializer, CategorySerializer, ProviderSerializer, PriceHistorySerializer
 from common.configuration.pagination import StandardResultsSetPagination
 from django.db.models.functions import Trim, Replace
-from django.db.models import Q, F, Value, Subquery
+from django.db.models import Q, F, Value, Count
 from rest_framework import generics
 
 from rest_framework.views import APIView
+from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
 
@@ -137,9 +138,15 @@ class ManufactureViewSet(viewsets.ModelViewSet):
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
-    queryset = Category.objects.filter(parent__isnull=True)
+    queryset = Category.objects.filter(parent__isnull=True).order_by('name').annotate(products_count=Count('products')).filter()
     serializer_class = CategorySerializer
-    pagination_class = StandardResultsSetPagination
+    pagination_class = None
+
+    @action(detail=True, methods=['get'])
+    def details(self, request, pk):
+        category = Category.objects.get(pk=pk)
+        serializer = CategorySerializer(category)
+        return Response(serializer.data)
 
 
 class ProviderViewSet(viewsets.ModelViewSet):

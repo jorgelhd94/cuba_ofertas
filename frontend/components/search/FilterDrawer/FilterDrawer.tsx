@@ -1,9 +1,10 @@
+import CategoriesSelect from "@/components/categories/CategoriesSelect/CategoriesSelect";
+import SearchByProvider from "@/components/providers/SearchByProvider";
 import { Drawer } from "flowbite-react";
 import { HiAdjustments } from "react-icons/hi";
 import { OrderBy } from "../SearchFIlters/OrderBy";
-import { ProductModeSelect } from "../SearchFIlters/ProductModeSelect";
-import SearchByProvider from "@/components/providers/SearchByProvider";
 import { PriceByWeightSelect } from "../SearchFIlters/PriceByWeightSelect";
+import { ProductModeSelect } from "../SearchFIlters/ProductModeSelect";
 
 type Props = {
   isOpen: boolean;
@@ -17,24 +18,20 @@ const FilterDrawer = (props: Props) => {
       open={props.isOpen}
       onClose={() => props.handleClose()}
       position="right"
-      className="mt-16 max-sm:w-full z-40"
+      className="mt-16 max-sm:w-full z-40 scrollbar-custom"
     >
       <Drawer.Header title="Filtros" titleIcon={HiAdjustments} />
       <Drawer.Items>
-        <div className="flex flex-col items-center gap-4">
+        <div className="flex flex-col items-center gap-4 pb-24">
           <OrderBy isDisabled={props.isLoading} />
           <ProductModeSelect isDisabled={props.isLoading} />
           <PriceByWeightSelect isDisabled={props.isLoading} />
 
           <SearchByProvider isDisabled={props.isLoading} />
 
-          {/* <ManufacturesMultipleSelect />
+          {/* <ManufacturesMultipleSelect /> */}
 
-          <h4 className="text-medium font-medium text-left w-full mt-2">
-            Categorías
-          </h4>
-          <Divider />
-          <CategoriesChecklist /> */}
+          <CategoriesSelect />
         </div>
       </Drawer.Items>
     </Drawer>

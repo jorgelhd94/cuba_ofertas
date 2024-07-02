@@ -198,3 +198,6 @@ def get_ranked_products_sm23(product: Product):
 
     return ranked_products
 
+
+def getCategoriesChildren(category: Category):
+    pass
