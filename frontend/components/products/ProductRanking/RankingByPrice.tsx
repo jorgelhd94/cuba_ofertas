@@ -20,6 +20,7 @@ const RankingByPrice = (props: Props) => {
   );
   const [showModal, setShowModal] = useState(false);
   const highlightedProductRef = useRef<HTMLDivElement | null>(null);
+  const [isSticky, setIsSticky] = useState(false);
 
   useEffect(() => {
     if (showModal && highlightedProductRef.current) {
@@ -27,6 +28,22 @@ const RankingByPrice = (props: Props) => {
         behavior: "smooth",
         block: "center",
       });
+
+      const observer = new IntersectionObserver(
+        () => {
+          setIsSticky(true);
+          observer.disconnect();
+        },
+        { threshold: 1 }
+      );
+
+      observer.observe(highlightedProductRef.current);
+
+      return () => {
+        if (highlightedProductRef.current) {
+          observer.unobserve(highlightedProductRef.current);
+        }
+      };
     }
   }, [showModal]);
 
@@ -67,12 +84,14 @@ const RankingByPrice = (props: Props) => {
               <div
                 key={product.id}
                 ref={isHighlighted ? highlightedProductRef : null}
-                className={product.id === props.product.id ? "sticky top-0 z-30 bottom-0" : ""}
+                className={
+                  isHighlighted && isSticky ? "sticky top-0 z-40 bottom-0" : ""
+                }
               >
                 <ProductInfoCard
                   position={index + 1}
                   product={product}
-                  highlight={product.id === props.product.id}
+                  highlight={isHighlighted}
                   compareToProduct={props.product}
                   hidePriceByWeightPercent
                 />

@@ -33,15 +33,7 @@ export default function RootLayout({
         <ToastContainer />
         <Providers>
           <div className="relative">
-            <Suspense
-              fallback={
-                <Skeleton>
-                  <div className="w-full h-12"></div>
-                </Skeleton>
-              }
-            >
-              <NavbarHome />
-            </Suspense>
+            <NavbarHome />
             <main className="py-8 min-h-max lg:min-h-screen bg-gradient-to-tr from-white to-slate-200 dark:bg-gradient-to-b dark:from-slate-800 via-transparent dark:to-black">
               {children}
             </main>

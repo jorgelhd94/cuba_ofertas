@@ -52,7 +52,7 @@ export const ProductInfoCard: React.FC<ProductInfoCardProps> = (props) => {
             </p>
           </Link>
 
-          <p className="text-sm font-bold mt-2 flex items-center flex-wrap">
+          <div className="text-sm font-bold mt-2 flex items-center flex-wrap">
             {props.product.current_price} {props.product.currency}
             {props.compareToProduct && !props.hidePricePercent && (
               <>
@@ -67,11 +67,10 @@ export const ProductInfoCard: React.FC<ProductInfoCardProps> = (props) => {
                 </span>
               </>
             )}
-          </p>
+          </div>
           {props.product.price_by_weight && (
-            <p className="text-xs font-bold mt-1 flex items-center flex-wrap">
+            <div className="text-xs font-bold mt-1 flex items-center flex-wrap">
               {props.product.price_by_weight} {props.product.currency_by_weight}
-              
               {props.compareToProduct &&
                 props.compareToProduct.price_by_weight &&
                 !props.hidePriceByWeightPercent && (
@@ -90,7 +89,7 @@ export const ProductInfoCard: React.FC<ProductInfoCardProps> = (props) => {
                     </span>
                   </>
                 )}
-            </p>
+            </div>
           )}
         </div>
 

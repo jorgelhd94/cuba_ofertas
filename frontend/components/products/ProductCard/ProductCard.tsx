@@ -110,18 +110,20 @@ export const ProductCard: React.FC<ProductCardProps> = (props) => {
             </div>
 
             <div className="col-span-6 md:col-span-12 flex flex-col items-start text-start justify-start gap-2 pt-4 p-4">
-              <p
-                className={
-                  "text-xs w-full " +
-                  (props.product.days_since_last_update > 0
-                    ? "text-danger"
-                    : "text-success")
-                }
-              >
-                {!props.product.days_since_last_update
-                  ? "Actualizado hoy"
-                  : `Actualizado hace ${props.product.days_since_last_update} día(s)`}
-              </p>
+              {!isPinProduct() && (
+                <p
+                  className={
+                    "text-xs w-full " +
+                    (props.product.days_since_last_update > 0
+                      ? "text-danger"
+                      : "text-success")
+                  }
+                >
+                  {!props.product.days_since_last_update
+                    ? "Actualizado hoy"
+                    : `Actualizado hace ${props.product.days_since_last_update} día(s)`}
+                </p>
+              )}
 
               <b
                 className="text-small text-primary-800"
@@ -133,7 +135,7 @@ export const ProductCard: React.FC<ProductCardProps> = (props) => {
                 </span>
               </b>
 
-              {props.product.manufacture && (
+              {props.product.manufacture && !isPinProduct() && (
                 <p className="text-small font-bold">
                   Marca:{" "}
                   <span className="font-normal">
@@ -161,7 +163,7 @@ export const ProductCard: React.FC<ProductCardProps> = (props) => {
                 </div>
 
                 {props.product.old_price && (
-                  <p className="font-semibold text-lg text-gray-400 line-through flex items-center">
+                  <p className="font-semibold text-sm md:text-lg text-gray-400 line-through flex items-center">
                     {props.product.old_price} {props.product.currency}
                   </p>
                 )}

@@ -8,8 +8,9 @@ import React, { useEffect, useState } from "react";
 type SearchFormProps = {
   loading: boolean;
   hideSaveSearch?: boolean;
-  handleSearchText: Function;
+  handleSearchText?: Function;
   standalone?: boolean;
+  path?: string;
 };
 
 export const SearchForm: React.FC<SearchFormProps> = (props) => {
@@ -22,27 +23,21 @@ export const SearchForm: React.FC<SearchFormProps> = (props) => {
   const handleSearch = (formData: FormData) => {
     const inputText = formData.get("searchText")?.toString() || "";
 
-    if (
-      searchParams.get("q") === inputText ||
-      (searchParams.get("q") === null && inputText === "") ||
-      props.standalone
-    ) {
-      props.handleSearchText(searchText);
-    }
-
-    if (!props.standalone) {
-      setSearchText(inputText);
-      changeRoute(inputText);
-    }
+    setSearchText(inputText);
+    changeRoute(inputText, props.path);
   };
 
-  const changeRoute = (searchText: string) => {
+  const changeRoute = (searchText: string, path?: string) => {
     let queryString = getQueryString(searchParams.toString(), {
       name: "q",
       value: searchText.trim(),
     });
-
-    router.push(pathname + "?" + queryString);
+    console.log(path);
+    if (path) {
+      router.push(path + "?" + queryString);
+    } else {
+      router.push(pathname + "?" + queryString);
+    }
   };
 
   useEffect(() => {
@@ -51,10 +46,7 @@ export const SearchForm: React.FC<SearchFormProps> = (props) => {
 
   return (
     <>
-      <form
-        action={handleSearch}
-        className="w-full flex gap-4 items-center"
-      >
+      <form action={handleSearch} className="w-full flex gap-4 items-center">
         <Input
           size="sm"
           name="searchText"

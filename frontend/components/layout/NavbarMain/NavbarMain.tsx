@@ -15,17 +15,6 @@ import SearchFormSkeleton from "@/components/shared/skeletons/SearchFormSkeleton
 
 function NavbarMain() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const router = useRouter();
-  const searchParams = useSearchParams();
-
-  const handleSearchText = (searchText: string) => {
-    const query = getQueryString(searchParams.toString(), {
-      name: "q",
-      value: searchText,
-    });
-
-    router.push(`/search?${query}`);
-  };
 
   return (
     <>
@@ -48,11 +37,7 @@ function NavbarMain() {
 
           <div className="md:w-1/2">
             <Suspense fallback={<SearchFormSkeleton />}>
-              <SearchForm
-                handleSearchText={handleSearchText}
-                loading={false}
-                standalone
-              />
+              <SearchForm loading={false} path="/search" />
             </Suspense>
           </div>
 
