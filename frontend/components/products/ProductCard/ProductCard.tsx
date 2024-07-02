@@ -97,7 +97,7 @@ export const ProductCard: React.FC<ProductCardProps> = (props) => {
                   </Chip>
                 )}
 
-                <Link href={`/product/${props.product.id}`}>
+                <Link href={`/products/${props.product.id}`}>
                   <Image
                     radius="lg"
                     width="100%"
@@ -126,8 +126,12 @@ export const ProductCard: React.FC<ProductCardProps> = (props) => {
               )}
 
               <b
-                className="text-small text-primary-800"
-                onClick={() => setShowFullText(!showFullText)}
+                className="text-small text-primary-800 cursor-pointer hover:text-primary-700"
+                onClick={() => {
+                  isPinProduct()
+                    ? setShowFullText(!showFullText)
+                    : router.push(`/products/${props.product.id}`);
+                }}
               >
                 <span className="max-md:hidden">{props.product.name}</span>
                 <span className="md:hidden cursor-pointer">

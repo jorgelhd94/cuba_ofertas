@@ -17,7 +17,7 @@ const ProductNotificationCard = (props: Props) => {
     <>
       <Card fullWidth shadow="md">
         <CardBody className="flex flex-row items-center relative max-sm:px-4 py-6 sm:py-4 gap-2 flex-wrap">
-          <Link href={"/product/" + props.product.id}>
+          <Link href={"/products/" + props.product.id}>
             <Image
               radius="lg"
               alt={props.product.name}

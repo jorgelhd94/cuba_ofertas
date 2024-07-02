@@ -17,7 +17,6 @@ async function getData(productId: string) {
   const res = await fetch(getApiUrl("/products/" + productId));
 
   if (!res.ok) {
-    // This will activate the closest `error.js` Error Boundary
     throw new Error("Failed to fetch data");
   }
 
