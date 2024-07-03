@@ -62,6 +62,14 @@ class Category(models.Model):
             descendants.append(child)
             descendants.extend(child.get_descendants())
         return descendants
+    
+    def get_ancestors(self, include_self=False):
+        ancestors = []
+        current = self if include_self else self.parent
+        while current is not None:
+            ancestors.append(current)
+            current = current.parent
+        return ancestors
 
 
 class Product(models.Model):

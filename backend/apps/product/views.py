@@ -143,15 +143,20 @@ class CategoryViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         provider_id = self.request.query_params.get('provider', None)
-
         if provider_id is not None:
-            queryset = Category.objects.filter(
+            categories_with_provider_products = Category.objects.filter(
                 Q(products__provider_id=provider_id) |
                 Q(children__products__provider_id=provider_id)
-            ).distinct().annotate(
-                products_count=Count('products', filter=Q(
-                    products__provider_id=provider_id))
-            ).filter(parent__isnull=True).order_by('name')
+            ).distinct()
+
+            ancestor_ids = set()
+            for category in categories_with_provider_products:
+                ancestors = category.get_ancestors(include_self=True)
+                ancestor_ids.update([ancestor.id for ancestor in ancestors])
+
+            queryset = Category.objects.filter(id__in=ancestor_ids, parent__isnull=True).distinct().annotate(
+                products_count=Count('products', filter=Q(products__provider_id=provider_id))
+            ).order_by('name')
         else:
             queryset = Category.objects.filter(parent__isnull=True).order_by(
                 'name').annotate(products_count=Count('products'))

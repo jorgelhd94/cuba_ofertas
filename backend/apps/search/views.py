@@ -21,7 +21,7 @@ order_mapping = {
 
 class SearchView(APIView):
     def get(self, request):
-        try:
+        # try:
             query_params = request.query_params
             search_text = query_params.get('q', '')
             orderby = query_params.get('orderby', 'default')
@@ -89,9 +89,9 @@ class SearchView(APIView):
 
             return paginator.get_paginated_response(serializer.data)
 
-        except Exception as e:
-            print("Ocurrió un error:", e)
-            return Response({"detail": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        # except Exception as e:
+        #     print("Ocurrió un error:", e)
+        #     return Response({"detail": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class UpdateDatabaseView(APIView):

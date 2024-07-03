@@ -14,8 +14,21 @@ type Props = {};
 
 const CategoriesSelect = (props: Props) => {
   const searchParams = useSearchParams();
+
+  const getParams = () => {
+    const urlParams = new URLSearchParams();
+
+    if (searchParams.get("provider")) {
+      urlParams.set("provider", searchParams.get("provider") as string);
+    }
+
+    if (urlParams.toString()) return "?" + urlParams.toString();
+
+    return "";
+  };
+
   const { data, isLoading, error } = useSWR(
-    getApiUrl("/categories/?" + searchParams.toString()),
+    getApiUrl("/categories/" + getParams()),
     fetcher
   );
 
@@ -27,7 +40,9 @@ const CategoriesSelect = (props: Props) => {
   );
 
   useEffect(() => {
-    setActiveCategoryId(searchParams.get("category") || "");
+    if (activeCategoryId !== searchParams.get("category")) {
+      setActiveCategoryId(searchParams.get("category") || "");
+    }
   }, [searchParams]);
 
   const handleCategoryClick = (categoryId: number) => {
