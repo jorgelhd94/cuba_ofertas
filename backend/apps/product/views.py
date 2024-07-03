@@ -138,9 +138,25 @@ class ManufactureViewSet(viewsets.ModelViewSet):
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
-    queryset = Category.objects.filter(parent__isnull=True).order_by('name').annotate(products_count=Count('products')).filter()
     serializer_class = CategorySerializer
     pagination_class = None
+
+    def get_queryset(self):
+        provider_id = self.request.query_params.get('provider', None)
+
+        if provider_id is not None:
+            queryset = Category.objects.filter(
+                Q(products__provider_id=provider_id) |
+                Q(children__products__provider_id=provider_id)
+            ).distinct().annotate(
+                products_count=Count('products', filter=Q(
+                    products__provider_id=provider_id))
+            ).filter(parent__isnull=True).order_by('name')
+        else:
+            queryset = Category.objects.filter(parent__isnull=True).order_by(
+                'name').annotate(products_count=Count('products'))
+
+        return queryset
 
     @action(detail=True, methods=['get'])
     def details(self, request, pk):

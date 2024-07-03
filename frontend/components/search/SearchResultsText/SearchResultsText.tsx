@@ -15,7 +15,9 @@ const SearchResultsText = (props: Props) => {
   const pageSize = parseInt(searchParams.get("page_size") || "50") || 50;
 
   const initialNumber = props.total ? 1 + pageSize * (pagination - 1) : 0;
-  const finalNumber = pageSize * (pagination - 1) + (props.resultsLength ? props.resultsLength : 0); ;
+  const finalNumber =
+    pageSize * (pagination - 1) +
+    (props.resultsLength ? props.resultsLength : 0);
 
   return (
     <div>
@@ -24,7 +26,7 @@ const SearchResultsText = (props: Props) => {
         <b>{searchText ? searchText : "Todos los productos"}</b>
       </h3>
 
-      {!props.loading && props.resultsLength && (
+      {!props.loading && props.resultsLength !== undefined && (
         <h5 className="text-sm font-semibold max-md:text-center max-sm:mt-4">
           {`Mostrando ${initialNumber} - ${finalNumber} 
         de ${props.total} resultados`}

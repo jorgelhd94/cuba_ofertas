@@ -13,11 +13,14 @@ import CategoryActiveChip from "../CategoryActiveChip";
 type Props = {};
 
 const CategoriesSelect = (props: Props) => {
-  const { data, isLoading, error } = useSWR(getApiUrl("/categories"), fetcher);
+  const searchParams = useSearchParams();
+  const { data, isLoading, error } = useSWR(
+    getApiUrl("/categories/?" + searchParams.toString()),
+    fetcher
+  );
 
   const router = useRouter();
   const pathname = usePathname();
-  const searchParams = useSearchParams();
 
   const [activeCategoryId, setActiveCategoryId] = useState(
     searchParams.get("category") || ""
@@ -40,7 +43,7 @@ const CategoriesSelect = (props: Props) => {
     if (category.products_count === 0) {
       return null;
     }
-    
+
     if (category.children && category.children.length === 0) {
       return (
         <CategoryItem

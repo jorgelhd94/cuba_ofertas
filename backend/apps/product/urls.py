@@ -5,7 +5,7 @@ from . import views
 router = DefaultRouter()
 router.register(r'products', views.ProductViewSet)
 router.register(r'manufactures', views.ManufactureViewSet)
-router.register(r'categories', views.CategoryViewSet)
+router.register(r'categories', views.CategoryViewSet, basename='category')
 router.register(r'providers', views.ProviderViewSet)
 # router.register(r'comparison_zones', ComparisonZoneViewSet)
 

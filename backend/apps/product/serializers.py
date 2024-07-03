@@ -24,29 +24,37 @@ class ProviderSerializer(serializers.ModelSerializer):
 
 
 class CategorySerializer(serializers.ModelSerializer):
+    ancestors = serializers.SerializerMethodField()
     children = serializers.SerializerMethodField()
     products_count = serializers.SerializerMethodField()
 
     class Meta:
         model = Category
-        fields = ['id', 'category_id', 'name',
-                  'url', 'children', 'products_count']
+        fields = ['id', 'category_id', 'name', 'url', 'parent', 'children', 'products_count', 'ancestors']
 
     def get_children(self, obj):
         children = obj.children.all()
-        return CategorySerializer(children, many=True).data
+        return CategorySerializer(children, many=True, context=self.context).data
+
+    def get_ancestors(self, obj):
+        ancestors = []
+        parent = obj.parent
+        while parent is not None:
+            ancestors.insert(0, {'id': parent.id, 'name': parent.name})  # Avoid full serialization to prevent recursion
+            parent = parent.parent
+        return ancestors
 
     def get_products_count(self, obj):
-        # Si la categoría no tiene hijos, contar los productos directamente
-        if not obj.children.exists():
-            return obj.products.count()
+        request = self.context.get('request')
+        provider_id = request.query_params.get('provider') if request else None
 
-        # Si la categoría tiene hijos, sumar los productos de todos los descendientes
-        count = 0
-        descendants = obj.get_descendants()
-        for descendant in descendants:
-            count += descendant.products.count()
-        return count
+        if provider_id:
+            count = obj.products.filter(provider_id=provider_id).count()
+            for child in obj.children.all():
+                count += self.get_products_count(child)  # Recursively count for children
+            return count
+
+        return obj.products.count()
 
 
 class ProductSerializer(serializers.ModelSerializer):
