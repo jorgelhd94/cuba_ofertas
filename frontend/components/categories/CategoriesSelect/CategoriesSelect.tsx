@@ -18,9 +18,7 @@ const CategoriesSelect = (props: Props) => {
   const getParams = () => {
     const urlParams = new URLSearchParams();
 
-    if (searchParams.get("provider")) {
-      urlParams.set("provider", searchParams.get("provider") as string);
-    }
+    urlParams.set("provider", searchParams.get("provider") || "");
 
     if (urlParams.toString()) return "?" + urlParams.toString();
 

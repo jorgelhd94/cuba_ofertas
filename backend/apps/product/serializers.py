@@ -57,21 +57,25 @@ class CategorySerializer(serializers.ModelSerializer):
         except:
             provider_id = None
 
+        count = 0
+
         if provider_id:
-        # Si la categoría no tiene hijos, contar los productos directamente
             if not obj.children.exists():
                 return obj.products.filter(provider_id=provider_id).count()
 
-            # Si la categoría tiene hijos, sumar los productos de todos los descendientes
-            count = sum(descendant.products.filter(provider_id=provider_id).count() for descendant in obj.get_descendants())
+            descendants = obj.get_descendants()
+
+            for descendant in descendants:
+                count += descendant.products.filter(
+                    provider_id=provider_id).count()
         else:
-            # Si la categoría no tiene hijos, contar los productos directamente
             if not obj.children.exists():
                 return obj.products.count()
 
-            # Si la categoría tiene hijos, sumar los productos de todos los descendientes
-            count = sum(descendant.products.count() for descendant in obj.get_descendants())
-
+            descendants = obj.get_descendants()
+            for descendant in descendants:
+                count += descendant.products.count()
+        
         return count
 
 

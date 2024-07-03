@@ -1,4 +1,4 @@
-from apps.product.models import Category, Product
+from apps.product.models import Category, Product, Provider
 from django.db.models import Q, F, Value
 from django.db.models.functions import Replace, Trim
 from django.db.models.expressions import Func
@@ -12,6 +12,70 @@ from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
 class Unaccent(Func):
     function = 'unaccent'
     output_field = models.CharField()
+
+
+# Ordenar productos si se proporciona orderby
+order_mapping = {
+    'default': 'cleaned_name',         # Por nombre
+    'less_price': 'current_price',     # Menor precio
+    'higher_price': '-current_price',    # Mayor precio
+    'new': '-created_at',       # Más nuevo
+    'less_price_by_weight': 'price_by_weight'    # Menor precio/lb
+}
+
+
+def get_product_queryset(query_params, exclude_categories: bool = False):
+    search_text = query_params.get('q', '')
+    orderby = query_params.get('orderby', 'default')
+    mode = query_params.get('mode', 'show_all')
+    price_by_weight = query_params.get('price_by_weight', 'show_all')
+    provider = query_params.get('provider', '')
+    category = query_params.get('category', '')
+
+    products_queryset = full_search_products(
+        search_text) if search_text else Product.objects.all()
+
+    if not exclude_categories:
+        # Clean Name
+        products_queryset = get_products_cleaned_name(
+            products_queryset
+        )
+
+        # Order By
+        try:
+            if orderby == 'default':
+                products_queryset = products_queryset.order_by('-rank')
+            else:
+                products_queryset = products_queryset.order_by(
+                    order_mapping.get(orderby, 'cleaned_name'))
+        except:
+            products_queryset = products_queryset.order_by(
+                order_mapping.get(orderby, 'cleaned_name'))
+
+    # Mode
+    products_queryset = filter_products_by_mode(
+        products_queryset, mode)
+
+    # Price By Weight
+    products_queryset = filter_by_price_weight(
+        products_queryset, price_by_weight)
+
+    # Filter by provider
+    if provider:
+        provider = Provider.objects.get(pk=provider)
+        products_queryset = products_queryset.filter(provider=provider)
+
+    # Filter by category
+    if category and not exclude_categories:
+        try:
+            category = Category.objects.get(pk=category)
+            categories_list = [category] + category.get_descendants()
+            products_queryset = products_queryset.filter(
+                categories__in=categories_list)
+        except Category.DoesNotExist:
+            products_queryset = products_queryset.none()
+
+    return products_queryset
 
 
 def search_products(query):
@@ -190,14 +254,14 @@ def get_ranked_products_sm23(product: Product):
     else:
         ranked_products = filter_products_by_mode(
             ranked_products, 'simple')
-    
 
     min_price = product.current_price * 0.5
     max_price = product.current_price * 1.5
-    ranked_products = ranked_products.filter(current_price__gte=min_price, current_price__lte=max_price)
+    ranked_products = ranked_products.filter(
+        current_price__gte=min_price, current_price__lte=max_price)
 
     return ranked_products
 
 
-def getCategoriesChildren(category: Category):
+def filterCategoriesByParams(category: Category):
     pass
