@@ -38,7 +38,7 @@ const FilterDrawer = (props: Props) => {
         className="p-4 pb-0"
       />
       <Drawer.Items className="relative scrollbar-custom overflow-y-auto h-[90vh]">
-        <div className="flex flex-col items-center gap-4 pb-16 px-4">
+        <div className="flex flex-col items-center gap-4 pb-32 px-4">
           <OrderBy isDisabled={props.isLoading} />
           <ProductModeSelect isDisabled={props.isLoading} />
           <PriceByWeightSelect isDisabled={props.isLoading} />
@@ -49,24 +49,24 @@ const FilterDrawer = (props: Props) => {
 
           <CategoriesSelect />
         </div>
-        <div className="sticky bottom-12 z-40 w-full h-16 bg-default-50 flex justify-center items-center gap-4">
-          <Button
-            startContent={<HiAdjustments />}
-            endContent={<span>{handleCountFilters(searchParams)}</span>}
-            color="danger"
-            onClick={cleanFilters}
-          >
-            Limpiar filtros
-          </Button>
-          <Button
-            variant="bordered"
-            color="primary"
-            onClick={() => props.handleClose()}
-          >
-            Cerrar
-          </Button>
-        </div>
       </Drawer.Items>
+      <div className="absolute bottom-16 z-40 w-full h-16 bg-default-50 flex justify-center items-center gap-4">
+        <Button
+          startContent={<HiAdjustments />}
+          endContent={<span>{handleCountFilters(searchParams)}</span>}
+          color="danger"
+          onClick={cleanFilters}
+        >
+          Limpiar filtros
+        </Button>
+        <Button
+          variant="bordered"
+          color="primary"
+          onClick={() => props.handleClose()}
+        >
+          Cerrar
+        </Button>
+      </div>
     </Drawer>
   );
 };
