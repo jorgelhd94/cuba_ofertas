@@ -6,11 +6,11 @@ import { HidePinProductContext } from "@/lib/context/HidePinProductContext";
 import { PinProductContext } from "@/lib/context/PinProductContext";
 import { ISearchProducts } from "@/lib/interfaces/ISearchProducts";
 import { getApiUrl } from "@/lib/utils/api/api";
+import { getQueryString } from "@/lib/utils/functions/getQueryString";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import ProductSearchGrid from "../../products/ProductSearchGrid/ProductSearchGrid";
-import { SearchForm } from "../SearchForm/SearchForm";
-import { getQueryString } from "@/lib/utils/functions/getQueryString";
+import { IProduct } from "@/lib/interfaces/IProduct";
 
 type Props = {
   hideSaveSearch?: boolean;
@@ -24,7 +24,7 @@ export const SearchComponent: React.FC<Props> = (props) => {
   const [loading, setLoading] = useState(false);
   const [isError, setIsError] = useState(false);
 
-  const { pinProduct } = useContext(PinProductContext);
+  const [pinProduct, setPinProduct] = useState<IProduct | null>(null);
   const hidePinProduct = useContext(HidePinProductContext);
 
   const [searchResults, setSearchResults] = useState<ISearchProducts | null>(
@@ -73,28 +73,30 @@ export const SearchComponent: React.FC<Props> = (props) => {
   }, [pinProduct]);
 
   return (
-    <div className="flex flex-col items-center gap-8 w-full">
-      <div className="flex max-md:flex-col justify-between px-4 gap-4 w-full">
-        {pinProduct && !hidePinProduct && (
-          <div className="h-max sticky pt-2 top-16 lg:top-20 z-30 flex md:flex-col justify-center">
-            <h3 className="text-xl font-medium pb-4 max-md:hidden">
-              Producto fijado
-            </h3>
-            <ProductCard product={pinProduct} />
-          </div>
-        )}
-
-        <div className="flex justify-center w-full">
-          {isError ? (
-            <ErrorMsg />
-          ) : (
-            <ProductSearchGrid
-              searchResults={searchResults}
-              loading={loading}
-            />
+    <PinProductContext.Provider value={{ pinProduct, setPinProduct }}>
+      <div className="flex flex-col items-center gap-8 w-full">
+        <div className="flex max-md:flex-col justify-between px-4 gap-4 w-full">
+          {pinProduct && !hidePinProduct && (
+            <div className="h-max sticky pt-2 top-16 lg:top-20 z-30 flex md:flex-col justify-center">
+              <h3 className="text-xl font-medium pb-4 max-md:hidden">
+                Producto fijado
+              </h3>
+              <ProductCard product={pinProduct} />
+            </div>
           )}
+
+          <div className="flex justify-center w-full">
+            {isError ? (
+              <ErrorMsg />
+            ) : (
+              <ProductSearchGrid
+                searchResults={searchResults}
+                loading={loading}
+              />
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </PinProductContext.Provider>
   );
 };

@@ -13,6 +13,7 @@ import { ProductsSkeleton } from "../ProductsSkeleton/ProductsSkeleton";
 import ChangeLimitSelect from "@/components/search/SearchFIlters/ChangeLimitSelect";
 import handleCountFilters from "@/lib/utils/functions/SearchFilters/handleCountFilters";
 import getCleanUrlFilters from "@/lib/utils/functions/SearchFilters/getCleanUrlFilters";
+import CategoryActiveChip from "@/components/categories/CategoryActiveChip";
 
 type ProductSearchGridProps = {
   searchResults: ISearchProducts | null;
@@ -31,7 +32,7 @@ export const ProductSearchGrid: React.FC<ProductSearchGridProps> = ({
   const showData = () => {
     if (loading) {
       return <ProductsSkeleton />;
-    } else if (searchResults && searchResults.results.length) {
+    } else if (searchResults && searchResults.results.length > 0) {
       return (
         <div className="gap-4 flex flex-col sm:flex-row justify-evenly flex-wrap lg:columns-4">
           {searchResults.results.map((item, index) => (
@@ -43,9 +44,11 @@ export const ProductSearchGrid: React.FC<ProductSearchGridProps> = ({
           ))}
         </div>
       );
-    } else {
+    } else if (searchResults && searchResults.results.length === 0) {
       return <EmptyMsg />;
     }
+
+    return <ProductsSkeleton />;
   };
 
   const [countFilters, setCountFilters] = useState(0);
@@ -62,59 +65,64 @@ export const ProductSearchGrid: React.FC<ProductSearchGridProps> = ({
   };
 
   return (
-    searchResults?.results && (
-      <div className="px-4 md:px-8 flex flex-col items-center gap-8 w-full">
-        <div className="flex max-md:flex-col gap-4 justify-between w-full">
+    <div className="px-4 md:px-8 flex flex-col items-center gap-8 w-full">
+      <div className="flex max-md:flex-col gap-4 justify-between w-full">
+        <div className="space-y-2 flex flex-col max-md:items-center">
           <SearchResultsText
-            resultsLength={searchResults.results.length}
-            total={searchResults.count}
+            resultsLength={searchResults?.results.length}
+            total={searchResults?.count}
             loading={loading}
           />
-          <div className="flex max-md:w-full gap-2 flex-grow justify-center md:justify-end items-end flex-wrap">
-            <ChangeLimitSelect isDisabled={loading} />
-            <Button
-              color="primary"
-              startContent={<HiAdjustments />}
-              endContent={
-                countFilters > 0 && (
-                  <Chip radius="sm" color="default" size="sm">
-                    {countFilters}
-                  </Chip>
-                )
-              }
-              onClick={() => setIsFilterOpen(true)}
-            >
-              Filtros
-            </Button>
-
-            {countFilters > 0 && (
-              <Button
-                color="danger"
-                startContent={<HiTrash />}
-                onClick={() => cleanFilters()}
-              >
-                Limpiar
-              </Button>
-            )}
-
-            <FilterDrawer
-              isOpen={isFilterOpen}
-              handleClose={() => setIsFilterOpen(false)}
-              isLoading={loading}
+          {searchParams.get("category") && (
+            <CategoryActiveChip
+              categoryId={searchParams.get("category") as string}
             />
-          </div>
+          )}
         </div>
+        <div className="flex max-md:w-full gap-2 flex-grow justify-center md:justify-end items-end flex-wrap">
+          <ChangeLimitSelect isDisabled={loading} />
+          <Button
+            color="primary"
+            startContent={<HiAdjustments />}
+            endContent={
+              countFilters > 0 && (
+                <Chip radius="sm" color="default" size="sm">
+                  {countFilters}
+                </Chip>
+              )
+            }
+            onClick={() => setIsFilterOpen(true)}
+          >
+            Filtros
+          </Button>
 
-        {showData()}
+          {countFilters > 0 && (
+            <Button
+              color="danger"
+              startContent={<HiTrash />}
+              onClick={() => cleanFilters()}
+            >
+              Limpiar
+            </Button>
+          )}
 
-        {searchResults.results.length > 0 && (
-          <SearchPagination
-            totalProducts={searchResults.count}
-            loading={loading}
+          <FilterDrawer
+            isOpen={isFilterOpen}
+            handleClose={() => setIsFilterOpen(false)}
+            isLoading={loading}
           />
-        )}
+        </div>
       </div>
-    )
+
+      {showData()}
+
+      {searchResults && searchResults.results.length > 0 && (
+        <SearchPagination
+          totalProducts={searchResults.count}
+          loading={loading}
+        />
+      )}
+    </div>
   );
 };
 
