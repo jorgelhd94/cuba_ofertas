@@ -31,6 +31,7 @@ def get_product_queryset(query_params, exclude_categories: bool = False):
     price_by_weight = query_params.get('price_by_weight', 'show_all')
     provider = query_params.get('provider', '')
     category = query_params.get('category', '')
+    manufactures = query_params.get('manufactures', '')
 
     products_queryset = full_search_products(
         search_text) if search_text else Product.objects.all()
@@ -66,7 +67,7 @@ def get_product_queryset(query_params, exclude_categories: bool = False):
         products_queryset = products_queryset.filter(provider=provider)
 
     # Filter by category
-    if category and not exclude_categories:
+    if category:
         try:
             category = Category.objects.get(pk=category)
             categories_list = [category] + category.get_descendants()
@@ -74,6 +75,11 @@ def get_product_queryset(query_params, exclude_categories: bool = False):
                 categories__in=categories_list)
         except Category.DoesNotExist:
             products_queryset = products_queryset.none()
+
+    # Filter by manufactures
+    if manufactures:
+        manufacture_ids_list = manufactures.split(",")
+        products_queryset = products_queryset.filter(manufacture__id__in=manufacture_ids_list)
 
     return products_queryset
 

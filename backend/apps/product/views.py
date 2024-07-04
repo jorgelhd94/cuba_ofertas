@@ -3,11 +3,13 @@ import random
 from apps.notifications.models import Notification
 from common.stores.sm23.notifications import notify_higher_ranked_products_sm23
 from rest_framework import viewsets
+
+from common.utils.categories_functions import add_product_counts_to_tree, category_to_dict
 from .models import Product, Manufacture, Category, Provider, PriceHistory
 from .serializers import ProductSerializer, ManufactureSerializer, CategorySerializer, ProviderSerializer, PriceHistorySerializer
-from common.configuration.pagination import StandardResultsSetPagination
+from common.configuration.pagination import BigResultsSetPagination, NoPagination, StandardResultsSetPagination
 from django.db.models.functions import Trim, Replace
-from django.db.models import Q, F, Value, Count
+from django.db.models import Q, F, Value, Count, Prefetch
 from rest_framework import generics
 
 from rest_framework.views import APIView
@@ -119,10 +121,11 @@ class PriceHistoryListView(generics.ListAPIView):
 class ManufactureViewSet(viewsets.ModelViewSet):
     queryset = Manufacture.objects.all().order_by('name')
     serializer_class = ManufactureSerializer
-    pagination_class = StandardResultsSetPagination
+    pagination_class = BigResultsSetPagination
 
     def get_queryset(self):
-        # Elimina tabulaciones, retornos de carro y nuevas líneas
+        search_text = self.request.query_params.get('search', '').strip()
+
         queryset = Manufacture.objects.annotate(
             cleaned_name=Trim(
                 Replace(
@@ -134,7 +137,28 @@ class ManufactureViewSet(viewsets.ModelViewSet):
                 )
             )
         ).order_by('cleaned_name')
+
+        if search_text:
+            queryset = queryset.filter(cleaned_name__icontains=search_text)
+
         return queryset
+
+    @action(detail=False, methods=['get'])
+    def list_by_ids(self, request):
+        ids_param = request.query_params.get('b', '')
+        if not ids_param:
+            return Response([], status=200)
+
+        try:
+            ids = [int(id.strip()) for id in ids_param.split(',')]
+        except ValueError:
+            return Response({"detail": "Invalid ids format."}, status=400)
+
+        queryset = self.queryset.filter(id__in=ids)
+        self.pagination_class = NoPagination  # Disable pagination for this action
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
@@ -153,6 +177,39 @@ class CategoryViewSet(viewsets.ModelViewSet):
         serializer = CategorySerializer(category)
         return Response(serializer.data)
 
+
+class CategoryAPIView(APIView):
+    def get(self, request):
+        query_params = request.query_params
+
+        # Obtener el queryset y agrupar por categorías, luego contar cada grupo
+        categories_count = search_functions.get_product_queryset(
+            query_params, exclude_categories=True
+        ).values('categories').annotate(count=Count('categories'))
+
+        # Convertir los resultados a un diccionario
+        categories_count_dict = {}
+        for item in categories_count:
+            category_id = item['categories']
+            count = item['count']
+            if category_id in categories_count_dict:
+                categories_count_dict[category_id] += count
+            else:
+                categories_count_dict[category_id] = count
+
+        root_categories = Category.objects.filter(parent__isnull=True).order_by('name').prefetch_related(
+            Prefetch('children', queryset=Category.objects.all(
+            ).prefetch_related('children').order_by('name'))
+        )
+
+        # Organizar la estructura de árbol con los conteos de productos
+        for root_category in root_categories:
+            add_product_counts_to_tree(root_category, categories_count_dict)
+
+        category_tree_dict = [category_to_dict(
+            category) for category in root_categories if category.products_count > 0]
+
+        return Response(category_tree_dict)
 
 
 class ProviderViewSet(viewsets.ModelViewSet):

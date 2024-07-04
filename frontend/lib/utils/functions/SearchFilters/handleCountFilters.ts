@@ -4,7 +4,8 @@ const handleCountFilters = (searchParams: URLSearchParams) => {
     { param: "mode", exclude: "show_all" },
     { param: "price_by_weight", exclude: "show_all" },
     { param: "provider" },
-    { param: "category" }
+    { param: "category" },
+    { param: "manufactures" },
   ];
 
   return conditions.reduce((count, { param, exclude }) => {

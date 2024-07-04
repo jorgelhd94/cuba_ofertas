@@ -68,6 +68,13 @@ export const ProductCard: React.FC<ProductCardProps> = (props) => {
 
   const [showOfferDays, setShowOfferDays] = useState(false);
 
+  const productName = (
+    <>
+      <span className="max-md:hidden">{props.product.name}</span>
+      <span className="md:hidden cursor-pointer">{getTruncateName()}</span>
+    </>
+  );
+
   return (
     <>
       <Card
@@ -128,15 +135,16 @@ export const ProductCard: React.FC<ProductCardProps> = (props) => {
               <b
                 className="text-small text-primary-800 cursor-pointer hover:text-primary-700"
                 onClick={() => {
-                  isPinProduct()
-                    ? setShowFullText(!showFullText)
-                    : router.push(`/products/${props.product.id}`);
+                  setShowFullText(!showFullText);
                 }}
               >
-                <span className="max-md:hidden">{props.product.name}</span>
-                <span className="md:hidden cursor-pointer">
-                  {getTruncateName()}
-                </span>
+                {!isPinProduct() ? (
+                  <Link href={`/products/${props.product.id}`}>
+                    {productName}
+                  </Link>
+                ) : (
+                  productName
+                )}
               </b>
 
               {props.product.manufacture && !isPinProduct() && (

@@ -16,9 +16,11 @@ const CategoriesSelect = (props: Props) => {
   const searchParams = useSearchParams();
 
   const getParams = () => {
-    const urlParams = new URLSearchParams();
+    const urlParams = new URLSearchParams(searchParams.toString());
 
-    urlParams.set("provider", searchParams.get("provider") || "");
+    urlParams.delete("category");
+    urlParams.delete("page");
+    urlParams.delete("page_size");
 
     if (urlParams.toString()) return "?" + urlParams.toString();
 
@@ -26,7 +28,7 @@ const CategoriesSelect = (props: Props) => {
   };
 
   const { data, isLoading, error } = useSWR(
-    getApiUrl("/categories/" + getParams()),
+    getApiUrl("/categories-menu/" + getParams()),
     fetcher
   );
 
@@ -108,6 +110,10 @@ const CategoriesSelect = (props: Props) => {
         <div className="w-full flex flex-col gap-3 px-1">
           {data.map((category: ICategory) => renderCategories(category))}
         </div>
+      )}
+
+      {data && data.length === 0 && (
+        <p className="text-xs text-default-600">No hay categorías para esta búsqueda</p>
       )}
     </>
   );
