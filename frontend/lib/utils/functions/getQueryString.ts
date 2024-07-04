@@ -10,9 +10,10 @@ export const getQueryString = (
     "mode",
     "price_by_weight",
     "provider",
+    "manufactures",
     "category",
   ];
-  
+
   const oldParams = new URLSearchParams(searchParams);
   const newParams = new URLSearchParams();
 

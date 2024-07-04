@@ -5,6 +5,7 @@ const getCleanUrlFilters = (searchParams: URLSearchParams) => {
     "price_by_weight",
     "provider",
     "category",
+    "manufactures",
   ];
   const newParams = new URLSearchParams(searchParams.toString());
 

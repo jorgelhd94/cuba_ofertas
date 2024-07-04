@@ -9,6 +9,7 @@ import { Button } from "@nextui-org/react";
 import getCleanUrlFilters from "@/lib/utils/functions/SearchFilters/getCleanUrlFilters";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import handleCountFilters from "@/lib/utils/functions/SearchFilters/handleCountFilters";
+import ManufacturesMultipleSelect from "@/components/manufactures/ManufacturesMultipleSelect/ManufacturesMultipleSelect";
 
 type Props = {
   isOpen: boolean;
@@ -44,7 +45,7 @@ const FilterDrawer = (props: Props) => {
 
           <SearchByProvider isDisabled={props.isLoading} />
 
-          {/* <ManufacturesMultipleSelect /> */}
+          <ManufacturesMultipleSelect />
 
           <CategoriesSelect />
         </div>
