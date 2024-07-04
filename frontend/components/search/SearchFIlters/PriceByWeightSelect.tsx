@@ -28,22 +28,22 @@ export const PriceByWeightSelect: React.FC<Props> = ({ isDisabled }) => {
         })
     );
   };
+
+  const isNotDefault =
+    searchParams.get("price_by_weight") &&
+    searchParams.get("price_by_weight") !== "show_all";
+
   return (
     <Select
       size="sm"
       isDisabled={isDisabled}
       selectedKeys={[searchParams.get("price_by_weight") || "show_all"]}
       selectionMode="single"
-      variant="faded"
+      variant={isNotDefault ? "flat" : "faded"}
       label="Precio por libra"
       className="max-w-64"
       onChange={(event) => handleMode(event.target.value)}
-      color={
-        searchParams.get("price_by_weight") &&
-        searchParams.get("price_by_weight") !== "show_all"
-          ? "primary"
-          : "default"
-      }
+      color={isNotDefault ? "primary" : "default"}
     >
       {options.map((option) => (
         <SelectItem key={option.value} value={option.value}>

@@ -31,21 +31,20 @@ export const OrderBy: React.FC<OrderByProps> = ({ isDisabled }) => {
     );
   };
 
+  const isNotDefault =
+    searchParams.get("orderby") && searchParams.get("orderby") !== "default";
+
   return (
     <Select
       size="sm"
       isDisabled={isDisabled}
       selectedKeys={[searchParams.get("orderby") || "default"]}
       selectionMode="single"
-      variant="faded"
+      variant={isNotDefault ? "flat" : "faded"}
       label="Ordenar por"
-      className="max-w-64"
+      className={`max-w-64`}
       onChange={(event) => handleOrderBy(event.target.value)}
-      color={
-        searchParams.get("orderby") && searchParams.get("orderby") !== "default"
-          ? "primary"
-          : "default"
-      }
+      color={isNotDefault ? "primary" : "default"}
     >
       {options.map((option) => (
         <SelectItem key={option.value} value={option.value}>

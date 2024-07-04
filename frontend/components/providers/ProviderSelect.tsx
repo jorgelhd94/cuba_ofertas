@@ -18,7 +18,7 @@ const ProviderSelect = (props: Props) => {
       selectedKeys={props.selectedKey ? [props.selectedKey] : []}
       selectionMode="single"
       placeholder="Seleccione un proveedor"
-      variant="faded"
+      variant={props.selectedKey ? "flat" : "faded"}
       label="Seleccionar proveedor"
       className="max-w-64"
       onChange={(event) => props.handleSelect(event.target.value)}

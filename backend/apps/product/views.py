@@ -3,11 +3,13 @@ import random
 from apps.notifications.models import Notification
 from common.stores.sm23.notifications import notify_higher_ranked_products_sm23
 from rest_framework import viewsets
+
+from common.utils.categories_functions import add_product_counts_to_tree, category_to_dict
 from .models import Product, Manufacture, Category, Provider, PriceHistory
 from .serializers import ProductSerializer, ManufactureSerializer, CategorySerializer, ProviderSerializer, PriceHistorySerializer
 from common.configuration.pagination import StandardResultsSetPagination
 from django.db.models.functions import Trim, Replace
-from django.db.models import Q, F, Value, Count
+from django.db.models import Q, F, Value, Count, Prefetch
 from rest_framework import generics
 
 from rest_framework.views import APIView
@@ -153,6 +155,39 @@ class CategoryViewSet(viewsets.ModelViewSet):
         serializer = CategorySerializer(category)
         return Response(serializer.data)
 
+
+class CategoryAPIView(APIView):
+    def get(self, request):
+        query_params = request.query_params
+
+        # Obtener el queryset y agrupar por categorías, luego contar cada grupo
+        categories_count = search_functions.get_product_queryset(
+            query_params, exclude_categories=True
+        ).values('categories').annotate(count=Count('categories'))
+
+        # Convertir los resultados a un diccionario
+        categories_count_dict = {}
+        for item in categories_count:
+            category_id = item['categories']
+            count = item['count']
+            if category_id in categories_count_dict:
+                categories_count_dict[category_id] += count
+            else:
+                categories_count_dict[category_id] = count
+
+        root_categories = Category.objects.filter(parent__isnull=True).order_by('name').prefetch_related(
+            Prefetch('children', queryset=Category.objects.all(
+            ).prefetch_related('children').order_by('name'))
+        )
+
+        # Organizar la estructura de árbol con los conteos de productos
+        for root_category in root_categories:
+            add_product_counts_to_tree(root_category, categories_count_dict)
+
+        category_tree_dict = [category_to_dict(
+            category) for category in root_categories if category.products_count > 0]
+
+        return Response(category_tree_dict)
 
 
 class ProviderViewSet(viewsets.ModelViewSet):

@@ -23,7 +23,6 @@ const FilterDrawer = (props: Props) => {
 
   const cleanFilters = () => {
     router.push(pathname + "?" + getCleanUrlFilters(searchParams));
-    props.handleClose();
   };
   return (
     <Drawer

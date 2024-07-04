@@ -66,7 +66,7 @@ def get_product_queryset(query_params, exclude_categories: bool = False):
         products_queryset = products_queryset.filter(provider=provider)
 
     # Filter by category
-    if category and not exclude_categories:
+    if category:
         try:
             category = Category.objects.get(pk=category)
             categories_list = [category] + category.get_descendants()

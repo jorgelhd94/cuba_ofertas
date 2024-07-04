@@ -17,6 +17,8 @@ urlpatterns = [
          views.RelatedProductsView.as_view(), name='product-related'),
     path('products/<int:product_id>/price-history/',
          views.PriceHistoryListView.as_view(), name='price-history-list'),
+    path('categories-menu/',
+         views.CategoryAPIView.as_view(), name='categories-menu'),
     path('products-test/',
          views.ProductTestView.as_view(), name='product-test'),
 ]
