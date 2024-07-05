@@ -5,11 +5,12 @@ import { OrderBy } from "../SearchFIlters/OrderBy";
 import { PriceByWeightSelect } from "../SearchFIlters/PriceByWeightSelect";
 import { ProductModeSelect } from "../SearchFIlters/ProductModeSelect";
 import { Drawer } from "flowbite-react";
-import { Button } from "@nextui-org/react";
+import { Button, Divider } from "@nextui-org/react";
 import getCleanUrlFilters from "@/lib/utils/functions/SearchFilters/getCleanUrlFilters";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import handleCountFilters from "@/lib/utils/functions/SearchFilters/handleCountFilters";
 import ManufacturesMultipleSelect from "@/components/manufactures/ManufacturesMultipleSelect/ManufacturesMultipleSelect";
+import OffersFilter from "../SearchFIlters/OffersFilter";
 
 type Props = {
   isOpen: boolean;
@@ -30,7 +31,7 @@ const FilterDrawer = (props: Props) => {
       open={props.isOpen}
       onClose={() => props.handleClose()}
       position="right"
-      className="mt-16 max-sm:w-full w-80 z-40 p-0 overflow-y-hidden"
+      className="mt-16 max-sm:w-full w-[21rem] z-40 p-0 overflow-y-hidden"
     >
       <Drawer.Header
         title="Filtros"
@@ -39,6 +40,8 @@ const FilterDrawer = (props: Props) => {
       />
       <Drawer.Items className="relative scrollbar-custom overflow-y-auto h-[90vh]">
         <div className="flex flex-col items-center gap-4 pb-32 px-4">
+          <OffersFilter />
+          <Divider />
           <OrderBy isDisabled={props.isLoading} />
           <ProductModeSelect isDisabled={props.isLoading} />
           <PriceByWeightSelect isDisabled={props.isLoading} />

@@ -13,9 +13,15 @@ class ShopSerializer(serializers.ModelSerializer):
 
 
 class ManufactureSerializer(serializers.ModelSerializer):
+    product_count = serializers.SerializerMethodField()
+
     class Meta:
         model = Manufacture
-        fields = ['id', 'name', 'url']
+        fields = ['id', 'name', 'url', 'product_count']
+
+    def get_product_count(self, obj):
+        # Acceder a product_count desde el contexto del serializador
+        return self.context.get('product_counts', {}).get(obj.id, 0)
 
 
 class ProviderSerializer(serializers.ModelSerializer):

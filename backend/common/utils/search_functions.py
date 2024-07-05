@@ -1,3 +1,4 @@
+from datetime import timedelta
 from apps.product.models import Category, Product, Provider
 from django.db.models import Q, F, Value
 from django.db.models.functions import Replace, Trim
@@ -7,6 +8,7 @@ from functools import reduce
 from django.contrib.postgres.search import SearchQuery, SearchRank
 import re
 from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
+from django.utils import timezone
 
 
 class Unaccent(Func):
@@ -24,8 +26,9 @@ order_mapping = {
 }
 
 
-def get_product_queryset(query_params, exclude_categories: bool = False):
+def get_product_queryset(query_params, exclude_categories: bool = False, exclude_manufactures: bool = False):
     search_text = query_params.get('q', '')
+    offers = query_params.get('offers', '')
     orderby = query_params.get('orderby', 'default')
     mode = query_params.get('mode', 'show_all')
     price_by_weight = query_params.get('price_by_weight', 'show_all')
@@ -35,6 +38,12 @@ def get_product_queryset(query_params, exclude_categories: bool = False):
 
     products_queryset = full_search_products(
         search_text) if search_text else Product.objects.all()
+
+    # Offers
+    if offers:
+        offer_datetime = timezone.now() - timedelta(days=int(offers))
+        products_queryset = products_queryset.filter(previous_price_updated_at__isnull=False,
+                                                     previous_price_updated_at__gte=offer_datetime.date())
 
     if not exclude_categories:
         # Clean Name
@@ -77,9 +86,10 @@ def get_product_queryset(query_params, exclude_categories: bool = False):
             products_queryset = products_queryset.none()
 
     # Filter by manufactures
-    if manufactures:
+    if manufactures and not exclude_manufactures:
         manufacture_ids_list = manufactures.split(",")
-        products_queryset = products_queryset.filter(manufacture__id__in=manufacture_ids_list)
+        products_queryset = products_queryset.filter(
+            manufacture__id__in=manufacture_ids_list)
 
     return products_queryset
 

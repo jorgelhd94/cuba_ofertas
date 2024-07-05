@@ -1,13 +1,12 @@
 from datetime import timedelta
-import random
-from apps.notifications.models import Notification
-from common.stores.sm23.notifications import notify_higher_ranked_products_sm23
 from rest_framework import viewsets
 
 from common.utils.categories_functions import add_product_counts_to_tree, category_to_dict
+from common.utils.common import clean_name_trim
+from common.utils.manufacture_functions import get_manufacture_ids_from_params
 from .models import Product, Manufacture, Category, Provider, PriceHistory
 from .serializers import ProductSerializer, ManufactureSerializer, CategorySerializer, ProviderSerializer, PriceHistorySerializer
-from common.configuration.pagination import BigResultsSetPagination, NoPagination, StandardResultsSetPagination
+from common.configuration.pagination import BigResultsSetPagination, StandardResultsSetPagination
 from django.db.models.functions import Trim, Replace
 from django.db.models import Q, F, Value, Count, Prefetch
 from rest_framework import generics
@@ -18,7 +17,6 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from common.utils import search_functions
-from apps.statistics_spy.models import ProductsUpdateLogs
 
 
 class ProductViewSet(viewsets.ModelViewSet):
@@ -143,22 +141,66 @@ class ManufactureViewSet(viewsets.ModelViewSet):
 
         return queryset
 
-    @action(detail=False, methods=['get'])
-    def list_by_ids(self, request):
-        ids_param = request.query_params.get('b', '')
-        if not ids_param:
-            return Response([], status=200)
 
+class ManufactureAPIView(APIView):
+    def get(self, request):
+        query_params = request.query_params
+
+        # Obtener los IDs desde los query params
         try:
-            ids = [int(id.strip()) for id in ids_param.split(',')]
-        except ValueError:
-            return Response({"detail": "Invalid ids format."}, status=400)
+            ids = get_manufacture_ids_from_params(query_params)
+        except ValueError as e:
+            return Response({"detail": str(e)}, status=400)
 
-        queryset = self.queryset.filter(id__in=ids)
-        self.pagination_class = NoPagination  # Disable pagination for this action
+        # Obtener el conteo de productos por fabricante
+        manufactures_count = search_functions.get_product_queryset(
+            query_params, exclude_manufactures=True
+        ).values('manufacture').annotate(count=Count('manufacture'))
 
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
+        # Crear un diccionario con los conteos de productos por fabricante
+        manufactures_count_dict = {}
+        for item in manufactures_count:
+            manufactures_id = item['manufacture']
+            count = item['count']
+
+            if manufactures_id in manufactures_count_dict:
+                manufactures_count_dict[manufactures_id] += count
+            else:
+                manufactures_count_dict[manufactures_id] = count
+
+        # Filtrar los fabricantes por los IDs proporcionados, si existen
+        manufactures = Manufacture.objects.annotate(
+            cleaned_name=clean_name_trim()
+        )
+
+        if ids:
+            manufactures = manufactures.filter(id__in=ids)
+        else:
+            manufactures = manufactures.filter(
+                id__in=manufactures_count_dict.keys())
+
+        # Obtener el texto de búsqueda desde los query params
+        search_text = query_params.get('search', '').strip()
+
+        # Filtrar por nombre limpio si se proporciona un texto de búsqueda
+        if search_text:
+            manufactures = manufactures.filter(
+                cleaned_name__icontains=search_text)
+
+        # Comprobar si el parámetro 'page' está en los query_params
+        if 'page' in query_params:
+            paginator = BigResultsSetPagination()
+            page = paginator.paginate_queryset(
+                manufactures.order_by('cleaned_name'), request)
+            if page is not None:
+                serializer = ManufactureSerializer(page, many=True, context={
+                                                   'product_counts': manufactures_count_dict})
+                return paginator.get_paginated_response(serializer.data)
+        else:
+            # Sin paginación
+            serializer = ManufactureSerializer(manufactures.order_by(
+                'cleaned_name'), many=True, context={'product_counts': manufactures_count_dict})
+            return Response(serializer.data)
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
@@ -220,21 +262,6 @@ class ProviderViewSet(viewsets.ModelViewSet):
 
 class ProductTestView(APIView):
     def get(self, request):
-        messages = [
-            'Notification message {}'.format(i) for i in range(1, 2001)
-        ]
-        notification_types = ['info', 'success',
-                              'warning', 'error', 'new_in_ranking']
-
-        notifications = [
-            Notification(
-                message=message,
-                notification_type=random.choice(notification_types)
-            )
-            for message in messages
-        ]
-
-        Notification.objects.bulk_create(notifications)
 
         return Response({'msg': 'ok'}, status=status.HTTP_200_OK)
 

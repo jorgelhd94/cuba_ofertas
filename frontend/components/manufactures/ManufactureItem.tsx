@@ -1,6 +1,7 @@
 "use client";
 import { IManufacture } from "@/lib/interfaces/IManufacture";
 import { getQueryString } from "@/lib/utils/functions/getQueryString";
+import { Chip } from "@nextui-org/react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FaX } from "react-icons/fa6";
@@ -55,15 +56,20 @@ const ManufactureItem = ({ manufacture }: Props) => {
 
   const getClassName = () => {
     let baseClass =
-      "break-words flex justify-between items-center gap-2 text-balance border border-default-200 hover:border-secondary-400 hover:bg-secondary-400 hover:text-default-50 dark:hover:text-white p-2 h-min cursor-pointer";
+      "break-words rounded-md flex flex-wrap justify-between items-center gap-2 text-balance border border-default-200 hover:border-secondary-400 hover:bg-secondary-400 hover:text-default-50 dark:hover:text-white p-2 h-min cursor-pointer";
     return isActive
-      ? `${baseClass} bg-secondary-400 text-xs text-white rounded-full`
-      : `${baseClass} text-sm rounded-md`;
+      ? `${baseClass} bg-secondary-400 text-xs text-white`
+      : `${baseClass} text-sm`;
   };
 
   return (
     <div className={getClassName()} onClick={handleClick}>
-      {manufacture.name}
+      {manufacture.name}{" "}
+      {manufacture.product_count !== undefined && (
+        <Chip size="sm" color="default" className="text-xs">
+          {manufacture.product_count}
+        </Chip>
+      )}
       {isActive && (
         <span className="p-1 h-max bg-default-50 text-default-800 rounded-full cursor-pointer hover:bg-default-200">
           <FaX size={8} />
