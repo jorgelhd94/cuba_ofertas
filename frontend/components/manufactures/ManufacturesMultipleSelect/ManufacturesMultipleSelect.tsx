@@ -1,24 +1,19 @@
-import { EmptyMsg } from "@/components/shared/messages/empty-msg/empty-msg";
-import { ErrorMsg } from "@/components/shared/messages/ErrorMsg/ErrorMsg";
+import SimpleMsg from "@/components/shared/messages/SimpleMsg";
 import { IManufacture } from "@/lib/interfaces/IManufacture";
 import { getApiUrl } from "@/lib/utils/api/api";
 import { fetcher } from "@/lib/utils/api/fetcher";
 import {
   Button,
   Divider,
-  Input,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
+  Input
 } from "@nextui-org/react";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { HiPlus, HiSearch } from "react-icons/hi";
 import useSWRInfinite from "swr/infinite";
 import ManufactureItem from "../ManufactureItem";
-import ManufacturesModal from "../ManufacturesModal";
 import ManufactureSelectedList from "../ManufactureSelectedList";
+import ManufacturesModal from "../ManufacturesModal";
 
 type Props = {};
 
@@ -30,13 +25,24 @@ interface Data {
 const getKey = (
   pageIndex: number,
   previousPageData: Data,
-  searchText: string
+  searchText: string,
+  searchParams: URLSearchParams
 ) => {
   if (previousPageData && !previousPageData.next) return null; // reached the end
-  return getApiUrl(`/manufactures?page=${pageIndex + 1}&search=${searchText}`); // SWR key
+
+  const urlParams = new URLSearchParams(searchParams.toString());
+  urlParams.delete("page");
+  urlParams.delete("manufactures");
+
+  return getApiUrl(
+    `/manufactures-list?page=${
+      pageIndex + 1
+    }&search=${searchText}&${urlParams.toString()}`
+  ); // SWR key
 };
 
 const ManufacturesMultipleSelect = (props: Props) => {
+  const searchParams = useSearchParams();
   const [isOpen, setIsOpen] = useState(false);
   const [searchText, setSearchText] = useState("");
 
@@ -45,7 +51,7 @@ const ManufacturesMultipleSelect = (props: Props) => {
 
   const { data, error, isLoading, size, setSize, mutate } = useSWRInfinite(
     (pageIndex, previousPageData) =>
-      getKey(pageIndex, previousPageData, searchText),
+      getKey(pageIndex, previousPageData, searchText, searchParams),
     fetcher
   );
 
@@ -64,26 +70,30 @@ const ManufacturesMultipleSelect = (props: Props) => {
     mutate(); // Refetch data when searchText changes
   }, [searchText, mutate]);
 
-  if (error) return <ErrorMsg message="Error al cargar las marcas" />;
-
   return (
     <>
       <h4 className="text-medium font-medium text-left w-full mt-2">Marcas</h4>
       <Divider />
 
-      <ManufactureSelectedList />
+      {error ? (
+        <SimpleMsg message="Error al cargar las marcas" type="error" />
+      ) : (
+        <>
+          <ManufactureSelectedList />
 
-      <div className="flex w-full">
-        <Button
-          onClick={() => setIsOpen(true)}
-          startContent={<HiPlus />}
-          aria-label="Add"
-          color="secondary"
-          isLoading={isLoading}
-        >
-          Seleccionar
-        </Button>
-      </div>
+          <div className="flex w-full">
+            <Button
+              onClick={() => setIsOpen(true)}
+              startContent={<HiPlus />}
+              aria-label="Add"
+              color="secondary"
+              isLoading={isLoading}
+            >
+              Seleccionar
+            </Button>
+          </div>
+        </>
+      )}
 
       <ManufacturesModal
         ref={listRef}
@@ -111,11 +121,10 @@ const ManufacturesMultipleSelect = (props: Props) => {
           )}
 
           {isDataEmpty && (
-            <div className="mt-8">
-              <EmptyMsg
-                title="Sin resultados"
-                message="No hay marcas para mostrar"
-              />
+            <div className="mt-8 w-full text-center">
+              <p className="text-default-400">
+                No hay marcas para mostrar
+              </p>
             </div>
           )}
 

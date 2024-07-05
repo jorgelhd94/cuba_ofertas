@@ -1,14 +1,15 @@
 "use client";
+import SimpleMsg from "@/components/shared/messages/SimpleMsg";
 import { ICategory } from "@/lib/interfaces/ICategory";
 import { getApiUrl } from "@/lib/utils/api/api";
 import { fetcher } from "@/lib/utils/api/fetcher";
-import { Divider, Skeleton } from "@nextui-org/react";
-import React, { useEffect, useState } from "react";
-import useSWR from "swr";
-import CategoryItem from "../CategoryItem";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { getQueryString } from "@/lib/utils/functions/getQueryString";
+import { Divider } from "@nextui-org/react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import useSWR from "swr";
 import CategoryActiveChip from "../CategoryActiveChip";
+import CategoryItem from "../CategoryItem";
 
 type Props = {};
 
@@ -103,17 +104,17 @@ const CategoriesSelect = (props: Props) => {
       )}
 
       {error && (
-        <p className="text-danger text-sm">Error al cargar las categorías</p>
+        <SimpleMsg message="Error al cargar las categorías" type="error" />
       )}
 
-      {data && data.length > 0 && (
+      {!error && data && data.length > 0 && (
         <div className="w-full flex flex-col gap-3 px-1">
           {data.map((category: ICategory) => renderCategories(category))}
         </div>
       )}
 
-      {data && data.length === 0 && (
-        <p className="text-xs text-default-600">No hay categorías para esta búsqueda</p>
+      {!error && data && data.length === 0 && (
+        <SimpleMsg message="No hay categorías para esta búsqueda" />
       )}
     </>
   );

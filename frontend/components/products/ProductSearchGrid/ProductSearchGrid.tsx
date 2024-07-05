@@ -1,19 +1,18 @@
 import FilterDrawer from "@/components/search/FilterDrawer/FilterDrawer";
+import ChangeLimitSelect from "@/components/search/SearchFIlters/ChangeLimitSelect";
 import SearchPagination from "@/components/search/SearchPagination/SearchPagination";
 import SearchResultsText from "@/components/search/SearchResultsText/SearchResultsText";
 import { EmptyMsg } from "@/components/shared/messages/empty-msg/empty-msg";
 import { HidePinProductContext } from "@/lib/context/HidePinProductContext";
 import { ISearchProducts } from "@/lib/interfaces/ISearchProducts";
+import getCleanUrlFilters from "@/lib/utils/functions/SearchFilters/getCleanUrlFilters";
+import handleCountFilters from "@/lib/utils/functions/SearchFilters/handleCountFilters";
 import { Button, Chip } from "@nextui-org/react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React, { useContext, useEffect, useState } from "react";
 import { HiAdjustments, HiTrash } from "react-icons/hi";
 import { ProductCard } from "../ProductCard/ProductCard";
 import { ProductsSkeleton } from "../ProductsSkeleton/ProductsSkeleton";
-import ChangeLimitSelect from "@/components/search/SearchFIlters/ChangeLimitSelect";
-import handleCountFilters from "@/lib/utils/functions/SearchFilters/handleCountFilters";
-import getCleanUrlFilters from "@/lib/utils/functions/SearchFilters/getCleanUrlFilters";
-import CategoryActiveChip from "@/components/categories/CategoryActiveChip";
 
 type ProductSearchGridProps = {
   searchResults: ISearchProducts | null;
@@ -73,11 +72,6 @@ export const ProductSearchGrid: React.FC<ProductSearchGridProps> = ({
             total={searchResults?.count}
             loading={loading}
           />
-          {searchParams.get("category") && (
-            <CategoryActiveChip
-              categoryId={searchParams.get("category") as string}
-            />
-          )}
         </div>
         <div className="flex max-md:w-full gap-2 flex-grow justify-center md:justify-end items-end flex-wrap">
           <ChangeLimitSelect isDisabled={loading} />

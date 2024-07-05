@@ -5,46 +5,58 @@ import { fetcher } from "@/lib/utils/api/fetcher";
 import { useSearchParams } from "next/navigation";
 import useSWR from "swr";
 import ManufactureItem from "./ManufactureItem";
+import SimpleMsg from "../shared/messages/SimpleMsg";
 
 type Props = {};
 
+const getUrlParams = (searchParams: string) => {
+  const urlParams = new URLSearchParams(searchParams);
+  urlParams.delete("page");
+
+  if (urlParams.get("manufactures")) {
+    return urlParams;
+  }
+
+  return null;
+};
+
 const ManufactureSelectedList = (props: Props) => {
   const searchParams = useSearchParams();
+  const urlParams = getUrlParams(searchParams.toString());
 
-  const getParams = () => {
-    return searchParams.get("manufactures")
-      ? "?b=" + searchParams.get("manufactures")
-      : "";
-  };
+  const shouldFetch = urlParams !== null;
 
   const { data, isLoading, error } = useSWR(
-    getApiUrl("/manufactures/list_by_ids/" + getParams()),
+    shouldFetch
+      ? getApiUrl("/manufactures-list/?" + urlParams.toString())
+      : null,
     fetcher
   );
 
-  
-
-  if (error) {
-    <p className="text-sm text-danger">Error al cargar las marcas</p>;
+  if (!shouldFetch) {
+    return null;
   }
 
   if (isLoading) {
-    <p className="text-sm text-default-300">Cargando marcas...</p>;
+    return <p className="text-sm text-default-300">Cargando marcas...</p>;
   }
 
-  if (data && data.length === 0) {
-    return null;
+  if (error) {
+    return <p className="text-sm text-danger">Error al cargar las marcas</p>;
   }
+
+  if (data && data.length === 0 && shouldFetch) {
+    return <SimpleMsg message="No hay marcas para esta búsqueda" />;
+  }
+
+  if (data && data.length === 0) return null;
 
   return (
     <div className="w-full flex gap-2 flex-wrap">
       {data &&
         data.length > 0 &&
         data.map((manufacture: IManufacture) => (
-          <ManufactureItem
-            key={manufacture.id}
-            manufacture={manufacture}
-          />
+          <ManufactureItem key={manufacture.id} manufacture={manufacture} />
         ))}
     </div>
   );

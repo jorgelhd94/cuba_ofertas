@@ -6,6 +6,7 @@ export const getQueryString = (
     "q",
     "page",
     "page_size",
+    "offers",
     "orderby",
     "mode",
     "price_by_weight",
