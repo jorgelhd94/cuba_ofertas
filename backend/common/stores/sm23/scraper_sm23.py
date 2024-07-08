@@ -289,8 +289,24 @@ def create_product_and_manufacture(product_id: str, product_data: dict, category
     product_defaults = product_data.copy()
     product_defaults['updated_at'] = timezone.now()
 
-    product, created = Product.objects.update_or_create(
-        product_id=product_id, manufacture=manufacture, defaults=product_defaults)
+    try:
+        # Intenta obtener el producto existente
+        product = Product.objects.get(product_id=product_id, manufacture=manufacture)
+
+        if product.current_price != product_defaults["current_price"]:
+            product_defaults["previous_price_updated_at"] = timezone.now()
+            product_defaults["previous_price"] = product.current_price
+            
+        # Actualiza los campos del producto con los valores de product_defaults
+        for key, value in product_defaults.items():
+            setattr(product, key, value)
+        # Guarda el producto actualizado
+        product.save()
+    except Product.DoesNotExist:
+        # Crea un nuevo producto con los valores de product_defaults
+        product_defaults['product_id'] = product_id
+        product_defaults['manufacture'] = manufacture
+        product = Product.objects.create(**product_defaults)
 
     # Obtener o crear la tienda "Supermarket 23" con la URL asociada
     shop_name = "Supermarket 23"

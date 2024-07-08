@@ -64,7 +64,7 @@ class Category(models.Model):
         for child in children:
             descendants.extend(child.get_descendants(include_self=True))
         return descendants
-    
+
     def get_ancestors(self, include_self=False):
         ancestors = []
         current = self if include_self else self.parent
@@ -114,8 +114,10 @@ class Product(models.Model):
         if self.pk is not None:  # Only if the product already exists
             previous = Product.objects.get(pk=self.pk)
             if previous.current_price != self.current_price:
-                self.previous_price = previous.current_price
                 self.previous_price_updated_at = timezone.now()
+                self.previous_price = previous.current_price
+            else:
+                self.previous_price = previous.previous_price
 
         super(Product, self).save(*args, **kwargs)
 

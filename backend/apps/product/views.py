@@ -4,6 +4,7 @@ from rest_framework import viewsets
 from common.utils.categories_functions import add_product_counts_to_tree, category_to_dict
 from common.utils.common import clean_name_trim
 from common.utils.manufacture_functions import get_manufacture_ids_from_params
+from common.utils.test import test_set_previous_price_updated_at
 from .models import Product, Manufacture, Category, Provider, PriceHistory
 from .serializers import ProductSerializer, ManufactureSerializer, CategorySerializer, ProviderSerializer, PriceHistorySerializer
 from common.configuration.pagination import BigResultsSetPagination, StandardResultsSetPagination
@@ -17,6 +18,8 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from common.utils import search_functions
+
+from apps.product import serializers
 
 
 class ProductViewSet(viewsets.ModelViewSet):
@@ -262,8 +265,8 @@ class ProviderViewSet(viewsets.ModelViewSet):
 
 class ProductTestView(APIView):
     def get(self, request):
-
-        return Response({'msg': 'ok'}, status=status.HTTP_200_OK)
+        serializer = test_set_previous_price_updated_at()
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 # class ComparisonZoneViewSet(viewsets.ModelViewSet):

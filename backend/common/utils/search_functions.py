@@ -5,7 +5,6 @@ from django.db.models.functions import Replace, Trim
 from django.db.models.expressions import Func
 from django.db import models
 from functools import reduce
-from django.contrib.postgres.search import SearchQuery, SearchRank
 import re
 from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
 from django.utils import timezone
