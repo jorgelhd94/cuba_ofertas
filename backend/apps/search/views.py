@@ -41,7 +41,8 @@ class SearchView(APIView):
 
 class UpdateDatabaseView(APIView):
     def get(self, request):
-        return Response({"msg": update_providers()})
+        update_database_sm23()
+        return Response({"msg": "ok"})
 
 
 class TestAuthView(APIView):
