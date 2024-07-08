@@ -13,6 +13,7 @@ export interface IProduct {
   provider: IProvider | null;
   shop: IShop;
   current_price: number;
+  previous_price: number | null;
   old_price: number | null;
   currency: string;
   price_by_weight: number | null;

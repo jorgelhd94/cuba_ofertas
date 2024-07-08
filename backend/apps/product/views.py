@@ -4,7 +4,7 @@ from rest_framework import viewsets
 from common.utils.categories_functions import add_product_counts_to_tree, category_to_dict
 from common.utils.common import clean_name_trim
 from common.utils.manufacture_functions import get_manufacture_ids_from_params
-from common.utils.test import test_set_previous_price_updated_at
+from common.utils.test import test_set_previous_price, test_set_previous_price_updated_at
 from .models import Product, Manufacture, Category, Provider, PriceHistory
 from .serializers import ProductSerializer, ManufactureSerializer, CategorySerializer, ProviderSerializer, PriceHistorySerializer
 from common.configuration.pagination import BigResultsSetPagination, StandardResultsSetPagination
@@ -71,8 +71,13 @@ class RelatedProductsView(APIView):
         if related_products_by_categories.count() > 0:
             related_products = related_products_by_categories
 
-        serializer = ProductSerializer(
-            related_products.exclude(pk=product.pk).distinct().order_by('current_price')[:20], many=True)
+        # Filtrar productos cuya diferencia de precio no sea mayor al 50%
+        related_products = related_products.exclude(pk=product.pk).distinct()
+        related_products = related_products.annotate(
+            price_difference_percentage=100 * (F('current_price') - product.current_price) / product.current_price
+        ).filter(price_difference_percentage__lte=50)
+
+        serializer = ProductSerializer(related_products.order_by('current_price')[:20], many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -265,8 +270,8 @@ class ProviderViewSet(viewsets.ModelViewSet):
 
 class ProductTestView(APIView):
     def get(self, request):
-        serializer = test_set_previous_price_updated_at()
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        products = test_set_previous_price()
+        return Response({'products': products.count()}, status=status.HTTP_200_OK)
 
 
 # class ComparisonZoneViewSet(viewsets.ModelViewSet):

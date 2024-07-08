@@ -10,7 +10,7 @@ type Props = {
 const OnSaleChip: React.FC<Props> = ({ product, showOfferDays }) => {
   return (
     <>
-      {product.old_price && product.days_on_sale !== null && (
+      {product.previous_price && product.days_on_sale !== null && (
         <Chip className="z-30" size="sm" color="danger">
           Oferta
           {showOfferDays && product.days_on_sale > 0 && (

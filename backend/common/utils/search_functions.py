@@ -41,8 +41,10 @@ def get_product_queryset(query_params, exclude_categories: bool = False, exclude
     # Offers
     if offers:
         offer_datetime = timezone.now() - timedelta(days=int(offers))
-        products_queryset = products_queryset.filter(previous_price_updated_at__isnull=False,
-                                                     previous_price_updated_at__gte=offer_datetime.date())
+        products_queryset = products_queryset.filter(
+            previous_price_updated_at__gte=offer_datetime.date(),
+            previous_price__gt=F('current_price')
+        )
 
     if not exclude_categories:
         # Clean Name
