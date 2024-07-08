@@ -11,6 +11,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import handleCountFilters from "@/lib/utils/functions/SearchFilters/handleCountFilters";
 import ManufacturesMultipleSelect from "@/components/manufactures/ManufacturesMultipleSelect/ManufacturesMultipleSelect";
 import OffersFilter from "../SearchFIlters/OffersFilter";
+import DiscountFilter from "../SearchFIlters/DiscountFilter";
 
 type Props = {
   isOpen: boolean;
@@ -41,6 +42,7 @@ const FilterDrawer = (props: Props) => {
       <Drawer.Items className="relative scrollbar-custom overflow-y-auto h-[90vh]">
         <div className="flex flex-col items-center gap-4 pb-32 px-4">
           <OffersFilter />
+          <DiscountFilter />
           <Divider />
           <OrderBy isDisabled={props.isLoading} />
           <ProductModeSelect isDisabled={props.isLoading} />

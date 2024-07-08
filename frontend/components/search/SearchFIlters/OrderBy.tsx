@@ -18,6 +18,8 @@ export const OrderBy: React.FC<OrderByProps> = ({ isDisabled }) => {
     { value: "higher_price", text: "Mayor precio" },
     { value: "new", text: "Más nuevo" },
     { value: "less_price_by_weight", text: "Menor precio/lb" },
+    { value: "less_discount", text: "Menor descuento" },
+    { value: "higher_discount", text: "Mayor descuento" },
   ];
 
   const handleOrderBy = (criteria: string) => {

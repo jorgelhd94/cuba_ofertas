@@ -1,6 +1,6 @@
 from datetime import timedelta
 from apps.product.models import Category, Product, Provider
-from django.db.models import Q, F, Value
+from django.db.models import Q, F, Value, FloatField, ExpressionWrapper
 from django.db.models.functions import Replace, Trim
 from django.db.models.expressions import Func
 from django.db import models
@@ -15,19 +15,10 @@ class Unaccent(Func):
     output_field = models.CharField()
 
 
-# Ordenar productos si se proporciona orderby
-order_mapping = {
-    'default': 'cleaned_name',         # Por nombre
-    'less_price': 'current_price',     # Menor precio
-    'higher_price': '-current_price',    # Mayor precio
-    'new': '-created_at',       # Más nuevo
-    'less_price_by_weight': 'price_by_weight'    # Menor precio/lb
-}
-
-
 def get_product_queryset(query_params, exclude_categories: bool = False, exclude_manufactures: bool = False):
     search_text = query_params.get('q', '')
     offers = query_params.get('offers', '')
+    discounts = query_params.get('discounts', '')
     orderby = query_params.get('orderby', 'default')
     mode = query_params.get('mode', 'show_all')
     price_by_weight = query_params.get('price_by_weight', 'show_all')
@@ -46,6 +37,14 @@ def get_product_queryset(query_params, exclude_categories: bool = False, exclude
             previous_price__gt=F('current_price')
         )
 
+    # Discounts
+    if discounts:
+        discount_percentage = float(discounts) / 100
+        products_queryset = products_queryset.filter(
+            Q(current_price__lte=F('old_price') * (1 - discount_percentage)) |
+            Q(current_price__lte=F('previous_price') * (1 - discount_percentage))
+        )
+
     if not exclude_categories:
         # Clean Name
         products_queryset = get_products_cleaned_name(
@@ -53,15 +52,7 @@ def get_product_queryset(query_params, exclude_categories: bool = False, exclude
         )
 
         # Order By
-        try:
-            if orderby == 'default':
-                products_queryset = products_queryset.order_by('-rank')
-            else:
-                products_queryset = products_queryset.order_by(
-                    order_mapping.get(orderby, 'cleaned_name'))
-        except:
-            products_queryset = products_queryset.order_by(
-                order_mapping.get(orderby, 'cleaned_name'))
+        products_queryset = sort_products(products_queryset, orderby)
 
     # Mode
     products_queryset = filter_products_by_mode(
@@ -91,6 +82,42 @@ def get_product_queryset(query_params, exclude_categories: bool = False, exclude
         manufacture_ids_list = manufactures.split(",")
         products_queryset = products_queryset.filter(
             manufacture__id__in=manufacture_ids_list)
+
+    return products_queryset
+
+
+def sort_products(products_queryset, orderby):
+    order_mapping = {
+        'default': 'cleaned_name',          # Por ranking
+        'less_price': 'current_price',    # Menor precio
+        'higher_price': '-current_price',  # Mayor precio
+        'new': '-created_at',        # Más nuevo
+        'less_price_by_weight': 'price_by_weight',  # Menor precio/lb
+        'less_discount': 'discount_percentage',    # Menor descuento
+        'higher_discount': '-discount_percentage'  # Mayor descuento
+    }
+
+    try:
+        if orderby == 'default':
+            products_queryset = products_queryset.order_by('-rank')
+        elif orderby in ['less_discount', 'higher_discount']:
+            discount_percentage = ExpressionWrapper(
+                (F('old_price') - F('current_price')) / F('old_price') * 100,
+                output_field=FloatField()
+            )
+            products_queryset = products_queryset.annotate(
+                discount_percentage=discount_percentage
+            ).exclude(old_price__isnull=True)  # Excluye los productos sin old_price
+            products_queryset = products_queryset.order_by(
+                order_mapping.get(orderby, 'discount_percentage')
+            )
+        else:
+            products_queryset = products_queryset.order_by(
+                order_mapping.get(orderby, 'cleaned_name'))
+    except Exception as e:
+        # En caso de error, ordenamos por nombre
+        products_queryset = products_queryset.order_by(
+            order_mapping.get(orderby, 'cleaned_name'))
 
     return products_queryset
 

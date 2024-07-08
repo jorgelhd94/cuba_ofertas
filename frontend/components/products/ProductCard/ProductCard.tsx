@@ -16,6 +16,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { ProductDropdownMenu } from "../ProductDropdownMenu/ProductDropdownMenu";
 import ProductRanking from "../ProductRanking/ProductRanking";
 import OnSaleChip from "../OnSaleChip/OnSaleChip";
+import PreviousPriceDisplay from "../PreviousPriceDisplay/PreviousPriceDisplay";
 
 type ProductCardProps = {
   product: IProduct;
@@ -174,11 +175,10 @@ export const ProductCard: React.FC<ProductCardProps> = (props) => {
                   </span>
                 </div>
 
-                {props.product.old_price && (
-                  <p className="font-semibold text-sm md:text-lg text-gray-400 line-through flex items-center">
-                    {props.product.old_price} {props.product.currency}
-                  </p>
-                )}
+                <PreviousPriceDisplay
+                  product={props.product}
+                  isPinProductActive={pinProduct !== null}
+                />
 
                 {props.product.price_by_weight && (
                   <div

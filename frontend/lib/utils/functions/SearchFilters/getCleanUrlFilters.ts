@@ -1,6 +1,7 @@
 const getCleanUrlFilters = (searchParams: URLSearchParams) => {
   const paramsToDelete = [
     "offers",
+    "discounts",
     "orderby",
     "mode",
     "price_by_weight",

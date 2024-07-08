@@ -73,9 +73,9 @@ class RelatedProductsView(APIView):
 
         # Filtrar productos cuya diferencia de precio no sea mayor al 50%
         related_products = related_products.exclude(pk=product.pk).distinct()
-        related_products = related_products.annotate(
-            price_difference_percentage=100 * (F('current_price') - product.current_price) / product.current_price
-        ).filter(price_difference_percentage__lte=50)
+        # related_products = related_products.annotate(
+        #     price_difference_percentage=100 * (F('current_price') - product.current_price) / product.current_price
+        # ).filter(price_difference_percentage__lte=50)
 
         serializer = ProductSerializer(related_products.order_by('current_price')[:20], many=True)
 
