@@ -27,54 +27,54 @@ def update_database_sm23():
     )
     update.save()
 
-    try:
-        new_products_count = 0
-        updated_products_count = 0
-        scraper_sm23.create_categories(seleniumDriver, base_url)
+    # try:
+    new_products_count = 0
+    updated_products_count = 0
+    scraper_sm23.create_categories(seleniumDriver, base_url)
 
-        categories = Category.objects.annotate(
-            num_sub_cat=Count('children')).filter(num_sub_cat=0)
+    categories = Category.objects.annotate(
+        num_sub_cat=Count('children')).filter(num_sub_cat=0)
 
-        print(f"Categorias a procesar: {categories.count()}\n")
+    print(f"Categorias a procesar: {categories.count()}\n")
 
-        for category in categories:
-            base_url = "categoria/" + category.category_id
-            total = scraper_sm23.create_or_update_products(
-                seleniumDriver, base_url, category)
+    for category in categories:
+        base_url = "categoria/" + category.category_id
+        total = scraper_sm23.create_or_update_products(
+            seleniumDriver, base_url, category)
 
-            print('------------------------')
-            print(f'Categoria procesada: {category.name}')
-            print(f'Cantidad de productos: {total}')
-            print('------------------------\n')
+        print('------------------------')
+        print(f'Categoria procesada: {category.name}')
+        print(f'Cantidad de productos: {total}')
+        print('------------------------\n')
 
-        new_products = Product.objects.filter(created_at__gte=now)
-        new_products_count = new_products.count()
+    new_products = Product.objects.filter(created_at__gte=now)
+    new_products_count = new_products.count()
 
-        updated_products = Product.objects.filter(
-            updated_at__gte=now).exclude(created_at__gte=now)
-        updated_products_count = updated_products.count()
+    updated_products = Product.objects.filter(
+        updated_at__gte=now).exclude(created_at__gte=now)
+    updated_products_count = updated_products.count()
 
-        deleted_products = Product.objects.filter(updated_at__lt=now)
-        deleted_products_count = deleted_products.count()
+    deleted_products = Product.objects.filter(updated_at__lt=now)
+    deleted_products_count = deleted_products.count()
 
-        # Update provider
-        update_providers()
+    # Update provider
+    update_providers()
 
-        update.end_time = timezone.now()
-        update.status = 'success'
-        update.new_products_count = new_products_count
-        update.updated_products_count = updated_products_count
-        update.deleted_products_count = deleted_products_count
+    update.end_time = timezone.now()
+    update.status = 'success'
+    update.new_products_count = new_products_count
+    update.updated_products_count = updated_products_count
+    update.deleted_products_count = deleted_products_count
 
-    except Exception as e:
-        print("Ocurrió un error:", e)
-        update.end_time = timezone.now()
-        update.status = 'error'
-        update.note = str(e)
-    finally:
-        print("Terminado")
-        seleniumDriver.quit()
-        update.save()
+    # except Exception as e:
+    #     print("Ocurrió un error:", e)
+    #     update.end_time = timezone.now()
+    #     update.status = 'error'
+    #     update.note = str(e)
+    # finally:
+    print("Terminado")
+    seleniumDriver.quit()
+    update.save()
     
     if update.status == 'success':
         notifications.notify_higher_ranked_products_sm23()
