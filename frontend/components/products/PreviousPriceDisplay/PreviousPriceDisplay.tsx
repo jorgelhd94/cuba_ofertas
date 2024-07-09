@@ -14,7 +14,7 @@ const PreviousPriceDisplay: React.FC<PreviousPriceDisplayProps> = ({
   const displayPrice = product.old_price ?? product.previous_price;
 
   return displayPrice ? (
-    <p className="font-semibold text-sm md:text-lg text-gray-400 line-through flex items-center gap-2">
+    <div className="font-semibold text-sm md:text-lg text-gray-400 line-through flex items-center gap-2">
       {displayPrice} {product.currency}
       {!isPinProductActive && (
         <span>
@@ -25,7 +25,7 @@ const PreviousPriceDisplay: React.FC<PreviousPriceDisplayProps> = ({
           />
         </span>
       )}
-    </p>
+    </div>
   ) : null;
 };
 

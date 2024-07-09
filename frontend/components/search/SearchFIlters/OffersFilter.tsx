@@ -45,6 +45,7 @@ const OffersFilter = (props: Props) => {
       <div className="flex flex-wrap gap-2 justify-center">
         {offers.map((offer) => (
           <Button
+            key={offer.value}
             variant={
               offer.value.toString() === searchParams.get("offers")
                 ? "solid"

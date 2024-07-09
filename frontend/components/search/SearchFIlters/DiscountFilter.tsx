@@ -46,6 +46,7 @@ const DiscountFilter = (props: Props) => {
       <div className="flex flex-wrap gap-2 justify-center">
         {discounts.map((discount) => (
           <Button
+            key={discount.value}
             variant={
               discount.value.toString() === searchParams.get("discounts")
                 ? "solid"

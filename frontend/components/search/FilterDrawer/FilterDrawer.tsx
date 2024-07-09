@@ -12,6 +12,7 @@ import handleCountFilters from "@/lib/utils/functions/SearchFilters/handleCountF
 import ManufacturesMultipleSelect from "@/components/manufactures/ManufacturesMultipleSelect/ManufacturesMultipleSelect";
 import OffersFilter from "../SearchFIlters/OffersFilter";
 import DiscountFilter from "../SearchFIlters/DiscountFilter";
+import PriceRangeFilter from "../SearchFIlters/PriceRangeFilter";
 
 type Props = {
   isOpen: boolean;
@@ -47,6 +48,10 @@ const FilterDrawer = (props: Props) => {
           <OrderBy isDisabled={props.isLoading} />
           <ProductModeSelect isDisabled={props.isLoading} />
           <PriceByWeightSelect isDisabled={props.isLoading} />
+
+          <Divider />
+
+          <PriceRangeFilter />
 
           <SearchByProvider isDisabled={props.isLoading} />
 

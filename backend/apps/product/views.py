@@ -27,6 +27,15 @@ class ProductViewSet(viewsets.ModelViewSet):
     serializer_class = ProductSerializer
     pagination_class = StandardResultsSetPagination
 
+    @action(detail=False, methods=['get'])
+    def range_prices(self, request):
+        products = Product.objects.all().order_by("current_price")
+
+        return Response({
+            "min_price": products.first().current_price,
+            "max_price": products.last().current_price,
+        })
+
 
 class ProductRankView(APIView):
     def get(self, request, product_id):
@@ -77,7 +86,8 @@ class RelatedProductsView(APIView):
         #     price_difference_percentage=100 * (F('current_price') - product.current_price) / product.current_price
         # ).filter(price_difference_percentage__lte=50)
 
-        serializer = ProductSerializer(related_products.order_by('current_price')[:20], many=True)
+        serializer = ProductSerializer(
+            related_products.order_by('current_price')[:20], many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
