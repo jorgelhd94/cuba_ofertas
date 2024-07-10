@@ -2,18 +2,15 @@ import SimpleMsg from "@/components/shared/messages/SimpleMsg";
 import { IManufacture } from "@/lib/interfaces/IManufacture";
 import { getApiUrl } from "@/lib/utils/api/api";
 import { fetcher } from "@/lib/utils/api/fetcher";
-import {
-  Button,
-  Divider,
-  Input
-} from "@nextui-org/react";
+import { Button, Divider, Input } from "@nextui-org/react";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { HiPlus, HiSearch } from "react-icons/hi";
 import useSWRInfinite from "swr/infinite";
 import ManufactureItem from "../ManufactureItem";
 import ManufactureSelectedList from "../ManufactureSelectedList";
 import ManufacturesModal from "../ManufacturesModal";
+import debounce from "lodash/debounce";
 
 type Props = {};
 
@@ -66,9 +63,17 @@ const ManufacturesMultipleSelect = (props: Props) => {
     setIsDataEmpty(data && data[0] && data[0].results.length === 0);
   }, [data]);
 
-  useEffect(() => {
-    mutate(); // Refetch data when searchText changes
-  }, [searchText, mutate]);
+  const debouncedMutate = useCallback(
+    debounce(() => {
+      mutate();
+    }, 300),
+    [mutate]
+  );
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchText(e.target.value);
+    debouncedMutate();
+  };
 
   return (
     <>
@@ -110,7 +115,7 @@ const ManufacturesMultipleSelect = (props: Props) => {
             className="sticky top-0 bg-default-50 z-10"
             startContent={<HiSearch />}
             value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
+            onChange={handleSearchChange}
             onClear={() => setSearchText("")}
           />
 
@@ -122,9 +127,7 @@ const ManufacturesMultipleSelect = (props: Props) => {
 
           {isDataEmpty && (
             <div className="mt-8 w-full text-center">
-              <p className="text-default-400">
-                No hay marcas para mostrar
-              </p>
+              <p className="text-default-400">No hay marcas para mostrar</p>
             </div>
           )}
 

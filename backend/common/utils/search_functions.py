@@ -25,6 +25,8 @@ def get_product_queryset(query_params, exclude_categories: bool = False, exclude
     provider = query_params.get('provider', '')
     category = query_params.get('category', '')
     manufactures = query_params.get('manufactures', '')
+    min_price = query_params.get('min_price', '')
+    max_price = query_params.get('max_price', '')
 
     products_queryset = full_search_products(
         search_text) if search_text else Product.objects.all()
@@ -82,6 +84,23 @@ def get_product_queryset(query_params, exclude_categories: bool = False, exclude
         manufacture_ids_list = manufactures.split(",")
         products_queryset = products_queryset.filter(
             manufacture__id__in=manufacture_ids_list)
+
+    # Prices
+    try:
+        if min_price:
+            min_price = float(min_price)
+            products_queryset = products_queryset.filter(
+                current_price__gte=min_price)
+    except:
+        pass
+
+    try:
+        if max_price:
+            max_price = float(max_price)
+            products_queryset = products_queryset.filter(
+                current_price__lte=max_price)
+    except:
+        pass
 
     return products_queryset
 

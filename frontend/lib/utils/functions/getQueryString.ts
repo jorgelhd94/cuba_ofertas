@@ -14,6 +14,8 @@ export const getQueryString = (
     "provider",
     "manufactures",
     "category",
+    "min_price",
+    "max_price",
   ];
 
   const oldParams = new URLSearchParams(searchParams);
@@ -45,11 +47,20 @@ export const getQueryString = (
     }
   });
 
-  if (newParams.get("page") !== null) {
-    if (Number.isNaN(parseInt(newParams.get("page") || "0"))) {
-      newParams.delete("page");
+  const paramNumberValidationList = [
+    "page",
+    "page_size",
+    "min_price",
+    "max_price",
+  ];
+
+  paramNumberValidationList.forEach((paramType) => {
+    if (newParams.get(paramType) !== null) {
+      if (Number.isNaN(parseInt(newParams.get(paramType) || "0"))) {
+        newParams.delete(paramType);
+      }
     }
-  }
+  });
 
   return newParams.toString();
 };
