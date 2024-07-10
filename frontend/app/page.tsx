@@ -1,16 +1,13 @@
-import HomeSection from "@/components/home/home-section/home-section";
-import AlertMsg from "@/components/shared/messages/AlertMsg/AlertMsg";
+import DiscountsList from "@/components/home/DiscountsList";
+import TodayOffers from "@/components/home/TodayOffers";
+import WeekOffers from "@/components/home/WeekOffers";
 
 export default async function Home() {
   return (
-    <div>
-      <div className="flex justify-end w-full">
-        <AlertMsg>
-          <span className="font-medium">Importante!!</span> La base de datos se
-          actualiza todas las noches a las 12 a.m hora de Cuba.
-        </AlertMsg>
-      </div>
-      <HomeSection />
+    <div className="space-y-8 container sm:mx-auto max-w-screen-xl max-sm:px-4">
+      <TodayOffers />
+      <DiscountsList />
+      <WeekOffers />
     </div>
   );
 }

@@ -21,6 +21,8 @@ from common.utils import search_functions
 
 from apps.product import serializers
 
+from django.utils import timezone
+
 
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
@@ -35,6 +37,26 @@ class ProductViewSet(viewsets.ModelViewSet):
             "min_price": products.first().current_price,
             "max_price": products.last().current_price,
         })
+
+    @action(detail=False, methods=['get'])
+    def today_offers(self, request):
+        products = Product.objects.filter(previous_price_updated_at__gte=timezone.now().date(),
+                                          previous_price__gt=F('current_price')).order_by('current_price')[:8]
+
+        serializer = ProductSerializer(products, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(detail=False, methods=['get'])
+    def week_offers(self, request):
+        offer_datetime = timezone.now() - timedelta(7)
+
+        products = Product.objects.filter(previous_price_updated_at__gte=offer_datetime.date(),
+                                          previous_price__gt=F('current_price')).order_by('current_price')[:8]
+
+        serializer = ProductSerializer(products, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class ProductRankView(APIView):

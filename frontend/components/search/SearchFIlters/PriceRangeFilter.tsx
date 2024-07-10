@@ -34,14 +34,16 @@ const PriceRangeFilter = () => {
     const minParam = parseInt(searchParams.get("min_price") || "0");
     const maxParam = parseInt(searchParams.get("max_price") || "0");
 
-    if (minParam < data.max_price) {
+    const maxPrice = data?.max_price || 0;
+
+    if (minParam < maxPrice) {
       setMin(minParam);
     }
 
-    if (maxParam > 0 && maxParam < data.max_price) {
+    if (maxParam > 0 && data && maxParam < maxPrice) {
       setMax(maxParam);
     } else {
-      setMax(data.max_price);
+      setMax(maxPrice);
     }
   }, [searchParams]);
 
