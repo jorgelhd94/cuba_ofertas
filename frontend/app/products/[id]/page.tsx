@@ -74,9 +74,17 @@ export default async function ProductDetailsPage({
 
             <div className="pt-2 space-y-1">
               {product.manufacture && (
-                <p>
-                  <b>Marca: </b> {product.manufacture?.name}
-                </p>
+                <div>
+                  <b>Marca: </b>
+                  <Chip
+                    color="primary"
+                    as={Link}
+                    href={"/search?manufactures=" + product.manufacture.id}
+                    size="sm"
+                  >
+                    {product.manufacture?.name}
+                  </Chip>
+                </div>
               )}
 
               {product.provider && (

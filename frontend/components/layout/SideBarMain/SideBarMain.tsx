@@ -1,4 +1,5 @@
 "use client";
+import Logo from "@/components/shared/logo";
 import { CustomFlowbiteTheme, Drawer, Sidebar } from "flowbite-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -6,7 +7,7 @@ import {
   HiChartPie,
   HiDatabase,
   HiDocumentSearch,
-  HiSearch
+  HiSearch,
 } from "react-icons/hi";
 
 type Props = {
@@ -53,6 +54,9 @@ const SideBarMain = (props: Props) => {
             className="[&>div]:bg-transparent [&>div]:p-0"
             theme={customSidebarTheme}
           >
+            <div className="mb-4 md:hidden">
+              <Logo />
+            </div>
             <Sidebar.Items>
               <Sidebar.ItemGroup className="flex flex-col">
                 {sidebarItems.map((item, index) => (

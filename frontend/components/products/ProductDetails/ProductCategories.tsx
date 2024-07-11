@@ -1,5 +1,6 @@
 import { IProduct } from "@/lib/interfaces/IProduct";
 import { Chip } from "@nextui-org/react";
+import Link from "next/link";
 import React from "react";
 
 type Props = {
@@ -13,6 +14,8 @@ const ProductCategories: React.FC<Props> = ({ product }) => {
       <div>
         {product.categories.map((category) => (
           <Chip
+            as={Link}
+            href={`/search?category=${category.id}`}
             size="sm"
             color="secondary"
             key={category.id}
