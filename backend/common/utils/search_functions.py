@@ -9,6 +9,8 @@ import re
 from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
 from django.utils import timezone
 
+from apps.statistics_spy.models import ProductsUpdateLogs
+
 
 class Unaccent(Func):
     function = 'unaccent'
@@ -30,6 +32,16 @@ def get_product_queryset(query_params, exclude_categories: bool = False, exclude
 
     products_queryset = full_search_products(
         search_text) if search_text else Product.objects.all()
+    
+
+    # Filtrar productos actualizados después de la última actualización exitosa
+    try:
+        last_successful_update = ProductsUpdateLogs.objects.filter(
+            status='success').latest('start_time').start_time
+        products_queryset = products_queryset.filter(updated_at__gt=last_successful_update)
+    except ProductsUpdateLogs.DoesNotExist:
+        pass  # No hay actualizaciones exitosas registradas
+
 
     # Offers
     if offers:

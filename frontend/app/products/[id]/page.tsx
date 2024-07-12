@@ -4,11 +4,9 @@ import ProductCategories from "@/components/products/ProductDetails/ProductCateg
 import ProductDetailsPrice from "@/components/products/ProductDetails/ProductDetailsPrice";
 import ProductPriceHistoryChart from "@/components/products/ProductPriceHistory/ProductPriceHistoryChart";
 import ProductRanking from "@/components/products/ProductRanking/ProductRanking";
-import { ProductsSkeleton } from "@/components/products/ProductsSkeleton/ProductsSkeleton";
 import RelatedProducts from "@/components/products/RelatedProducts/RelatedProducts";
 import { IProduct } from "@/lib/interfaces/IProduct";
 import { getApiUrl } from "@/lib/utils/api/api";
-import { convertToReadableDate } from "@/lib/utils/functions/dates";
 import { Button, Chip, Image } from "@nextui-org/react";
 import Link from "next/link";
 import { FaShare } from "react-icons/fa6";
@@ -98,25 +96,6 @@ export default async function ProductDetailsPage({
               <ProductCategories product={product} />
             )}
 
-            <div className="pt-2 space-y-1">
-              <p className="text-sm">
-                <b>Última actualización: </b>
-                {convertToReadableDate(product.updated_at)}
-              </p>
-
-              <p
-                className={
-                  "text-xs " +
-                  (product.days_since_last_update > 0
-                    ? "text-danger"
-                    : "text-primary")
-                }
-              >
-                {!product.days_since_last_update
-                  ? "El producto está actualizado"
-                  : `El producto fue actualizado hace ${product.days_since_last_update} días`}
-              </p>
-            </div>
 
             <Button
               as={Link}
