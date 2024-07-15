@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'apps.product',
     'apps.statistics_spy',
     'apps.notifications',
+    'apps.integrations',
 ]
 
 MIDDLEWARE = [
