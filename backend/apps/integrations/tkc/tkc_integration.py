@@ -32,7 +32,7 @@ def tkc_auth(seleniumDriver: SeleniumDriver):
     driver = seleniumDriver.get_driver(login_url)
     WebDriverWait(driver, 20).until(
         EC.presence_of_element_located((By.ID, "username")))
-    time.sleep(2)
+    time.sleep(1)
 
     # Encuentra los campos de entrada y el botón de inicio de sesión
     email_field = driver.find_element(By.ID, "username")
