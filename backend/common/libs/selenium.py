@@ -4,11 +4,12 @@ from selenium import webdriver
 class SeleniumDriver:
     base_url = "https://www.supermarket23.com/es/"
     
-    def __init__(self):    
+    def __init__(self, url: str = base_url):
+        self.base_url = url    
         # Configuración de Chrome en modo headless
         chrome_options = Options()
         # TODO: Decomentar debajo cuando pase a produccion
-        chrome_options.add_argument("--headless")
+        # chrome_options.add_argument("--headless")
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument('--disable-blink-features=AutomationControlled')
