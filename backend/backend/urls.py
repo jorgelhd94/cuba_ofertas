@@ -23,4 +23,5 @@ urlpatterns = [
     path('api/v1/', include('apps.search.urls')),
     path('api/v1/', include('apps.statistics_spy.urls')),
     path('api/v1/', include('apps.notifications.urls')),
+    path('api/v1/integrations/', include('apps.integrations.urls')),
 ]
