@@ -6,5 +6,5 @@ from rest_framework import status
 
 class TKCTestView(APIView):
     def get(self, request):
-        test_tkc()
-        return Response({'test': "ok"}, status=status.HTTP_200_OK)
+        response_data = test_tkc()
+        return Response(response_data, status=status.HTTP_200_OK)
