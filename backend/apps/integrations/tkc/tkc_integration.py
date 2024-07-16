@@ -1,4 +1,3 @@
-import time
 from common.libs.selenium import SeleniumDriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -6,6 +5,8 @@ from selenium.webdriver.support import expected_conditions as EC
 
 import requests
 from bs4 import BeautifulSoup
+
+from common.utils.datetime_functions import get_previous_formatted_date
 
 
 test_credentials = {
@@ -30,9 +31,13 @@ def test_tkc():
     session = requests.Session()
     session.cookies.update(cookies)
 
-    warehouses_dict = get_tkc_warehouses(session)
+    # warehouses_dict = get_tkc_warehouses(session)
+    # inventory_data = get_tkc_inventory_report(session, '203')
+    # products_data = get_tkc_products(session)
 
-    return warehouses_dict
+    # return inventory_data.json()
+
+    return get_tkc_combos(session).json()
 
 
 def tkc_login(seleniumDriver: SeleniumDriver):
@@ -93,17 +98,59 @@ def get_tkc_warehouses(session: requests.Session):
         raise Exception("Ocurrió un error al realizar la petición")
 
 
-def get_tkc_inventory_report(session: requests.Session):
+def get_tkc_products(session: requests.Session):
+    inventory_products_endpoint = "/provider/invetario/productos"
+
+    inventory_payload = {
+        'length': '-1',
+        'almacenes': ["all"],
+        'existencia': 'existencia',
+        'tienda': 'tienda',
+        'inventario': 'tienda'
+    }
+
+    response = session.post(
+        base_url + inventory_products_endpoint, data=inventory_payload)
+
+    if response.status_code == 200:
+        return response
+    else:
+        raise Exception("Ocurrio un error al realizar la petición")
+
+
+def get_tkc_combos(session: requests.Session):
+    combos_products_endpoint = "/admin/shop-provider-combos/combo/tienda/ajax/list/"
+
+    combos_payload = {
+        "draw": '3',
+        "start": '0',
+        "length": '-1',
+        "almacenes": [
+            "all"
+        ],
+        "serverPagination": 'true'
+    }
+
+    response = session.post(
+        base_url + combos_products_endpoint, data=combos_payload)
+
+    if response.status_code == 200:
+        return response
+    # else:
+    #     raise Exception("Ocurrio un error al realizar la petición")
+
+
+def get_tkc_inventory_report(session: requests.Session, warehouse_id: str):
     inventory_report_endpoint = "/reportes/cierres"
 
     inventory_payload = {
-        'fecha': '2024-07-15',
-        'almacen': '203',
-        'existencia': 'true',
-        'tienda': 'true',
-        'aviable': 'false',
-        'active': 'false',
-        'bloqueados': 'false',
+        'fecha': get_previous_formatted_date(previous_days=1, format="%Y-%m-%d"),
+        'almacen': warehouse_id,
+        'existencia': 'True',
+        'tienda': 'True',
+        'aviable': 'False',
+        'active': 'False',
+        'bloqueados': 'False',
         'tipos[]': 'all'
     }
 
@@ -111,7 +158,6 @@ def get_tkc_inventory_report(session: requests.Session):
         base_url + inventory_report_endpoint, data=inventory_payload)
 
     if response.status_code == 200:
-        data = response.json()
-        return data
+        return response
     else:
         raise Exception("Ocurrio un error al realizar la petición")
