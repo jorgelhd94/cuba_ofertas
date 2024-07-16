@@ -38,9 +38,7 @@ class Provider(models.Model):
     class Meta:
         db_table = 'provider'
 
-
-class Category(models.Model):
-    id = models.AutoField(primary_key=True)
+class BaseModel(models.Model):
     category_id = models.CharField(max_length=255)
     name = models.CharField(max_length=255, null=True)
     url = models.CharField(max_length=255, null=True)
@@ -50,7 +48,7 @@ class Category(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        db_table = 'category'
+        abstract = True 
 
     def __str__(self):
         return self.name
@@ -72,6 +70,22 @@ class Category(models.Model):
             ancestors.append(current)
             current = current.parent
         return ancestors
+    
+class Category(BaseModel):
+    id = models.AutoField(primary_key=True)
+
+    class Meta:
+        db_table = 'category'
+        abstract = False 
+    
+class CategoryShop(BaseModel):
+    id = models.AutoField(primary_key=True)
+    shop = models.ForeignKey(
+        Shop, on_delete=models.CASCADE, null=True, related_name='category_shops')
+
+    class Meta:
+        db_table = 'category_shop'
+        abstract = False
 
 
 class Product(models.Model):
