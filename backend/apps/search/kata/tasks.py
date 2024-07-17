@@ -1,9 +1,4 @@
 import requests
-
-[ {'id':1, 'nombre':'Alimentos Frescos', 'url':'...', 'parent_id': None},
-  {'id':2, 'nombre':'Huevos', 'url':'...', 'parent_id':1} 
-]
-
     
 def get_category_data(data):
     def recurse(categories, parent_id):
@@ -37,17 +32,19 @@ def update_database_kata():
         })
         if response.status_code == 200:
             categories_data = response.json()
-            categories_list = categories_data.get('categories', [])[0]
-            categories = get_category_data(categories_list)
-            
-            print(categories)
+            categories_list = categories_data.get('categories', [])[0]["8647"]['children']
+            categories = []
+            for category in categories_list:
+                categories_info = get_category_data(category)
+                categories.extend(categories_info)
             return categories                   
         else:
             print(f"Failed to fetch categories. Status code: {response.status_code}")
     except Exception as e:
         print(f"An error occurred: {e}")
     return None
-update_database_kata()
+
+# update_database_kata()
 
 
 
