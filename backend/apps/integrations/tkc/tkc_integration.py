@@ -34,10 +34,10 @@ def test_tkc():
     # warehouses_dict = get_tkc_warehouses(session)
     # inventory_data = get_tkc_inventory_report(session, '203')
     # products_data = get_tkc_products(session)
+    # combos_data = get_tkc_combos(session)
+    sells_data = get_tkc_sells_report(session, 'all')
 
-    # return inventory_data.json()
-
-    return get_tkc_combos(session).json()
+    return sells_data.json()
 
 
 def tkc_login(seleniumDriver: SeleniumDriver):
@@ -121,23 +121,13 @@ def get_tkc_products(session: requests.Session):
 def get_tkc_combos(session: requests.Session):
     combos_products_endpoint = "/admin/shop-provider-combos/combo/tienda/ajax/list/"
 
-    combos_payload = {
-        "draw": '3',
-        "start": '0',
-        "length": '-1',
-        "almacenes": [
-            "all"
-        ],
-        "serverPagination": 'true'
-    }
-
     response = session.post(
-        base_url + combos_products_endpoint, data=combos_payload)
+        base_url + combos_products_endpoint)
 
     if response.status_code == 200:
         return response
-    # else:
-    #     raise Exception("Ocurrio un error al realizar la petición")
+    else:
+        raise Exception("Ocurrio un error al realizar la petición")
 
 
 def get_tkc_inventory_report(session: requests.Session, warehouse_id: str):
@@ -152,6 +142,25 @@ def get_tkc_inventory_report(session: requests.Session, warehouse_id: str):
         'active': 'False',
         'bloqueados': 'False',
         'tipos[]': 'all'
+    }
+
+    response = session.post(
+        base_url + inventory_report_endpoint, data=inventory_payload)
+
+    if response.status_code == 200:
+        return response
+    else:
+        raise Exception("Ocurrio un error al realizar la petición")
+
+
+def get_tkc_sells_report(session: requests.Session, warehouse_id: str):
+    inventory_report_endpoint = "/reportes/load/historial/tkc/productos"
+
+    inventory_payload = {
+        'fechaInicio': get_previous_formatted_date(previous_days=1, format="%Y-%m-%d"),
+        'fechaFin': get_previous_formatted_date(previous_days=1, format="%Y-%m-%d"),
+        'almacenes[]': warehouse_id,
+        'criterios': 'ordenes',
     }
 
     response = session.post(
