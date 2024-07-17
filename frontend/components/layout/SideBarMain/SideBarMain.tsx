@@ -2,12 +2,11 @@
 import Logo from "@/components/shared/logo";
 import { CustomFlowbiteTheme, Drawer, Sidebar } from "flowbite-react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import {
   HiChartPie,
   HiDatabase,
-  HiDocumentSearch,
-  HiSearch,
+  HiSearch
 } from "react-icons/hi";
 
 type Props = {
@@ -19,6 +18,9 @@ const customSidebarTheme: CustomFlowbiteTheme["sidebar"] = {
   item: {
     base: "flex items-center justify-center rounded-lg p-2 text-base font-normal text-gray-900 hover:bg-indigo-200 dark:text-white dark:hover:bg-gray-700",
     active: "bg-indigo-100 dark:bg-gray-700",
+    icon: {
+      "base": "h-5 w-5 flex-shrink-0 text-primary-600 transition duration-75 group-hover:text-gray-900 dark:group-hover:text-white",
+    }
   },
 };
 
