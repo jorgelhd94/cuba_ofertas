@@ -3,7 +3,7 @@
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
-import "@theme-toggles/react/css/Expand.css"
+import "@theme-toggles/react/css/Expand.css";
 import { Expand } from "@theme-toggles/react";
 
 export function ThemeSwitcher() {
@@ -16,15 +16,20 @@ export function ThemeSwitcher() {
 
   if (!mounted) return null;
 
+  const handleToogle = () => {
+    setTheme(theme === "dark" ? "light" : "dark");
+  };
+
   return (
-    <div className="flex items-center">
+    <div className="flex items-center gap-4" onClick={handleToogle}>
       <Expand
         toggled={theme === "dark"}
-        toggle={() => setTheme(theme === "dark" ? "light" : "dark")}
+        toggle={handleToogle}
         duration={750}
         placeholder={theme}
         className="text-3xl text-slate-800 dark:text-white"
       />
+      <p className="text-medium">Cambiar tema</p>
     </div>
   );
 }

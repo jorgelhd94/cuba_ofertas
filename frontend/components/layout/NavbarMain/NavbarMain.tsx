@@ -3,7 +3,6 @@
 import NotificationMenu from "@/components/notifications/NotificationMenu/NotificationMenu";
 import { SearchForm } from "@/components/search/SearchForm/SearchForm";
 import { getQueryString } from "@/lib/utils/functions/getQueryString";
-import { Button } from "flowbite-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
@@ -12,6 +11,15 @@ import Logo from "../../shared/logo";
 import { ThemeSwitcher } from "../../shared/theme-switcher";
 import SideBarMain from "../SideBarMain/SideBarMain";
 import SearchFormSkeleton from "@/components/shared/skeletons/SearchFormSkeleton";
+import {
+  Button,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+} from "@nextui-org/react";
+import { VerticalDots } from "@/components/shared/icons/VerticalDots";
+import BurgerBtn from "@/components/shared/buttons/BurgerBtn";
 
 function NavbarMain() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -21,14 +29,7 @@ function NavbarMain() {
       <nav className="bg-white border-b border-gray-200 px-4 py-2.5 dark:bg-gray-800 dark:border-gray-700 sticky left-0 right-0 top-0 z-50">
         <div className="flex max-sm:gap-2 sm:flex-wrap justify-around sm:justify-between items-center">
           <div className="flex justify-start items-center gap-4">
-            <Button
-              size="xs"
-              outline={!isMenuOpen}
-              gradientDuoTone="purpleToBlue"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-            >
-              <HiMenu className="h-6 w-6" />
-            </Button>
+            <BurgerBtn isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
 
             <Link href="/" className="max-md:hidden">
               <Logo />
@@ -41,9 +42,26 @@ function NavbarMain() {
             </Suspense>
           </div>
 
-          <div className="flex items-center lg:order-2 gap-4">
+          <div className="flex items-center lg:order-2">
             <NotificationMenu />
-            <ThemeSwitcher />
+            <Dropdown>
+              <DropdownTrigger>
+                <Button
+                  isIconOnly
+                  className="z-20 bg-white"
+                  radius="lg"
+                  color="default"
+                  variant="bordered"
+                >
+                  <VerticalDots />
+                </Button>
+              </DropdownTrigger>
+              <DropdownMenu aria-label="Static Actions">
+                <DropdownItem>
+                  <ThemeSwitcher />
+                </DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
           </div>
         </div>
       </nav>
