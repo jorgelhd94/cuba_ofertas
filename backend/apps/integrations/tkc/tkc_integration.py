@@ -1,3 +1,4 @@
+from apps.integrations.tkc.classes.tkc_classes import ComboTKC, ProductTKC, SellTKC
 from common.libs.selenium import SeleniumDriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -20,7 +21,15 @@ base_url = "https://www.almendarestravel.com/products/backend"
 def test_tkc():
     seleniumDriver = SeleniumDriver(url=base_url)
 
-    driver_auth = tkc_login(seleniumDriver)
+    try:
+        driver_auth = tkc_login(seleniumDriver)
+    except Exception as e:
+        seleniumDriver.quit()
+        raise Exception("Ocurrio un error al conectarse", e)
+
+    if not driver_auth:
+        seleniumDriver.quit()
+        raise Exception("Ocurrio un error al iniciar sesión")
 
     selenium_cookies = driver_auth.get_cookies()
 
@@ -33,14 +42,27 @@ def test_tkc():
 
     # warehouses_dict = get_tkc_warehouses(session)
     # inventory_data = get_tkc_inventory_report(session, '203')
-    # products_data = get_tkc_products(session)
-    # combos_data = get_tkc_combos(session)
+    products_data = get_tkc_products(session)
+    combos_data = get_tkc_combos(session)
     sells_data = get_tkc_sells_report(session, 'all')
 
-    return sells_data.json()
+    products = [
+        ProductTKC(**product) for product in products_data.json()['data']
+    ]
+
+    combos = [
+        ComboTKC(**combo) for combo in combos_data.json()
+    ]
+
+    sells = [
+        SellTKC(**sell) for sell in sells_data.json()['data']
+    ]
+
+    return {}
 
 
 def tkc_login(seleniumDriver: SeleniumDriver):
+    print("Login started")
     login_endpoint = "/login"
 
     driver = seleniumDriver.get_driver(login_endpoint)
@@ -59,8 +81,16 @@ def tkc_login(seleniumDriver: SeleniumDriver):
 
     login_button.click()
 
-    WebDriverWait(driver, 20).until(
-        EC.presence_of_element_located((By.CLASS_NAME, "kt-page-loader")))
+    try:
+        WebDriverWait(driver, 3).until(
+            EC.presence_of_element_located((By.CLASS_NAME, "alert-warning")))
+
+        return None
+    except Exception as e:
+        WebDriverWait(driver, 20).until(
+            EC.presence_of_element_located((By.CLASS_NAME, "kt-page-loader")))
+
+    print("Login ended successfully")
 
     return driver
 
@@ -99,6 +129,7 @@ def get_tkc_warehouses(session: requests.Session):
 
 
 def get_tkc_products(session: requests.Session):
+    print("Fetching products...")
     inventory_products_endpoint = "/provider/invetario/productos"
 
     inventory_payload = {
@@ -113,18 +144,21 @@ def get_tkc_products(session: requests.Session):
         base_url + inventory_products_endpoint, data=inventory_payload)
 
     if response.status_code == 200:
+        print("Products fetched successfully")
         return response
     else:
         raise Exception("Ocurrio un error al realizar la petición")
 
 
 def get_tkc_combos(session: requests.Session):
+    print("Fetching combos...")
     combos_products_endpoint = "/admin/shop-provider-combos/combo/tienda/ajax/list/"
 
     response = session.post(
         base_url + combos_products_endpoint)
 
     if response.status_code == 200:
+        print("Combos fetched successfully")
         return response
     else:
         raise Exception("Ocurrio un error al realizar la petición")
@@ -154,6 +188,7 @@ def get_tkc_inventory_report(session: requests.Session, warehouse_id: str):
 
 
 def get_tkc_sells_report(session: requests.Session, warehouse_id: str):
+    print("Fetching sells...")
     inventory_report_endpoint = "/reportes/load/historial/tkc/productos"
 
     inventory_payload = {
@@ -167,6 +202,7 @@ def get_tkc_sells_report(session: requests.Session, warehouse_id: str):
         base_url + inventory_report_endpoint, data=inventory_payload)
 
     if response.status_code == 200:
+        print("Sells fetched successfully")
         return response
     else:
         raise Exception("Ocurrio un error al realizar la petición")
