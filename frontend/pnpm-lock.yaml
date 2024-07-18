@@ -11,6 +11,9 @@ dependencies:
   '@theme-toggles/react':
     specifier: ^4.1.0
     version: 4.1.0(react-dom@18.3.1)(react@18.3.1)
+  classnames:
+    specifier: ^2.5.1
+    version: 2.5.1
   clsx:
     specifier: ^2.1.0
     version: 2.1.0
@@ -250,13 +253,13 @@ packages:
     resolution: {integrity: sha512-+QoPW4csYALsQIl8GbN14igZzDbuwzcpWrku9nyMXlaqAlwRBgl5V+p0vWMGFqHOw37czNXaP/lEk4wbLgcmtA==}
     dependencies:
       '@formatjs/intl-localematcher': 0.5.4
-      tslib: 2.6.2
+      tslib: 2.6.3
     dev: false
 
   /@formatjs/fast-memoize@2.2.0:
     resolution: {integrity: sha512-hnk/nY8FyrL5YxwP9e4r9dqeM6cAbo8PeU9UjyXojZMNvVad2Z06FAVHyR3Ecw6fza+0GH7vdJgiKIVXTMbSBA==}
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.6.3
     dev: false
 
   /@formatjs/icu-messageformat-parser@2.7.6:
@@ -264,20 +267,20 @@ packages:
     dependencies:
       '@formatjs/ecma402-abstract': 1.18.2
       '@formatjs/icu-skeleton-parser': 1.8.0
-      tslib: 2.6.2
+      tslib: 2.6.3
     dev: false
 
   /@formatjs/icu-skeleton-parser@1.8.0:
     resolution: {integrity: sha512-QWLAYvM0n8hv7Nq5BEs4LKIjevpVpbGLAJgOaYzg9wABEoX1j0JO1q2/jVkO6CVlq0dbsxZCngS5aXbysYueqA==}
     dependencies:
       '@formatjs/ecma402-abstract': 1.18.2
-      tslib: 2.6.2
+      tslib: 2.6.3
     dev: false
 
   /@formatjs/intl-localematcher@0.5.4:
     resolution: {integrity: sha512-zTwEpWOzZ2CiKcB93BLngUX59hQkuZjT2+SAQEscSm52peDW/getsawMcWF1rGRpMCX6D7nSJA3CzJ8gn13N/g==}
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.6.3
     dev: false
 
   /@humanwhocodes/config-array@0.11.14:
@@ -2869,7 +2872,7 @@ packages:
   /@swc/helpers@0.4.14:
     resolution: {integrity: sha512-4C7nX/dvpzB7za4Ql9K81xK3HPxCpHMgwTZVyf+9JQ6VUbn9jjZVN7/Nkdz/Ugzs2CSjqnL/UPXroiVBVHUWUw==}
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.6.3
     dev: false
 
   /@swc/helpers@0.4.36:

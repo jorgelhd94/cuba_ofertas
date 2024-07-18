@@ -1,16 +1,12 @@
 "use client";
 
-import NotificationMenu from "@/components/notifications/NotificationMenu/NotificationMenu";
+import LoginButton from "@/components/auth/LoginButton";
 import { SearchForm } from "@/components/search/SearchForm/SearchForm";
-import { getQueryString } from "@/lib/utils/functions/getQueryString";
-import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useState } from "react";
-import { HiMenu } from "react-icons/hi";
-import Logo from "../../shared/logo";
-import { ThemeSwitcher } from "../../shared/theme-switcher";
-import SideBarMain from "../SideBarMain/SideBarMain";
+import BurgerBtn from "@/components/shared/buttons/BurgerBtn";
+import { VerticalDots } from "@/components/shared/icons/VerticalDots";
+import Logo from "@/components/shared/logo";
 import SearchFormSkeleton from "@/components/shared/skeletons/SearchFormSkeleton";
+import { ThemeSwitcher } from "@/components/shared/theme-switcher";
 import {
   Button,
   Dropdown,
@@ -18,9 +14,9 @@ import {
   DropdownMenu,
   DropdownTrigger,
 } from "@nextui-org/react";
-import { VerticalDots } from "@/components/shared/icons/VerticalDots";
-import BurgerBtn from "@/components/shared/buttons/BurgerBtn";
-import LoginButton from "@/components/auth/LoginButton";
+import Link from "next/link";
+import { Suspense, useState } from "react";
+import SideBarMain from "../../SideBarMain/SideBarMain";
 
 function NavbarMain() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

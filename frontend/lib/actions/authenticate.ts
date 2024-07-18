@@ -11,7 +11,7 @@ export async function authenticate(
     await signIn("credentials", {
       username: formData.get("username") as string,
       password: formData.get("password") as string,
-      redirectTo: "/dashboard",
+      redirectTo: "/admin",
     });
   } catch (error) {
     if (error instanceof AuthError) {

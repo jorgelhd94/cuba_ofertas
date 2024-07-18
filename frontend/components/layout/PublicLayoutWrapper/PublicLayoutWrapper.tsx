@@ -1,8 +1,8 @@
 "use client";
 import React, { useState } from "react";
-import NavbarMain from "../NavbarMain/NavbarMain";
 import { LoginModalContextt } from "@/lib/context/LoginModalContext";
 import LoginModal from "@/components/auth/LoginModal";
+import NavbarMain from "../Navbars/NavbarMain/NavbarMain";
 
 type Props = {
   children: React.ReactNode;
