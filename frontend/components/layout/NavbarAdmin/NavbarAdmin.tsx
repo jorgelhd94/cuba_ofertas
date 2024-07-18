@@ -12,6 +12,8 @@ import { ThemeSwitcher } from "../../shared/theme-switcher";
 import SideBarMain from "../SideBarMain/SideBarMain";
 import SearchFormSkeleton from "@/components/shared/skeletons/SearchFormSkeleton";
 import {
+  Avatar,
+  AvatarIcon,
   Button,
   Dropdown,
   DropdownItem,
@@ -21,8 +23,9 @@ import {
 import { VerticalDots } from "@/components/shared/icons/VerticalDots";
 import BurgerBtn from "@/components/shared/buttons/BurgerBtn";
 import LoginButton from "@/components/auth/LoginButton";
+import LogoutButton from "@/components/auth/LogoutButton";
 
-function NavbarMain() {
+function NavbarAdmin() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
@@ -37,31 +40,24 @@ function NavbarMain() {
             </Link>
           </div>
 
-          <div className="md:w-1/2">
-            <Suspense fallback={<SearchFormSkeleton />}>
-              <SearchForm loading={false} path="/search" />
-            </Suspense>
-          </div>
-
-          <div className="flex items-center lg:order-2">
+          <div className="flex items-center lg:order-2 gap-2">
+            <NotificationMenu />
             <Dropdown>
-              <DropdownTrigger>
-                <Button
-                  isIconOnly
-                  className="z-20 bg-white"
-                  radius="lg"
-                  color="default"
-                  variant="bordered"
-                >
-                  <VerticalDots />
-                </Button>
+              <DropdownTrigger className="cursor-pointer">
+                <Avatar
+                  icon={<AvatarIcon />}
+                  classNames={{
+                    base: "bg-gradient-to-r from-primary-100 to-primary-200",
+                    icon: "text-black/80",
+                  }}
+                />
               </DropdownTrigger>
               <DropdownMenu aria-label="User Actions">
-                <DropdownItem textValue="Login">
-                  <LoginButton />
-                </DropdownItem>
                 <DropdownItem textValue="Theme">
                   <ThemeSwitcher />
+                </DropdownItem>
+                <DropdownItem textValue="Login">
+                  <LogoutButton />
                 </DropdownItem>
               </DropdownMenu>
             </Dropdown>
@@ -74,4 +70,4 @@ function NavbarMain() {
   );
 }
 
-export default NavbarMain;
+export default NavbarAdmin;
