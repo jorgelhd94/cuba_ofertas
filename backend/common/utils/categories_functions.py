@@ -30,3 +30,22 @@ def add_product_counts_to_tree(category, counts_dict):
     category.products_count = total_count + counts_dict.get(category.id, 0)
     
     return category.products_count
+
+def get_category_data(data):
+    def recurse(categories, parent_id):
+        result = []
+        for category_id,category_data in categories.items():
+            category = {}
+            category['id'] = category_data['category']['id']
+            category['name'] = category_data['category']['name']
+            category['url'] = category_data['category']['permalink']
+            children = category_data.get('children', [])
+            for child in children:
+                result.extend(recurse(child, category_id))
+                
+            category['parent_id'] = parent_id
+            result.append(category)
+        return result
+    
+    categories = data
+    return recurse(categories, None)

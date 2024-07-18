@@ -23,4 +23,6 @@ urlpatterns = [
          views.ManufactureAPIView.as_view(), name='manufactures-list'),
     path('products-test/',
          views.ProductTestView.as_view(), name='product-test'),
+    path('cat-test/',
+         views.CategoryKataTestView.as_view(), name='category-kata-test'),
 ]
