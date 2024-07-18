@@ -45,7 +45,7 @@ function NavbarMain() {
 
           <div className="flex items-center lg:order-2">
             <NotificationMenu />
-            <Dropdown closeOnSelect={false}>
+            <Dropdown>
               <DropdownTrigger>
                 <Button
                   isIconOnly
