@@ -311,6 +311,11 @@ class CategoryKataTestView(APIView):
         categories = update_database_kata()
         return Response({'categories': categories}, status=status.HTTP_200_OK)
     
+class ProductsKataTestView(APIView):
+    def get(self, request):
+        products = update_database_kata()
+        return Response({'products': products}, status=status.HTTP_200_OK)
+    
 # class ComparisonZoneViewSet(viewsets.ModelViewSet):
 #     queryset = ComparisonZone.objects.all()
 #     serializer_class = ComparisonZoneSerializer
