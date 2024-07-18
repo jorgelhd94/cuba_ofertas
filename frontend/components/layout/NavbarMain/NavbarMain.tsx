@@ -45,7 +45,7 @@ function NavbarMain() {
 
           <div className="flex items-center lg:order-2">
             <NotificationMenu />
-            <Dropdown>
+            <Dropdown closeOnSelect={false}>
               <DropdownTrigger>
                 <Button
                   isIconOnly
@@ -58,10 +58,10 @@ function NavbarMain() {
                 </Button>
               </DropdownTrigger>
               <DropdownMenu aria-label="User Actions">
-                <DropdownItem>
+                <DropdownItem textValue="Login">
                   <LoginButton />
                 </DropdownItem>
-                <DropdownItem>
+                <DropdownItem textValue="Theme">
                   <ThemeSwitcher />
                 </DropdownItem>
               </DropdownMenu>

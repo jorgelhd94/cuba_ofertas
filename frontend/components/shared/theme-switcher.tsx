@@ -23,7 +23,7 @@ export function ThemeSwitcher() {
 
   return (
     <div className="flex items-center gap-4" onClick={handleToogle}>
-      <Button isIconOnly variant="light">
+      <Button as={"div"} isIconOnly variant="light">
         <Expand
           toggled={theme === "dark"}
           toggle={handleToogle}
