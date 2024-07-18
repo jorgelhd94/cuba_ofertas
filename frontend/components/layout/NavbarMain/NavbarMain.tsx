@@ -20,6 +20,7 @@ import {
 } from "@nextui-org/react";
 import { VerticalDots } from "@/components/shared/icons/VerticalDots";
 import BurgerBtn from "@/components/shared/buttons/BurgerBtn";
+import LoginButton from "@/components/auth/LoginButton";
 
 function NavbarMain() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -56,7 +57,10 @@ function NavbarMain() {
                   <VerticalDots />
                 </Button>
               </DropdownTrigger>
-              <DropdownMenu aria-label="Static Actions">
+              <DropdownMenu aria-label="User Actions">
+                <DropdownItem>
+                  <LoginButton />
+                </DropdownItem>
                 <DropdownItem>
                   <ThemeSwitcher />
                 </DropdownItem>

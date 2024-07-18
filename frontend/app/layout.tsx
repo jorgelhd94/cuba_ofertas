@@ -1,5 +1,3 @@
-import NavbarHome from "@/components/layout/NavbarMain/NavbarMain";
-import ScrollToTopButton from "@/components/shared/buttons/ScrollToTopButton";
 import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
@@ -7,9 +5,8 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./globals.css";
 import { Providers } from "./providers";
+import ScrollToTopButton from "@/components/shared/buttons/ScrollToTopButton";
 import ScrollToTop from "@/components/shared/utils/ScrollToTop";
-import { Suspense } from "react";
-import { Skeleton } from "@nextui-org/react";
 
 const roboto = Roboto({
   weight: "400",
@@ -31,17 +28,10 @@ export default function RootLayout({
       <body className={`${roboto.className} antialiased`}>
         <NextTopLoader />
         <ToastContainer />
-        <Providers>
-          <div className="relative">
-            <NavbarHome />
-            <main className="py-8 min-h-max lg:min-h-screen bg-gradient-to-tr from-white to-slate-200 dark:bg-gradient-to-b dark:from-slate-800 via-transparent dark:to-black">
-              {children}
-            </main>
+        <Providers>{children}</Providers>
 
-            <ScrollToTopButton />
-            <ScrollToTop />
-          </div>
-        </Providers>
+        <ScrollToTopButton />
+        <ScrollToTop />
       </body>
     </html>
   );
