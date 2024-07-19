@@ -4,19 +4,13 @@ from common.utils.categories_functions import get_category_data
 from django.core.exceptions import ObjectDoesNotExist
 
 
-def update_categories(shop, proxy=None):
+def update_categories(headers, shop, proxy=None):
     print("Starting to fetch categories...")
     
     url = "https://api-services.katapulk.com/api/proxy/spree/api/v1/global-categories"  
     
     try:
-        if proxy:
-            response = requests.get(url, proxies={
-            "http": proxy,
-            "https": proxy
-            })
-        else:
-            response = requests.get(url)
+        response = requests.get(url, headers=headers)
             
         if response.status_code == 200:
             categories_data = response.json()

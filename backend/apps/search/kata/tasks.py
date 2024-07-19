@@ -19,13 +19,12 @@ def update_database_kata():
         "url": "https://www.katapulk.com/",
         "slug": "kata"
     }
-    
     shop, created = Shop.objects.get_or_create(slug='kata', defaults=katapulk)
     
-    # update_categories(shop, proxy_url)      
     # return fetch_zones(headers)   
-    # return update_products(headers, shop)   
-    return update_providers(headers, shop)   
+    # return update_categories(headers, shop)      
+    # return update_providers(headers, shop)   
+    return update_products(headers, shop)   
     
 
 
