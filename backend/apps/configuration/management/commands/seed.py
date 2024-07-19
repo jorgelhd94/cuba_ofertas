@@ -38,6 +38,7 @@ class Command(BaseCommand):
 
     def create_superuser(self):
         email = 'jorgelhd94@gmail.com'
+        first_name = 'Administrador'
         username = 'admin'
         password = 'Admin*123*'
 
@@ -47,7 +48,7 @@ class Command(BaseCommand):
                 f'El superusuario "{username}" ya existe.'))
         except ObjectDoesNotExist:
             user = User.objects.create_superuser(
-                username=username, password=password, email=email)
+                username=username, password=password, email=email, first_name=first_name)
             self.stdout.write(self.style.SUCCESS(
                 f'Superusuario "{username}" creado con la contraseña "{password}".'))
 
