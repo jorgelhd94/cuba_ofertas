@@ -20,6 +20,8 @@ def update_products(headers, proxy=None):
     
     params = {
         "per_page": "100",
+        "include": "images",
+        "image_transformation[size]": "600"
     }
     
     all_products = []
