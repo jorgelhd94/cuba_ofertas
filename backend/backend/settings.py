@@ -81,7 +81,10 @@ ACCOUNT_EMAIL_VERIFICATION = "none"
 REST_AUTH = {
     "USE_JWT": True,
     "JWT_AUTH_HTTPONLY": False,
+    'USER_DETAILS_SERIALIZER': 'apps.authentication.serializers.CustomUserDetailsSerializer',
+
 }
+
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),

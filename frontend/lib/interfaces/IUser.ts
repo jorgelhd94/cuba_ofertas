@@ -1,6 +1,6 @@
 export interface IUser {
-  pk: string;
+  id: string;
   username: string;
-  firstname: string;
-  lastname: Date;
+  email: string;
+  groups: string[];
 }
