@@ -13,7 +13,8 @@ headers = {
 
 def update_database_kata():
     # update_categories(proxy_url)      
-    return update_products(headers, proxy_url)      
+    # return fetch_zones(headers)   
+    return update_products(headers, proxy_url)   
 
 
 
