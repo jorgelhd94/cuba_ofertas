@@ -16,6 +16,22 @@ class ProductTKC:
         self.extra_attributes = kwargs
 
 
+class ProductSubmayorTKC:
+    def __init__(self, id, categoria_online, idTienda, codigo, nombre, suministrador,
+                 unidad_medida, existencia_fisica, almacen, tienda, **kwargs):
+        self.id = id
+        self.categoria_online = categoria_online
+        self.idTienda = idTienda
+        self.codigo = codigo
+        self.nombre = nombre
+        self.suministrador = suministrador
+        self.unidad_medida = unidad_medida
+        self.existencia_fisica = existencia_fisica
+        self.almacen = almacen
+        self.tienda = tienda
+        self.extra_attributes = kwargs
+
+
 class ComboChildren:
     def __init__(self, ID_PRODUCTO_TIENDA, CODIGO_PRODUCTO, NOMBRE_PRODUCTO, NOMBRE_ALMACEN, TOTAL_PRODUCTO, tienda, info, EN_TIENDA, ACTIVO, **kwargs):
         self.id_producto_tienda = ID_PRODUCTO_TIENDA

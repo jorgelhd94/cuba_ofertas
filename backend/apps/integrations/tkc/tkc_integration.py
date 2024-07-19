@@ -1,4 +1,4 @@
-from apps.integrations.tkc.classes.tkc_classes import ComboTKC, ProductTKC, SellTKC
+from apps.integrations.tkc.classes.tkc_classes import ComboTKC, ProductSubmayorTKC, ProductTKC, SellTKC
 from common.libs.selenium import SeleniumDriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -40,25 +40,33 @@ def test_tkc():
     session = requests.Session()
     session.cookies.update(cookies)
 
-    # warehouses_dict = get_tkc_warehouses(session)
-    # inventory_data = get_tkc_inventory_report(session, '203')
-    products_data = get_tkc_products(session)
+    warehouses_dict = get_tkc_warehouses(session)
+
+    all_products = []
+
+    for warehouse in warehouses_dict:
+        warehouse_id = warehouse['id']
+        products_data = get_tkc_products_submayor(session, warehouse_id)
+        products = [ProductSubmayorTKC(**product)
+                    for product in products_data.json()['data']]
+        all_products.extend(products)
+
     combos_data = get_tkc_combos(session)
-    sells_data = get_tkc_sells_report(session, 'all')
-
-    products = [
-        ProductTKC(**product) for product in products_data.json()['data']
-    ]
-
     combos = [
         ComboTKC(**combo) for combo in combos_data.json()
     ]
+
+    sells_data = get_tkc_sells_report(session, 'all', 1)
 
     sells = [
         SellTKC(**sell) for sell in sells_data.json()['data']
     ]
 
-    return {}
+    return {
+        'products': len(all_products),
+        'combos': len(combos),
+        'sells': len(sells),
+    }
 
 
 def tkc_login(seleniumDriver: SeleniumDriver):
@@ -164,6 +172,27 @@ def get_tkc_combos(session: requests.Session):
         raise Exception("Ocurrio un error al realizar la petición")
 
 
+def get_tkc_products_submayor(session: requests.Session, warehouse_id: str):
+    print("Fetching products submayor...")
+    print("Almacen:", warehouse_id, "...")
+
+    inventory_report_endpoint = "/reportes/load/products/update"
+
+    inventory_payload = {
+        'almacen': warehouse_id,
+        'existencia': 'true',
+    }
+
+    response = session.post(
+        base_url + inventory_report_endpoint, data=inventory_payload)
+
+    if response.status_code == 200:
+        print("Products submayor fetched successfully")
+        return response
+    else:
+        raise Exception("Ocurrio un error al realizar la petición")
+
+
 def get_tkc_inventory_report(session: requests.Session, warehouse_id: str):
     inventory_report_endpoint = "/reportes/cierres"
 
@@ -187,13 +216,13 @@ def get_tkc_inventory_report(session: requests.Session, warehouse_id: str):
         raise Exception("Ocurrio un error al realizar la petición")
 
 
-def get_tkc_sells_report(session: requests.Session, warehouse_id: str):
+def get_tkc_sells_report(session: requests.Session, warehouse_id: str, previous_days: int):
     print("Fetching sells...")
     inventory_report_endpoint = "/reportes/load/historial/tkc/productos"
 
     inventory_payload = {
-        'fechaInicio': get_previous_formatted_date(previous_days=1, format="%Y-%m-%d"),
-        'fechaFin': get_previous_formatted_date(previous_days=1, format="%Y-%m-%d"),
+        'fechaInicio': get_previous_formatted_date(previous_days=previous_days, format="%Y-%m-%d"),
+        'fechaFin': get_previous_formatted_date(previous_days=previous_days, format="%Y-%m-%d"),
         'almacenes[]': warehouse_id,
         'criterios': 'ordenes',
     }
