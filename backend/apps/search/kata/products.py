@@ -3,6 +3,7 @@ from apps.product.models import CategoryShop, Shop
 from common.utils.categories_functions import get_category_data
 from django.core.exceptions import ObjectDoesNotExist
 from .zones import fetch_zones
+from common.utils.common import remove_duplicates
 
 def update_products(headers, proxy=None):    
     # if proxy:
@@ -64,7 +65,8 @@ def update_products(headers, proxy=None):
             
         # print(f"Length All Products {len(all_products)}")
         
-        return len(all_products)
+        single_products = remove_duplicates(all_products)
+        return len(single_products)
         
     except Exception as e:
         print(f"An error occurred: {e}")

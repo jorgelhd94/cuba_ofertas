@@ -12,3 +12,8 @@ def clean_name_trim():
             Value('\n'), Value('')
         )
     )
+
+# Function to remove duplicates based on 'id'
+def remove_duplicates(data):
+    seen_ids = set()
+    return [item for item in data if not (item["id"] in seen_ids or seen_ids.add(item["id"]))]
