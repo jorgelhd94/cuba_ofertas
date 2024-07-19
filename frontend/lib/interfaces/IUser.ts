@@ -1,7 +1,6 @@
 export interface IUser {
-  id: string;
+  pk: string;
   username: string;
   firstname: string;
   lastname: Date;
-  updatedAt: Date;
 }

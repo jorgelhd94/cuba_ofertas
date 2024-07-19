@@ -1,3 +1,4 @@
+"use client";
 import AdminLayoutWrapper from "@/components/layout/AdminLayoutWrapper/AdminLayoutWrapper";
 import React from "react";
 
