@@ -14,7 +14,7 @@ def process_products(products, id_list):
             processed_products.append(product)
     return {'products': processed_products, 'products_id': products_id}
 
-def update_products(headers, proxy=None):    
+def update_products(headers, shop, proxy=None):    
         
     zone_ids = fetch_zones(headers)
     

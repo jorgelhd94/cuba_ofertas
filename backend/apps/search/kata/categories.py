@@ -4,7 +4,7 @@ from common.utils.categories_functions import get_category_data
 from django.core.exceptions import ObjectDoesNotExist
 
 
-def update_categories(proxy=None):
+def update_categories(shop, proxy=None):
     print("Starting to fetch categories...")
     
     url = "https://api-services.katapulk.com/api/proxy/spree/api/v1/global-categories"  
@@ -25,8 +25,6 @@ def update_categories(proxy=None):
             for category in categories_list:
                 categories_info = get_category_data(category)
                 categories.extend(categories_info)
-            
-            shop = Shop.objects.get(slug='kata')
             
             print("Adding categories to db if not exists...")
             for category in categories:
