@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     "allauth.account",
     "dj_rest_auth",
     "dj_rest_auth.registration",
+    'apps.configuration',
     'apps.search',
     'apps.product',
     'apps.statistics_spy',
