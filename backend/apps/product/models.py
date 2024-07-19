@@ -34,6 +34,7 @@ class Provider(models.Model):
     url = models.CharField(max_length=255, null=True)
     shop = models.ForeignKey(
         Shop, on_delete=models.CASCADE, null=True, related_name='provider_shops')
+    provider_id = models.CharField(max_length=255, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -100,7 +101,7 @@ class Product(models.Model):
         Manufacture, on_delete=models.CASCADE, null=True)
     provider = models.ForeignKey(Provider, on_delete=models.CASCADE, null=True)
     categories = models.ManyToManyField(Category, related_name='products')
-
+    categories_shop = models.ManyToManyField(CategoryShop, related_name='products_shop')
     name = models.CharField(max_length=255, null=True)
     product_url = models.CharField(max_length=255, null=True)
     image_url = models.CharField(max_length=255, null=True)
