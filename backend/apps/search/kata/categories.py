@@ -28,7 +28,10 @@ def update_categories(shop, proxy=None):
             
             print("Adding categories to db if not exists...")
             for category in categories:
-                existing_category = CategoryShop.objects.filter(category_id=category["id"])
+                existing_category = CategoryShop.objects.filter(
+                        category_id=category["id"],
+                        shop=shop
+                    )
                 if not existing_category:
                     new_category = CategoryShop(
                                 category_id=category["id"],
@@ -55,11 +58,10 @@ def update_categories(shop, proxy=None):
                 except ObjectDoesNotExist:
                     print(f"Category with ID {category['id']} not found.")
                     
-            print("------Category process finished------")
+            print("------Category process completed successfully------")
             return categories_with_parents                   
         else:
             print(f"Failed to fetch categories. Status code: {response.status_code}")
     except Exception as e:
         print(f"An error occurred: {e}")
         
-    return None

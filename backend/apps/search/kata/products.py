@@ -68,6 +68,8 @@ def update_products(headers, shop, proxy=None):
                 #             product_list.extend(products_page_data)
                             # product_count_per_page += len(products_page_data)
                 # print(f"Product list for zone {zone}: {len(product_list)}")
+                
+                print("------Product process completed successfully------")
             else:
                 print(f"Failed to fetch products. Status code: {first_response.status_code}")    
                 
@@ -81,5 +83,4 @@ def update_products(headers, shop, proxy=None):
         
     except Exception as e:
         print(f"An error occurred: {e}")
-        
-    return None
+ 
