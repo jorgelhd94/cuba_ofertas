@@ -103,7 +103,7 @@ class Product(models.Model):
     categories = models.ManyToManyField(Category, related_name='products')
     categories_shop = models.ManyToManyField(CategoryShop, related_name='products_shop')
     name = models.CharField(max_length=255, null=True)
-    product_url = models.CharField(max_length=255, null=True)
+    product_url = models.CharField(max_length=900, null=True)
     image_url = models.CharField(max_length=255, null=True)
 
     current_price = models.FloatField(null=True)
