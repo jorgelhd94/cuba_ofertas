@@ -1,10 +1,10 @@
 import datetime
 from apps.integrations.tkc.tkc_api import get_tkc_combos, get_tkc_products_submayor, get_tkc_sells_report
-import models as tkc_models
+import apps.integrations.models as tkc_models
 from django.utils import timezone
 
 
-def create_or_update_products(session, warehouses_dict):
+def create_or_update_products(session, warehouses_dict, credentials: tkc_models.TKC_Credentials):
     all_products = []
     for warehouse in warehouses_dict:
         warehouse_id = warehouse['id']
@@ -25,14 +25,14 @@ def create_or_update_products(session, warehouses_dict):
                     'almacen': product.get('almacen', ''),
                     'tienda': product.get('tienda', ''),
                     # Ajusta según corresponda
-                    'user': product.get('user', None)
+                    'user_tkc': credentials
                 }
             )
             all_products.append(product_instance)
     return all_products
 
 
-def create_or_update_combos(session):
+def create_or_update_combos(session, credentials: tkc_models.TKC_Credentials):
     combos_data = get_tkc_combos(session)
     combos = combos_data.json()
 
@@ -51,7 +51,7 @@ def create_or_update_combos(session):
                     'existencia_fisica': hijo.get('existencia_fisica', 0),
                     'almacen': hijo.get('almacen', ''),
                     'tienda': hijo.get('tienda', ''),
-                    'user': hijo.get('user', None)  # Ajusta según corresponda
+                    'user_tkc': credentials
                 }
             )
             hijo_producto_instances.append(product_instance)
@@ -67,10 +67,10 @@ def create_or_update_combos(session):
                 'tienda': combo.get('tienda', ''),
                 'peso': combo.get('PESO', 0),
                 'pv': combo.get('PV', 0),
-                'user': combo.get('user', None)  # Ajusta según corresponda
+                'user_tkc': credentials
             }
         )
-        combo_instance.hijo_producto.set(hijo_producto_instances)
+        combo_instance.childrens.set(hijo_producto_instances)
 
     return combos
 
@@ -78,7 +78,8 @@ def create_or_update_combos(session):
 def create_or_update_sells(session):
     all_sells = []
     for i in range(7):
-        date = (timezone.now() - datetime.timedelta(days=i)).strftime('%Y-%m-%d')
+        date = (timezone.now() - datetime.timedelta(days=i + 1)
+                ).strftime('%Y-%m-%d')
         sells_data = get_tkc_sells_report(session, 'all', date)
         sells = sells_data.json()['data']
 
@@ -90,7 +91,6 @@ def create_or_update_sells(session):
                     'categoria_online': sell.get('categoria_online', ''),
                     'codigo': sell.get('codigo', ''),
                     'nombre': sell.get('nombre', ''),
-                    # Ajusta según corresponda
                     'owner': sell.get('owner', None),
                     'suministrador': sell.get('suministrador', ''),
                     'unidad_medida': sell.get('unidad_medida', ''),
