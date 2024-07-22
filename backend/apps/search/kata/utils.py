@@ -83,7 +83,7 @@ def create_product(product_data, shop):
             product.previous_price = product.current_price
             product.current_price = external_current_price
         
-        # Actualiza los campos del producto con los valores de product_defaults
+        # Actualiza los campos del producto con los valores de new_product
         for key, value in new_product.items():
             setattr(product, key, value)
             
