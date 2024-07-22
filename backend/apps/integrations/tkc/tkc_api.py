@@ -8,6 +8,8 @@ from bs4 import BeautifulSoup
 
 from common.utils.datetime_functions import get_previous_formatted_date
 
+from apps.integrations.tkc.tkc_config import tkc_base_url as base_url
+
 
 def authenticate_and_get_session(seleniumDriver, credentials):
     # Authentication
@@ -179,12 +181,13 @@ def get_tkc_inventory_report(session: requests.Session, warehouse_id: str):
 
 
 def get_tkc_sells_report(session: requests.Session, warehouse_id: str, previous_days: int):
-    print("Fetching sells...")
+    previous_date = get_previous_formatted_date(previous_days=previous_days, format="%Y-%m-%d")
+    print("Fetching sells: " + previous_date)
     inventory_report_endpoint = "/reportes/load/historial/tkc/productos"
 
     inventory_payload = {
-        'fechaInicio': get_previous_formatted_date(previous_days=previous_days, format="%Y-%m-%d"),
-        'fechaFin': get_previous_formatted_date(previous_days=previous_days, format="%Y-%m-%d"),
+        'fechaInicio': previous_date,
+        'fechaFin': previous_date,
         'almacenes[]': warehouse_id,
         'criterios': 'ordenes',
     }

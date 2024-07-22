@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from ..models import TKC_Credentials, ProductSubmayorTKC, ComboTKC, SellTKC
+from ..models import ComboProductSubmayor, TKC_Credentials, ProductSubmayorTKC, ComboTKC, SellTKC
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -10,11 +10,9 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class TKC_CredentialsSerializer(serializers.ModelSerializer):
-    user = UserSerializer(read_only=True)
-
     class Meta:
         model = TKC_Credentials
-        fields = ['id', 'username', 'password', 'user']
+        fields = ['id', 'username', 'password']
 
     def create(self, validated_data):
         request = self.context.get('request', None)
@@ -32,17 +30,25 @@ class TKC_CredentialsSerializer(serializers.ModelSerializer):
 
 
 class ProductSubmayorTKCSerializer(serializers.ModelSerializer):
-    user_tkc = TKC_CredentialsSerializer()
-
     class Meta:
         model = ProductSubmayorTKC
         fields = ['id', 'categoria_online', 'idTienda', 'codigo', 'nombre', 'suministrador',
-                  'unidad_medida', 'existencia_fisica', 'almacen', 'tienda', 'user_tkc']
+                  'unidad_medida', 'existencia_fisica', 'almacen', 'tienda']
+
+
+class ComboProductSubmayorSerializer(serializers.ModelSerializer):
+    product_submayor = serializers.StringRelatedField()
+    combo = serializers.StringRelatedField()
+
+    class Meta:
+        model = ComboProductSubmayor
+        fields = ['combo', 'product_submayor', 'cantidad']
 
 
 class ComboTKCSerializer(serializers.ModelSerializer):
     user_tkc = TKC_CredentialsSerializer()
-    childrens = ProductSubmayorTKCSerializer(many=True)
+    childrens = ComboProductSubmayorSerializer(
+        source='comboproductsubmayor_set', many=True)
 
     class Meta:
         model = ComboTKC
@@ -51,7 +57,6 @@ class ComboTKCSerializer(serializers.ModelSerializer):
 
 
 class SellTKCSerializer(serializers.ModelSerializer):
-    owner = UserSerializer()
     combo_tkc = ComboTKCSerializer()
     product_submayor_tkc = ProductSubmayorTKCSerializer()
 
@@ -62,7 +67,6 @@ class SellTKCSerializer(serializers.ModelSerializer):
 
 
 class SimpleSellTKCSerializer(serializers.ModelSerializer):
-    owner = serializers.StringRelatedField()
     combo_tkc = serializers.PrimaryKeyRelatedField(
         queryset=ComboTKC.objects.all(), allow_null=True)
     product_submayor_tkc = serializers.PrimaryKeyRelatedField(

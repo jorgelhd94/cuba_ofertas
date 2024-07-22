@@ -37,13 +37,22 @@ class TKCCredentialsViewSet(viewsets.ModelViewSet):
     def perform_update(self, serializer):
         serializer.save(user=self.request.user)
 
-    def perform_destroy(self, instance):
-        instance.delete()
+    def destroy(self, request, *args, **kwargs):
+        user = request.user
+        if not user.is_staff:
+            # Ensure that a non-staff user can only delete their own credential
+            instance = self.get_object()
+            if instance.user != user:
+                return Response({"detail": "You do not have permission to delete this credential."}, status=status.HTTP_403_FORBIDDEN)
+
+        # Call the parent class's destroy method to handle the actual deletion
+        return super().destroy(request, *args, **kwargs)
 
 
 class UserTKCCredentialRetrieveView(generics.RetrieveAPIView):
     serializer_class = TKC_CredentialsSerializer
-    permission_classes = [permissions.IsAuthenticated, auth_permissions.IsClient]
+    permission_classes = [
+        permissions.IsAuthenticated, auth_permissions.IsClient]
 
     def get_object(self):
         user = self.request.user

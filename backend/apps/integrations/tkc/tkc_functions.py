@@ -12,21 +12,20 @@ def create_or_update_products(session, warehouses_dict, credentials: tkc_models.
         products = products_data.json()['data']
 
         for product in products:
+            product_info = {
+                'categoria_online': product.get('categoria_online', ''),
+                'idTienda': product.get('idTienda', ''),
+                'codigo': product.get('codigo', ''),
+                'nombre': product.get('nombre', ''),
+                'suministrador': product.get('suministrador', ''),
+                'unidad_medida': product.get('unidad_medida', ''),
+                'existencia_fisica': product.get('existencia_fisica', 0),
+                'almacen': product.get('almacen', ''),
+                'tienda': product.get('tienda', ''),
+            }
             product_instance, created = tkc_models.ProductSubmayorTKC.objects.update_or_create(
-                id=product['id'],
-                defaults={
-                    'categoria_online': product.get('categoria_online', ''),
-                    'idTienda': product.get('idTienda', ''),
-                    'codigo': product.get('codigo', ''),
-                    'nombre': product.get('nombre', ''),
-                    'suministrador': product.get('suministrador', ''),
-                    'unidad_medida': product.get('unidad_medida', ''),
-                    'existencia_fisica': product.get('existencia_fisica', 0),
-                    'almacen': product.get('almacen', ''),
-                    'tienda': product.get('tienda', ''),
-                    # Ajusta según corresponda
-                    'user_tkc': credentials
-                }
+                user_tkc=credentials,
+                **product_info
             )
             all_products.append(product_instance)
     return all_products
@@ -35,74 +34,94 @@ def create_or_update_products(session, warehouses_dict, credentials: tkc_models.
 def create_or_update_combos(session, credentials: tkc_models.TKC_Credentials):
     combos_data = get_tkc_combos(session)
     combos = combos_data.json()
+    all_combos = []
 
     for combo in combos:
-        hijo_producto_instances = []
-        for hijo in combo.get('HIJO_PRODUCTO', []):
-            product_instance, created = tkc_models.ProductSubmayorTKC.objects.update_or_create(
-                id=hijo['id'],
-                defaults={
-                    'categoria_online': hijo.get('categoria_online', ''),
-                    'idTienda': hijo.get('idTienda', ''),
-                    'codigo': hijo.get('codigo', ''),
-                    'nombre': hijo.get('nombre', ''),
-                    'suministrador': hijo.get('suministrador', ''),
-                    'unidad_medida': hijo.get('unidad_medida', ''),
-                    'existencia_fisica': hijo.get('existencia_fisica', 0),
-                    'almacen': hijo.get('almacen', ''),
-                    'tienda': hijo.get('tienda', ''),
-                    'user_tkc': credentials
-                }
-            )
-            hijo_producto_instances.append(product_instance)
+        combo_info = {
+            'id_producto_tienda': combo.get('ID_PRODUCTO_TIENDA', ''),
+            'codigo_producto': combo.get('CODIGO_PRODUCTO', ''),
+            'nombre_producto': combo.get('NOMBRE_PRODUCTO', ''),
+            'nombre_almacen': combo.get('NOMBRE_ALMACEN', ''),
+            'total_producto': combo.get('TOTAL_PRODUCTO', 0),
+            'tienda': combo.get('tienda', ''),
+            'peso': combo.get('PESO', 0),
+            'pv': combo.get('PV', 0),
+        }
 
         combo_instance, created = tkc_models.ComboTKC.objects.update_or_create(
-            id_producto_tienda=combo['ID_PRODUCTO_TIENDA'],
-            defaults={
-                'codigo_producto': combo.get('CODIGO_PRODUCTO', ''),
-                'nombre_producto': combo.get('NOMBRE_PRODUCTO', ''),
-                'nombre_almacen': combo.get('NOMBRE_ALMACEN', ''),
-                'total_producto': combo.get('TOTAL_PRODUCTO', 0),
-                'created': combo.get('CREATED', timezone.now()),
-                'tienda': combo.get('tienda', ''),
-                'peso': combo.get('PESO', 0),
-                'pv': combo.get('PV', 0),
-                'user_tkc': credentials
-            }
+            user_tkc=credentials,
+            **combo_info
         )
-        combo_instance.childrens.set(hijo_producto_instances)
 
-    return combos
+        for child in combo.get('HIJO_PRODUCTO', []):
+            try:
+                product_instance = tkc_models.ProductSubmayorTKC.objects.get(
+                    idTienda=child.get('ID_PRODUCTO_TIENDA', '')
+                )
+
+                cantidad = child.get('TOTAL_PRODUCTO', 0)
+
+                # Create or update the intermediate model
+                tkc_models.ComboProductSubmayor.objects.update_or_create(
+                    combo=combo_instance,
+                    product_submayor=product_instance,
+                    defaults={'cantidad': cantidad}
+                )
+            except tkc_models.ProductSubmayorTKC.DoesNotExist:
+                continue
+
+        all_combos.append(combo_instance)
+
+    return all_combos
 
 
 def create_or_update_sells(session):
     all_sells = []
     for i in range(7):
-        date = (timezone.now() - datetime.timedelta(days=i + 1)
-                ).strftime('%Y-%m-%d')
-        sells_data = get_tkc_sells_report(session, 'all', date)
+        sells_data = get_tkc_sells_report(session, 'all', i + 1)
         sells = sells_data.json()['data']
 
         for sell in sells:
+            id_tienda = sell.get('idTienda', '')
+            codigo = sell.get('codigo', '')
+
+            is_product = tkc_models.ProductSubmayorTKC.objects.filter(
+                idTienda=id_tienda).exists()
+            is_combo = tkc_models.ComboTKC.objects.filter(
+                id_producto_tienda=id_tienda).exists()
+
+            if not is_product and not is_combo:
+                continue
+
+            datetime_sell = (timezone.now() - datetime.timedelta(days=i + 1)
+                             )
+
+            sell_info = {
+                'sell_date': datetime_sell.date(),
+                'id_tienda': sell.get('idTienda', ''),
+                'categoria_online': sell.get('categoria_online', ''),
+                'codigo': sell.get('codigo', ''),
+                'nombre': sell.get('nombre', ''),
+                'owner': sell.get('owner', None),
+                'suministrador': sell.get('suministrador', ''),
+                'unidad_medida': sell.get('unidad_medida', ''),
+                'existencia': sell.get('existencia', 0),
+                'total_vendido': sell.get('total_vendido', 0),
+                'precio_prov': sell.get('precio_prov', 0),
+                'importe': sell.get('importe', 0),
+                'precio_venta': sell.get('precio_venta', 0),
+            }
             sell_instance, created = tkc_models.SellTKC.objects.update_or_create(
-                id=sell['id'],
-                defaults={
-                    'id_tienda': sell.get('idTienda', ''),
-                    'categoria_online': sell.get('categoria_online', ''),
-                    'codigo': sell.get('codigo', ''),
-                    'nombre': sell.get('nombre', ''),
-                    'owner': sell.get('owner', None),
-                    'suministrador': sell.get('suministrador', ''),
-                    'unidad_medida': sell.get('unidad_medida', ''),
-                    'existencia': sell.get('existencia', 0),
-                    'total_vendido': sell.get('total_vendido', 0),
-                    'precio_prov': sell.get('precio_prov', 0),
-                    'importe': sell.get('importe', 0),
-                    'precio_venta': sell.get('precio_venta', 0),
-                    'fecha_venta': date,
-                    'combo_tkc': None,  # Ajusta según corresponda
-                    'product_submayor_tkc': None  # Ajusta según corresponda
-                }
+                **sell_info
             )
+
+            if is_product:
+                sell_instance.product_submayor_tkc = tkc_models.ProductSubmayorTKC.objects.get(
+                    idTienda=id_tienda, codigo=codigo)
+            elif is_combo:
+                sell_instance.combo_tkc = tkc_models.ComboTKC.objects.get(
+                    id_producto_tienda=id_tienda, codigo_producto=codigo)
+
             all_sells.append(sell_instance)
+
     return all_sells
