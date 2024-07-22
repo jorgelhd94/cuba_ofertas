@@ -82,16 +82,13 @@ def create_product(product_data, shop):
             product.previous_price_updated_at = timezone.now()
             product.previous_price = product.current_price
             product.current_price = external_current_price
-            product.save() # Eliminar esto y solo actualizar el campo current_price
-        # TODO: Logica para guardar el producto
-        # else:
-        #     new_product["current_price"] = external_current_price
         
         # Actualiza los campos del producto con los valores de product_defaults
-        # for key, value in new_product.items():
-        #     setattr(product, key, value)
+        for key, value in new_product.items():
+            setattr(product, key, value)
+            
         # Guarda el producto actualizado
-        # product.save()
+        product.save()
             
     except Product.DoesNotExist:
         new_product["current_price"] = external_current_price
