@@ -6,48 +6,50 @@ from apps.product.models import Shop, Product
 from django.utils import timezone
 from apps.statistics_spy.models import ProductsUpdateLogs
 
-proxy_url = config("PROXY_URL")   
+proxy_url = config("PROXY_URL")
 origin = config("ORIGIN_KATAPULK")
+
 
 def update_database_kata():
     headers = {
         "Origin": origin,
     }
-    
-    now = timezone.now()
+
+    start_update = timezone.now()
 
     update = ProductsUpdateLogs(
-        start_time=now,
+        start_time=start_update,
         status='processing',
-        name='katapulk'
+        name='Katapulk: Processing products'
     )
     update.save()
-    
+
     try:
         new_products_count = 0
         updated_products_count = 0
-        
+
         katapulk = {
             "name": "Katapulk",
             "url": "https://www.katapulk.com/",
             "slug": "kata"
         }
-        shop, created = Shop.objects.get_or_create(slug='kata', defaults=katapulk)
-        
-        update_categories(headers, shop)      
-        update_providers(headers, shop)   
-        update_products(headers, shop)   
-        
-        new_products = Product.objects.filter(created_at__gte=now)
+        shop, created = Shop.objects.get_or_create(
+            slug='kata', defaults=katapulk)
+
+        update_categories(headers, shop)
+        update_providers(headers, shop)
+        update_products(headers, shop)
+
+        new_products = Product.objects.filter(created_at__gte=start_update) # TODO: Aqui añadir filtro de tienda
         new_products_count = new_products.count()
 
         updated_products = Product.objects.filter(
-            updated_at__gte=now).exclude(created_at__gte=now)
+            updated_at__gte=start_update).exclude(created_at__gte=start_update) # TODO: Aqui añadir filtro de tienda
         updated_products_count = updated_products.count()
 
-        deleted_products = Product.objects.filter(updated_at__lt=now)
+        deleted_products = Product.objects.filter(updated_at__lt=start_update) # TODO: Aqui añadir filtro de tienda
         deleted_products_count = deleted_products.count()
-        
+
         update.end_time = timezone.now()
         update.status = 'success'
         update.new_products_count = new_products_count
@@ -61,7 +63,3 @@ def update_database_kata():
         update.note = str(e)
 
     return {"proceso": "Terminado"}
-
-
-
-
