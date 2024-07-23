@@ -103,6 +103,9 @@ def create_product(product_data, shop):
     return product
             
 def get_image_url(image_id, images_list):
+    if image_id == 0:
+        return 'https://www.katapulk.com/assets/imgs/product-card/no-product-image.png'
+    
     image_url = ''
     for image in images_list:
         if image["id"] == image_id:
@@ -122,7 +125,13 @@ def process_products(products, id_list, images_list, shop):
         if product['id'] not in products_id:
             id = product['id']
             products_id.append(product['id'])
-            image_id = product["relationships"]["images"]["data"][0]["id"]
+            product_images = product["relationships"]["images"]["data"]
+            
+            if len(product_images) > 0:
+                image_id = product_images[0]["id"]
+            else:
+                image_id = 0
+
             image_url = get_image_url(image_id, images_list)
             product["image_url"] = image_url
             created_product = create_product(product, shop)
