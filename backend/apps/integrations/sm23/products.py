@@ -9,9 +9,7 @@ def update_products(headers, shop, proxy=None):
     params = {
         "language":"SPA",
     }
-    
-    products_id = []
-    all_products = []
+
     
     print("Starting to fetch products from Supermarket 23...")
     try:
