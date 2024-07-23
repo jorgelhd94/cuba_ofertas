@@ -82,5 +82,6 @@ export const authConfig = {
       return token;
     },
   },
+  trustHost: true,
   providers: [],
 } satisfies NextAuthConfig;
