@@ -25,6 +25,7 @@ from apps.integrations.kata.tasks import update_database_kata
 
 from apps.integrations.sm23.tasks import update_database_sm23_api
 
+
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
@@ -34,9 +35,15 @@ class ProductViewSet(viewsets.ModelViewSet):
     def range_prices(self, request):
         products = Product.objects.all().order_by("current_price")
 
+        if products.count() == 0:
+            return Response({"min_price": 0, "max_price": 0}, status=status.HTTP_200_OK)
+
+        min_price = products.first().current_price
+        max_price = products.last().current_price
+
         return Response({
-            "min_price": products.first().current_price,
-            "max_price": products.last().current_price,
+            "min_price": min_price,
+            "max_price": max_price,
         })
 
     @action(detail=False, methods=['get'])
@@ -306,21 +313,24 @@ class ProductTestView(APIView):
         products = test_set_previous_price()
         return Response({'products': products.count()}, status=status.HTTP_200_OK)
 
+
 class CategoryKataTestView(APIView):
     def get(self, request):
         categories = update_database_kata()
         return Response({'categories': categories}, status=status.HTTP_200_OK)
-    
+
+
 class ProductsKataTestView(APIView):
     def get(self, request):
         products = update_database_kata()
         return Response({'products': products}, status=status.HTTP_200_OK)
-    
+
+
 class ProductsSm23TestView(APIView):
     def get(self, request):
         products = update_database_sm23_api()
         return Response({'products': products}, status=status.HTTP_200_OK)
-    
+
 # class ComparisonZoneViewSet(viewsets.ModelViewSet):
 #     queryset = ComparisonZone.objects.all()
 #     serializer_class = ComparisonZoneSerializer
