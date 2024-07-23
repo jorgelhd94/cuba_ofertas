@@ -1,11 +1,11 @@
 version: '3.9'
 
 services:
-  nextapp:
-    container_name: frontend
-    image: frontend
+  ofertas-nextapp:
+    container_name: ofertas-frontend
+    image: ofertas-frontend
     build: .
     ports:
-      - "80:80"
+      - "3000:3000"
     env_file:
       - .env.production

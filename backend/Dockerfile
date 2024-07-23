@@ -1,13 +1,13 @@
 FROM python:3.10.11
 
-WORKDIR /backend
+WORKDIR /ofertas-backend
 
 # Copia el archivo de requerimientos y luego instala las dependencias
-COPY ./requirements.txt /backend/requirements.txt
-RUN pip install --no-cache-dir --upgrade -r /backend/requirements.txt
+COPY ./requirements.txt /ofertas-backend/requirements.txt
+RUN pip install --no-cache-dir --upgrade -r /ofertas-backend/requirements.txt
 
 # Copia el código de la aplicación Django
-COPY . /backend
+COPY . /ofertas-backend
 
 # Actualizar la lista de paquetes e instalar dependencias necesarias
 RUN apt-get update -y && apt-get install -y wget xvfb unzip

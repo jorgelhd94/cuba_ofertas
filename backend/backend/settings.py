@@ -131,7 +131,7 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config("DB_NAME") if config("ENVIRONMENT") == "PROD" else 'spy-db',
+        'NAME': config("DB_NAME") if config("ENVIRONMENT") == "PROD" else 'ofertasdb',
         'USER': config("DB_USER"),
         'PASSWORD': config("DB_PASSWORD"),
         'HOST': config("DB_HOST") if config("ENVIRONMENT") == "PROD" else 'localhost',
@@ -183,6 +183,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CRONJOBS = [
     ('0 4 * * *', 'apps.search.tasks.update_database_sm23'),
+    ('0 7 * * *', 'apps.integrations.kata.tasks.update_database_kata'),
 ]
 
 REST_FRAMEWORK = {

@@ -1,4 +1,4 @@
-# 🖥️ SPY-SM23 Backend
+# 🖥️ CubaOfertas Backend
 
 Esta es una aplicación desarrollada usando **Django** versión 5.0.3 y **Django Rest Framework** versión 3.15.1 con **Python 3.10.11**.
 
