@@ -55,6 +55,9 @@ def update_database_kata():
         update.new_products_count = new_products_count
         update.updated_products_count = updated_products_count
         update.deleted_products_count = deleted_products_count
+
+        shop.date_last_update = start_update
+        shop.save()
     except Exception as e:
         print("Ocurrió un error:", e)
         update.end_time = timezone.now()

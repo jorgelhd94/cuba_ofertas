@@ -42,7 +42,7 @@ def get_product_categories(product_data, shop):
     return db_categories
         
 def create_product(product_data, shop):
-    product_base_url = 'https://api.katapulk.com/api/v2/storefront/products'
+    product_base_url = 'https://www.katapulk.com/cu/products'
     product_id = product_data["id"]
     slug = product_data["attributes"]["slug"]
     url = f'{product_base_url}/{slug}' 

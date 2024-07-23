@@ -92,10 +92,9 @@ export default async function ProductDetailsPage({
               )}
             </div>
 
-            {product.categories.length && (
+            {product.categories.length > 0 && (
               <ProductCategories product={product} />
             )}
-
 
             <Button
               as={Link}

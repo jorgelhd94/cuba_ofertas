@@ -105,10 +105,7 @@ export const ProductInfoCard: React.FC<ProductInfoCardProps> = (props) => {
         )}
 
         <div className="absolute bottom-2 max-sm:left-3 sm:right-2">
-          <ShopImage
-            shop={props.product.shop}
-            urlProduct={props.product.product_url}
-          />
+          <ShopImage product={props.product} />
         </div>
       </CardBody>
     </Card>

@@ -95,7 +95,7 @@ export const ProductCard: React.FC<ProductCardProps> = (props) => {
                   />
                 </div>
 
-                {props.product.provider && (
+                {/* {props.product.provider && (
                   <Chip
                     color="secondary"
                     size="sm"
@@ -103,7 +103,7 @@ export const ProductCard: React.FC<ProductCardProps> = (props) => {
                   >
                     {props.product.provider.name}
                   </Chip>
-                )}
+                )} */}
 
                 <Link href={`/products/${props.product.id}`}>
                   <Image
@@ -201,10 +201,7 @@ export const ProductCard: React.FC<ProductCardProps> = (props) => {
               <PinBtn isActive={isPinActive} handleClick={handlePinProduct} />
             )}
 
-            <ShopImage
-              shop={props.product.shop}
-              urlProduct={props.product.product_url}
-            />
+            <ShopImage product={props.product} />
 
             {!props.hideMenu && <ProductDropdownMenu product={props.product} />}
           </div>

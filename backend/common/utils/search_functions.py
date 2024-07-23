@@ -1,5 +1,5 @@
 from datetime import timedelta
-from apps.product.models import Category, Product, Provider
+from apps.product.models import Category, Product, Provider, Shop
 from django.db.models import Q, F, Value, FloatField, ExpressionWrapper
 from django.db.models.functions import Replace, Trim
 from django.db.models.expressions import Func
@@ -36,11 +36,12 @@ def get_product_queryset(query_params, exclude_categories: bool = False, exclude
 
     # Filtrar productos actualizados después de la última actualización exitosa
     try:
-        last_successful_update = ProductsUpdateLogs.objects.filter(
-            status='success').latest('start_time').start_time
-        products_queryset = products_queryset.filter(updated_at__gt=last_successful_update)
-    except ProductsUpdateLogs.DoesNotExist:
-        pass  # No hay actualizaciones exitosas registradas
+    # Obtén los productos cuyo updated_at es mayor que date_last_update de su tienda
+        products_queryset = products_queryset.filter(
+            models.Q(updated_at__gt=models.F('shop__date_last_update')) | models.Q(shop__date_last_update__isnull=True)
+        )
+    except Shop.DoesNotExist:
+        pass  # No hay tiendas registradas
 
 
     # Offers

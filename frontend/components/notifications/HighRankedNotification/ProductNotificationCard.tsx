@@ -68,8 +68,7 @@ const ProductNotificationCard = (props: Props) => {
 
           <div className="absolute bottom-2 right-2">
             <ShopImage
-              shop={props.product.shop}
-              urlProduct={props.product.product_url}
+              product={props.product}
             />
           </div>
         </CardBody>

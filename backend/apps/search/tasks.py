@@ -3,7 +3,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-from apps.product.models import Product, Category, Provider
+from apps.product.models import Product, Category, Provider, Shop
 from apps.statistics_spy.models import ProductsUpdateLogs
 
 from django.utils import timezone
@@ -26,6 +26,15 @@ def update_database_sm23():
         status='processing'
     )
     update.save()
+
+    supermarket23 = {
+        "name": "Supermarket 23",
+        "url": "https://www.supermarket23.com/es/",
+        "slug": "sm23"
+    }
+
+    shop, created = Shop.objects.get_or_create(
+        slug='sm23', defaults=supermarket23)
 
     try:
         new_products_count = 0
@@ -66,6 +75,9 @@ def update_database_sm23():
         update.updated_products_count = updated_products_count
         update.deleted_products_count = deleted_products_count
 
+        shop.date_last_update = now
+        shop.save()
+
     except Exception as e:
         print("Ocurrió un error:", e)
         update.end_time = timezone.now()
@@ -75,7 +87,7 @@ def update_database_sm23():
         print("Terminado")
         seleniumDriver.quit()
         update.save()
-    
+
     if update.status == 'success':
         notifications.notify_higher_ranked_products_sm23()
 
