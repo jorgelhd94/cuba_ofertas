@@ -131,7 +131,7 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config("DB_NAME") if config("ENVIRONMENT") == "PROD" else 'spy-db',
+        'NAME': config("DB_NAME") if config("ENVIRONMENT") == "PROD" else 'cubaofertas-db',
         'USER': config("DB_USER"),
         'PASSWORD': config("DB_PASSWORD"),
         'HOST': config("DB_HOST") if config("ENVIRONMENT") == "PROD" else 'localhost',
