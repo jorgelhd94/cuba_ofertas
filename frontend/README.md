@@ -1,4 +1,4 @@
-# 🖥️ SPY-SM23 Frontend
+# 🖥️ CubaOfertas Frontend
 
 Esta es una aplicación desarrollada usando **NextJS 14** y el manejador de paquetes **pnpm**.
 
