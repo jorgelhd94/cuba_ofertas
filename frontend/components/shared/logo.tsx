@@ -7,7 +7,7 @@ const Logo = () => {
       {/* <Image src="/logo.svg" alt="Logo" width={32} height={32} /> */}
       <h2 className="font-bold text-xl flex flex-col gap-0 leading-none m-0 p-0">
         {/* <span className="text-sm leading-none text-primary-800">Cuba</span> */}
-        SPY-SM23
+        SPY-Market
       </h2>
     </div>
   );

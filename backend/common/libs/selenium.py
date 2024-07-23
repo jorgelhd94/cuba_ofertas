@@ -4,7 +4,8 @@ from selenium import webdriver
 class SeleniumDriver:
     base_url = "https://www.supermarket23.com/es/"
     
-    def __init__(self):    
+    def __init__(self, url: str = base_url):
+        self.base_url = url    
         # Configuración de Chrome en modo headless
         chrome_options = Options()
         # TODO: Decomentar debajo cuando pase a produccion

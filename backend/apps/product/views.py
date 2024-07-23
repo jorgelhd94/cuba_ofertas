@@ -19,8 +19,6 @@ from rest_framework import status
 
 from common.utils import search_functions
 
-from apps.product import serializers
-
 from django.utils import timezone
 
 from apps.search.kata.tasks import update_database_kata

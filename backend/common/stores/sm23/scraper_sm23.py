@@ -1,7 +1,7 @@
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.common.by import By
-from common.libs.selenium import SeleniumDriver
 from selenium.webdriver.support.ui import WebDriverWait
+from common.libs.selenium import SeleniumDriver
 from selenium.webdriver.support import expected_conditions as EC
 import re
 from django.utils import timezone
