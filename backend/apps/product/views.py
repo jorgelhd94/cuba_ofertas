@@ -21,9 +21,9 @@ from common.utils import search_functions
 
 from django.utils import timezone
 
-from apps.search.kata.tasks import update_database_kata
+from apps.integrations.kata.tasks import update_database_kata
 
-from apps.search.sm23.tasks import update_database_sm23_api
+from apps.integrations.sm23.tasks import update_database_sm23_api
 
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()

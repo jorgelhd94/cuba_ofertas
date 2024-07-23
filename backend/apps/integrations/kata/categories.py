@@ -1,5 +1,5 @@
 import requests
-from apps.product.models import CategoryShop, Shop
+from apps.product.models import CategoryShop
 from common.utils.categories_functions import get_category_data
 from django.core.exceptions import ObjectDoesNotExist
 
