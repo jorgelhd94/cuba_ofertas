@@ -21,6 +21,8 @@ class Manufacture(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255, null=True)
     url = models.CharField(max_length=255, null=True)
+    shop = models.ForeignKey(
+        Shop, on_delete=models.CASCADE, null=True, related_name='manufacture_shops')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
