@@ -25,6 +25,8 @@ from django.utils import timezone
 
 from apps.search.kata.tasks import update_database_kata
 
+from apps.search.sm23.tasks import update_database_sm23_api
+
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
@@ -314,6 +316,11 @@ class CategoryKataTestView(APIView):
 class ProductsKataTestView(APIView):
     def get(self, request):
         products = update_database_kata()
+        return Response({'products': products}, status=status.HTTP_200_OK)
+    
+class ProductsSm23TestView(APIView):
+    def get(self, request):
+        products = update_database_sm23_api()
         return Response({'products': products}, status=status.HTTP_200_OK)
     
 # class ComparisonZoneViewSet(viewsets.ModelViewSet):
