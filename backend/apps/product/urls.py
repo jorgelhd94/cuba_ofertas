@@ -27,4 +27,6 @@ urlpatterns = [
          views.CategoryKataTestView.as_view(), name='category-kata-test'),
     path('kata-products-test/',
          views.ProductsKataTestView.as_view(), name='products-kata-test'),
+    path('sm23-products-test/',
+         views.ProductsSm23TestView.as_view(), name='products-sm23-test'),
 ]
