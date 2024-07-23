@@ -10,12 +10,9 @@ RUN pip install --no-cache-dir --upgrade -r /ofertas-backend/requirements.txt
 COPY . /ofertas-backend
 
 # Actualizar la lista de paquetes e instalar dependencias necesarias
-RUN apt-get update -y && apt-get install -y wget xvfb unzip
-
-RUN apt-get -y install cron
-
-RUN apt-get install -y postgresql-client && \
-    apt-get clean
+RUN apt-get update -y && apt-get install -y wget xvfb unzip cron postgresql-client \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/*
 
 ENV CHROME_VERSION 125.0.6422.76
 
@@ -30,9 +27,9 @@ ENV CHROMEDRIVER_DIR /chromedriver
 RUN mkdir $CHROMEDRIVER_DIR
 
 # Descargar e instalar ChromeDriver
-
-RUN wget -q --continue -P $CHROMEDRIVER_DIR "https://storage.googleapis.com/chrome-for-testing-public/$CHROME_VERSION/linux64/chromedriver-linux64.zip" && \
-    unzip $CHROMEDRIVER_DIR/chromedriver* -d $CHROMEDRIVER_DIR
+RUN wget -q --continue -P $CHROMEDRIVER_DIR "https://storage.googleapis.com/chrome-for-testing-public/$CHROME_VERSION/linux64/chromedriver-linux64.zip" \
+ && unzip $CHROMEDRIVER_DIR/chromedriver* -d $CHROMEDRIVER_DIR \
+ && rm $CHROMEDRIVER_DIR/chromedriver-linux64.zip
 
 # Añadir ChromeDriver al PATH
 ENV PATH $CHROMEDRIVER_DIR:$PATH
