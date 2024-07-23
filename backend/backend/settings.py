@@ -183,6 +183,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CRONJOBS = [
     ('0 4 * * *', 'apps.search.tasks.update_database_sm23'),
+    ('0 7 * * *', 'apps.integrations.kata.tasks.update_database_kata'),
 ]
 
 REST_FRAMEWORK = {
