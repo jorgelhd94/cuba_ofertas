@@ -1,5 +1,5 @@
-# 🕵️‍♂️ SPY-SM23
-Repositorio para obtener información de Supermarket23. El frontend de la aplicación está desarrollado usando NextJS 14 y el backend con Django y Django Rest Framework. Este proyecto está desplegado temporalmente en http://35.198.54.12/.
+# 🛍️ Cuba Ofertas
+Repositorio principal de Cuba Ofertas. El frontend de la aplicación está desarrollado usando NextJS 14 y el backend con Django y Django Rest Framework. Este proyecto está desplegado temporalmente en http://35.198.54.12:3000/.
 
 # Producción
 
@@ -105,10 +105,10 @@ docker-compose --version
 1. Dentro de la carpeta que desee, preferiblemente la carpeta del usuario. En este ejemplo **./alesarmiento**. Ejecute el siguiente comando:
 
 ```
-git clone https://github.com/alesarmiento/spySM23.git
+git clone https://github.com/jorgelhd94/cuba_ofertas.git
 ```
 
-**Importante:** Al clonar un repositorio privado git le pedirá sus credenciales. La contraseña no es la contraseña que usamos comúnmente, es un token que generamos en nuestro perfil de github. Para más información https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens
+**Importante:** Al clonar un repositorio privado git le pedirá sus credenciales si no es el propietario. La contraseña no es la contraseña que usamos comúnmente, es un token que generamos en nuestro perfil de github. Para más información https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens
 
 
 ## Iniciar aplicaciones
