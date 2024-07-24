@@ -123,6 +123,7 @@ def process_products(products, id_list, images_list, shop):
     products_id = id_list
     for product in products:
         if product['id'] not in products_id:
+            # TODO: La variable id no se usa
             id = product['id']
             products_id.append(product['id'])
             product_images = product["relationships"]["images"]["data"]
