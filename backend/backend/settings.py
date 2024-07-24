@@ -131,11 +131,11 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config("DB_NAME") if config("ENVIRONMENT") == "PROD" else 'ofertasdb',
-        'USER': config("DB_USER"),
-        'PASSWORD': config("DB_PASSWORD"),
-        'HOST': config("DB_HOST") if config("ENVIRONMENT") == "PROD" else 'localhost',
-        'PORT': config("PORT"),
+        'NAME': config("DB_NAME") if config("ENVIRONMENT") == "PROD" else config("DEV_DB_NAME"),
+        'USER': config("DB_USER") if config("ENVIRONMENT") == "PROD" else config("DEV_DB_USER"),
+        'PASSWORD': config("DB_PASSWORD") if config("ENVIRONMENT") == "PROD" else config("DEV_DB_PASSWORD"),
+        'HOST': config("DB_HOST") if config("ENVIRONMENT") == "PROD" else config("DEV_DB_HOST"),
+        'PORT': config("PORT") if config("ENVIRONMENT") == "PROD" else config("DEV_PORT"),
     }
 }
 
@@ -182,8 +182,8 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CRONJOBS = [
-    ('0 6 * * *', 'apps.search.tasks.update_database_sm23'),
-    ('0 8 * * *', 'apps.integrations.kata.tasks.update_database_kata'),
+    ('30 6 * * *', 'apps.search.tasks.update_database_sm23'),
+    ('0 6 * * *', 'apps.integrations.kata.tasks.update_database_kata'),
 ]
 
 REST_FRAMEWORK = {
