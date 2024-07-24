@@ -1,14 +1,6 @@
 import requests
-
 from apps.product.models import Manufacture, Provider
-
-def add_if_no_exists(item, item_list):
-    new_list = item_list
-    added = False
-    if item not in item_list:
-        new_list.append(item)
-        added = True
-    return new_list, added
+from .utils import update_category
 
 def update_products(headers, shop, proxy=None):
     url = "https://apitreewsearchengine.treew.com/products"
@@ -17,7 +9,6 @@ def update_products(headers, shop, proxy=None):
     try:
         manufactures = []
         providers = []
-        categories = []
         products_id = []  
           
         first_response = requests.get(url, headers=headers)
@@ -53,32 +44,52 @@ def update_products(headers, shop, proxy=None):
                     #             shop=shop,
                     #             defaults=new_manufacture
                     #         )
+                    print("------SM23 manufactures created successfully------")
                     # Providers
-                    provider_name = product.get("ProviderName")
-                    if provider_name:
-                        provider_id = product.get("ProviderId")
-                        providers, provider_added = add_if_no_exists(provider_name, providers)
-                        if provider_added:
-                            provider_url = f"https://www.supermarket23.com/es/productos/proveedor?q={provider_name}"
-                            new_provider = {
-                                    "name": provider_name,
-                                    "url": provider_url,
-                                    "provider_id": provider_id,
-                                    "shop": shop
-                                }
-                            Provider.objects.update_or_create(
-                                name=provider_name,
-                                shop=shop,
-                                defaults=new_provider
-                            )
+                    # provider_name = product.get("ProviderName")
+                    # if provider_name:
+                    #     provider_id = product.get("ProviderId")
+                    #     providers, provider_added = add_if_no_exists(provider_name, providers)
+                    #     if provider_added:
+                    #         provider_url = f"https://www.supermarket23.com/es/productos/proveedor?q={provider_name}"
+                    #         new_provider = {
+                    #                 "name": provider_name,
+                    #                 "url": provider_url,
+                    #                 "provider_id": provider_id,
+                    #                 "shop": shop
+                    #             }
+                    #         Provider.objects.update_or_create(
+                    #             name=provider_name,
+                    #             shop=shop,
+                    #             defaults=new_provider
+                    #         )
+                    print("------SM23 providers created successfully------")
                     # Categories
-                    category_id = product.get("CategoryId")
-                    category_name = product.get("SpaCategoryName")    
-                print(len(products))    
-                print("------Products sm23 process completed successfully------")
+                    category = {
+                        'category': {
+                            'category_id': product.get("CategoryId"),
+                            'category_name': product.get("SpaCategoryName"),
+                        },
+                        'category_father': {
+                            'category_id': product.get("CategoryFatherId"),
+                            'category_name': product.get("SpaCategoryFatherName"),
+                        },
+                        'category_grandfather': {
+                            'category_id': product.get("CategoryGrandFatherId"),
+                            'category_name': product.get("SpaCategoryGrandFatherName"),
+                        },
+                        'category_greatgrandfather': {
+                            'category_id': product.get("CategoryGreatGrandFatherId"),
+                            'category_name': product.get("SpaCategoryGreatGrandFatherName"),
+                        }   
+                    }
+                    update_category(category, shop) 
+                    print("------SM23 categories created successfully------")
             else:
-                print(f"Failed to fetch providers. Status code: {response.status_code}")
+                print(f"Failed to fetch products. Status code: {response.status_code}")  
+                       
+            print("------SM23 Products process completed successfully------")
     except Exception as e:
         print(f"An error occurred: {e}")
+        raise Exception(e)
     
-    pass
