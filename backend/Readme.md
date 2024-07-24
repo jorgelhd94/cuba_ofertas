@@ -117,7 +117,7 @@ docker ps
 Usa **docker exec** para ejecutar **pg_dump** dentro del contenedor y redirigir la salida a un archivo en el sistema de archivos del contenedor. Supongamos que el nombre del contenedor es **backend_db_1** y queremos hacer un backup de la base de datos **ofertasdb**.
 
 ```
-sudo docker exec -t backend_db_1 pg_dump -U postgres ofertasdb -F c -b -v -f /var/lib/postgresql/data/backup.dump
+sudo docker exec -t backend_ofertas_ofertas-db_1 pg_dump -U postgres ofertasdb -F c -b -v -f /var/lib/postgresql/data/backup.dump
 ```
 
 * `-U postgres` especifica el usuario de PostgreSQL.
@@ -128,7 +128,7 @@ sudo docker exec -t backend_db_1 pg_dump -U postgres ofertasdb -F c -b -v -f /va
 Usa **docker cp** para copiar el archivo de backup desde el contenedor a una carpeta en tu máquina host:
 
 ```
-sudo docker cp backend_db_1:/var/lib/postgresql/data/backup.dump ~/cuba_ofertas/backup.dump
+sudo docker cp backend_ofertas_ofertas-db_1:/var/lib/postgresql/data/backup.dump ~/cuba_ofertas/backup.dump
 ```
 
 ### 4. Eliminar el archivo de backup temporal del contenedor
