@@ -114,7 +114,7 @@ docker ps
 
 ### 2. Crear un backup de la base de datos
 
-Usa **docker exec** para ejecutar **pg_dump** dentro del contenedor y redirigir la salida a un archivo en el sistema de archivos del contenedor. Supongamos que el nombre del contenedor es **backend_db_1** y queremos hacer un backup de la base de datos **ofertasdb**.
+Usa **docker exec** para ejecutar **pg_dump** dentro del contenedor y redirigir la salida a un archivo en el sistema de archivos del contenedor. Supongamos que el nombre del contenedor es **backend_ofertas_ofertas-db_1** y queremos hacer un backup de la base de datos **ofertasdb**.
 
 ```
 sudo docker exec -t backend_ofertas_ofertas-db_1 pg_dump -U postgres ofertasdb -F c -b -v -f /var/lib/postgresql/data/backup.dump
@@ -136,7 +136,7 @@ sudo docker cp backend_ofertas_ofertas-db_1:/var/lib/postgresql/data/backup.dump
 Limpia el archivo de backup temporal del contenedor una vez copiado:
 
 ```
-sudo docker exec backend_db_1 rm /var/lib/postgresql/data/backup.dump
+sudo docker exec backend_ofertas_ofertas-db_1 rm /var/lib/postgresql/data/backup.dump
 ```
 
 Esta guía cubre los aspectos esenciales para desarrollar, desplegar y mantener la aplicación **Cuba Ofertas Backend**.
