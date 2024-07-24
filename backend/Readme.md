@@ -1,3 +1,5 @@
+# 🖥️ Cuba Ofertas Backend
+
 La aplicación **Cuba Ofertas Backend** es una aplicación desarrollada con **Django 5.0.3** y **Django Rest Framework 3.15.1**, utilizando **Python 3.10.11**. Aquí tienes una guía para configurar, desarrollar y desplegar la aplicación, así como para gestionar la base de datos PostgreSQL.
 
 ## Variables de entorno
