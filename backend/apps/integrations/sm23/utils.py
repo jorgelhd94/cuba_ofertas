@@ -40,6 +40,8 @@ def update_category(category_dict, shop):
                 grandparent = add_or_get_category(category_dict['category_greatgrandfather'], shop)
                 grandparent.parent = greatgrandparent
                 grandparent.save()
+    
+    return category
 
 def add_if_no_exists(item, item_list):
     new_list = item_list
