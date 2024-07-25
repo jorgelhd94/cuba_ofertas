@@ -93,6 +93,7 @@ def create_product(product, shop, product_manufacture, product_provider, product
     
     product_id = product.get("ProductId")
     product_name = product.get("SpanishName")
+    product_description = product.get("SpanishDescription")
     product_url = f'{base_product_url}/{product_id}'
     product_image = product.get("Image")
     product_image_url = None
@@ -113,6 +114,7 @@ def create_product(product, shop, product_manufacture, product_provider, product
         product_currency_by_weight = 'US$/lb'
     new_product = {
         'name': product_name,
+        'description': product_description,
         'product_id': product_id,
         'product_url': product_url,
         'image_url': product_image_url,

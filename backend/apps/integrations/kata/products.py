@@ -31,17 +31,16 @@ def update_products(headers, shop, proxy=None):
             # Getting first page to obtain products metadata
             if first_response.status_code == 200:
                 products_full_data = first_response.json()
+                products_meta = first_response.json().get('meta')
+                total_pages = products_meta.get('total_pages')
                 products_data = products_full_data.get('data')
                 images = products_full_data["included"]
                 print(
-                    f"Processing products from zone with id {zone} and page 1")
+                    f"Processing products from zone with id {zone} and page 1 of {total_pages}")
                 product_result = process_products(
                     products_data, products_id, images, shop)
-                products_meta = first_response.json().get('meta')
                 products_id = product_result['products_id']
                 product_list.extend(product_result['products'])
-
-                total_pages = products_meta.get('total_pages')
 
                 # Looping to get all data from all pages
                 if total_pages > 1:
@@ -56,7 +55,7 @@ def update_products(headers, shop, proxy=None):
                                 'data')
                             images_page = products_page_full_data["included"]
                             print(
-                                f"Processing products from zone with id {zone} and page {page_number}")
+                                f"Processing products from zone with id {zone} and page {page_number} of {total_pages}")
                             product_page_result = process_products(
                                 products_page_data, products_id, images_page, shop)
                             products_id = product_page_result['products_id']

@@ -47,6 +47,7 @@ def create_product(product_data, shop):
     slug = product_data["attributes"]["slug"]
     url = f'{product_base_url}/{slug}' 
     name = product_data["attributes"]["name"]
+    description = product_data["attributes"]["description"]
     image_url = product_data["image_url"]
     currency = product_data["attributes"]["currency"]
     external_current_price = product_data["attributes"]["price"]
@@ -64,6 +65,7 @@ def create_product(product_data, shop):
     
     new_product = {
             'name': name,
+            'description': description,
             'product_url': url,
             'product_id': product_id,
             'image_url': image_url,
