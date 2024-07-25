@@ -89,7 +89,7 @@ def update_products(headers, shop, proxy=None):
                     
                     #Products
                     base_product_url = "https://www.supermarket23.com/es/producto"
-                    image_base_url = 'https://medias.treew.com/imgproducts/middle'
+                    image_base_url = 'https://medias.treew.com/imgproducts/thumbs'
                     
                     product_id = product.get("ProductId")
                     product_name = product.get("SpanishName")
@@ -98,7 +98,7 @@ def update_products(headers, shop, proxy=None):
                     product_image_url = None
                     if product_images and len(product_images) > 0:
                         media_url = product_images[0]["Url"]
-                        new_media_url = media_url.lstrip('~/')
+                        new_media_url = media_url.lstrip('~/imgproducts/')
                         product_image_url = f'{image_base_url}/{new_media_url}'
                     product_currency = 'US$'
                     product_old_price = None
@@ -122,7 +122,6 @@ def update_products(headers, shop, proxy=None):
                         'old_price': product_old_price,
                         'provider': product_provider,
                         'manufacture': product_manufacture,
-                        'price_by_weight': product_price_by_weigth,
                         'currency_by_weight': product_currency_by_weight,
                         'shop': shop,
                         'updated_at': timezone.now(),
@@ -133,10 +132,12 @@ def update_products(headers, shop, proxy=None):
                         str_current_price = str(product.current_price)
                         if str_current_price != external_current_price:
                             product.previous_price_updated_at = timezone.now()
-                            
-                            product.previous_price = product.current_price  # TODO: check if previous price is working well
+                            product.previous_price = product.current_price
                             product.current_price = external_current_price
-                            # TODO: Previous price by weigth
+                            
+                            if product_price_by_weigth is not None:
+                                product.previous_price_by_weight = product.price_by_weight
+                                product.price_by_weight = product_price_by_weigth                            
                             
                         # Actualiza los campos del producto con los valores de new_product
                         for key, value in new_product.items():
@@ -147,6 +148,8 @@ def update_products(headers, shop, proxy=None):
                         
                     except Product.DoesNotExist:
                         new_product["current_price"] = external_current_price
+                        if product_price_by_weigth is not None:
+                            new_product["price_by_weight"] = product_price_by_weigth
                         product = Product.objects.create(**new_product)      
                 
                     product.categories_shop.add(product_category)
