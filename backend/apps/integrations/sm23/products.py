@@ -7,9 +7,6 @@ def update_products(headers, shop, proxy=None):
     
     print("Starting to fetch products from Supermarket 23...")
     try:
-        manufactures = []
-        providers = []
-          
         first_response = requests.get(url, headers=headers, params={"limit": "1"})
         
         if first_response.status_code == 200:
@@ -29,10 +26,10 @@ def update_products(headers, shop, proxy=None):
                 for count, product in enumerate(products):
                     print(f"Processing product #{count+1} of {total}")
                     # Manufactures
-                    product_manufacture, manufactures = update_manufacture(product, manufactures, shop)
+                    product_manufacture = update_manufacture(product, shop)
                     
                     # Providers
-                    product_provider, providers = update_provider(product, providers, shop)
+                    product_provider = update_provider(product, shop)
                     
                     # Categories
                     category = {

@@ -45,6 +45,7 @@ def update_category(category_dict, shop):
     return category
 
 def update_manufacture(product, shop):
+    manufacture = None
     manufacture_name = product.get("Brand")
     if manufacture_name:
         manufacture_url = f"https://www.supermarket23.com/es/productos/bp?q={manufacture_name}"
@@ -93,12 +94,10 @@ def create_product(product, shop, product_manufacture, product_provider, product
     product_id = product.get("ProductId")
     product_name = product.get("SpanishName")
     product_url = f'{base_product_url}/{product_id}'
-    product_images = product.get("Resources")
+    product_image = product.get("Image")
     product_image_url = None
-    if product_images and len(product_images) > 0:
-        media_url = product_images[0]["Url"]
-        new_media_url = media_url.lstrip('~/imgproducts/')
-        product_image_url = f'{image_base_url}/{new_media_url}'
+    if product_image:
+        product_image_url = f'{image_base_url}/{product_image}'
     product_currency = 'US$'
     product_old_price = None
     product_discount = product.get("DiscountUSD")
