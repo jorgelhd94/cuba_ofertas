@@ -162,18 +162,4 @@ def add_if_no_exists(item, item_list):
         new_list.append(item)
         added = True
     return new_list, added
- 
-def search_duplicate_products():
-    products = Product.objects.filter(shop_id=1)
-    
-    duplicates = []
-    
-    for product in products:
-        cant = 0
-        for p in products.exclude(pk=product.id):
-            if product.product_id == p.product_id:
-                cant += 1 
-                duplicates.append({'product': product, 'cant': cant})
-                
-    return duplicates
 
