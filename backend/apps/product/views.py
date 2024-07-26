@@ -328,8 +328,7 @@ class ProductsKataTestView(APIView):
 
 class ProductsSm23TestView(APIView):
     def get(self, request):
-        # products = update_database_sm23_api()
-        products = search_duplicate_products(shop_id=None)
+        products = update_database_sm23_api()
         return Response({'products': products}, status=status.HTTP_200_OK)
     
 class SearchDuplicateItems(APIView):
