@@ -17,7 +17,7 @@ def update_products(headers, shop, proxy=None):
     products_id = []
     all_products = []
 
-    print("Starting to fetch products...")
+    print("Starting to fetch products from Katapulk...")
     try:
         # Get all products for each zone
         for zone in zone_ids:
@@ -68,7 +68,7 @@ def update_products(headers, shop, proxy=None):
 
             all_products.extend(product_list)
 
-        print("------Product process completed successfully------")
+        print("------Katapulk Products process completed successfully------")
 
     except Exception as e:
         print(f"An error occurred: {e}")
