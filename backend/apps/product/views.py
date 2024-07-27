@@ -2,7 +2,7 @@ from datetime import timedelta
 from rest_framework import viewsets
 
 from common.utils.categories_functions import add_product_counts_to_tree, category_to_dict
-from common.utils.common import clean_name_trim
+from common.utils.common import clean_name_trim, search_duplicate_items
 from common.utils.manufacture_functions import get_manufacture_ids_from_params
 from common.utils.test import test_set_previous_price, test_set_previous_price_updated_at
 from .models import Product, Manufacture, Category, Provider, PriceHistory
@@ -330,6 +330,11 @@ class ProductsSm23TestView(APIView):
     def get(self, request):
         products = update_database_sm23_api()
         return Response({'products': products}, status=status.HTTP_200_OK)
+    
+class SearchDuplicateItems(APIView):
+    def get(self, request):
+        duplicates = search_duplicate_items()
+        return Response({'amount':len(duplicates), 'items': duplicates}, status=status.HTTP_200_OK)
 
 # class ComparisonZoneViewSet(viewsets.ModelViewSet):
 #     queryset = ComparisonZone.objects.all()

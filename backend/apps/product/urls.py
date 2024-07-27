@@ -29,4 +29,6 @@ urlpatterns = [
          views.ProductsKataTestView.as_view(), name='products-kata-test'),
     path('sm23-products-test/',
          views.ProductsSm23TestView.as_view(), name='products-sm23-test'),
+    path('duplicate-items/',
+         views.SearchDuplicateItems.as_view(), name='duplicate-items'),
 ]

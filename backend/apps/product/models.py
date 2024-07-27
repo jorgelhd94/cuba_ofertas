@@ -22,6 +22,8 @@ class Manufacture(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255, null=True)
     url = models.CharField(max_length=255, null=True)
+    shop = models.ForeignKey(
+        Shop, on_delete=models.CASCADE, null=True, related_name='manufacture_shops')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -42,8 +44,7 @@ class Provider(models.Model):
     class Meta:
         db_table = 'provider'
 
-
-class BaseModel(models.Model):
+class CategoryBaseModel(models.Model):
     category_id = models.CharField(max_length=255)
     name = models.CharField(max_length=255, null=True)
     url = models.CharField(max_length=255, null=True)
@@ -75,17 +76,15 @@ class BaseModel(models.Model):
             ancestors.append(current)
             current = current.parent
         return ancestors
-
-
-class Category(BaseModel):
+    
+class Category(CategoryBaseModel):
     id = models.AutoField(primary_key=True)
 
     class Meta:
         db_table = 'category'
-        abstract = False
-
-
-class CategoryShop(BaseModel):
+        abstract = False 
+    
+class CategoryShop(CategoryBaseModel):
     id = models.AutoField(primary_key=True)
     shop = models.ForeignKey(
         Shop, on_delete=models.CASCADE, null=True, related_name='category_shops')
@@ -108,6 +107,7 @@ class Product(models.Model):
     categories_shop = models.ManyToManyField(
         CategoryShop, related_name='products_shop')
     name = models.CharField(max_length=255, null=True)
+    description = models.TextField(null=True)
     product_url = models.CharField(max_length=900, null=True)
     image_url = models.CharField(max_length=255, null=True)
 
