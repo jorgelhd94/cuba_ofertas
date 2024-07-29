@@ -1,0 +1,48 @@
+version: '3.9'
+
+networks:
+  ofertas-network:
+    driver: bridge
+
+services:
+  ofertas-web:
+    container_name: ofertas-backend
+    image: ofertas-backend
+    build: .
+    ports:
+      - "8001:8001"
+    command: >
+      bash -c "
+        until pg_isready -h ofertas-db -p 5432; do
+          echo 'Waiting for Postgres to be ready...';
+          sleep 5;
+        done;
+        service cron start &&
+        python manage.py makemigrations &&
+        python manage.py migrate &&
+        python manage.py crontab add &&
+        python manage.py seed &&
+        python manage.py runserver 0.0.0.0:8001"
+    env_file:
+      - ./.env
+    depends_on:
+      - ofertas-db
+    networks:
+      - ofertas-network
+
+  ofertas-db:
+    image: postgres
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - ofertas-network
+
+volumes:
+  postgres_data:

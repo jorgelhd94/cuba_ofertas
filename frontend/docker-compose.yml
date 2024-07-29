@@ -1,0 +1,11 @@
+version: '3.9'
+
+services:
+  ofertas-nextapp:
+    container_name: ofertas-frontend
+    image: ofertas-frontend
+    build: .
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env.production

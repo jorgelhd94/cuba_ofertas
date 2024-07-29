@@ -1,0 +1,92 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+.dark-section {
+  background-color: hsla(0, 0%, 0%, 1);
+  background-image: radial-gradient(
+      at 0% 59%,
+      hsla(290, 89%, 20%, 0.31) 0px,
+      transparent 50%
+    ),
+    radial-gradient(at 100% 36%, hsla(213, 72%, 20%, 0.3) 0px, transparent 50%),
+    radial-gradient(
+      at 100% 100%,
+      hsla(272, 73%, 11%, 0.55) 0px,
+      transparent 50%
+    );
+}
+
+[type="text"],
+[type="email"],
+[type="url"],
+[type="password"],
+[type="number"],
+[type="date"],
+[type="datetime-local"],
+[type="month"],
+[type="search"],
+[type="tel"],
+[type="time"],
+[type="week"],
+[multiple],
+textarea,
+select {
+  border: none;
+  padding-left: 0px;
+}
+
+[type="text"]:focus,
+[type="email"]:focus,
+[type="url"]:focus,
+[type="password"]:focus,
+[type="number"]:focus,
+[type="date"]:focus,
+[type="datetime-local"]:focus,
+[type="month"]:focus,
+[type="search"]:focus,
+[type="tel"]:focus,
+[type="time"]:focus,
+[type="week"]:focus,
+[multiple]:focus,
+textarea:focus,
+select:focus {
+  box-shadow: none !important;
+}
+
+
+/* Scrollbar */
+
+:root {
+  --scrollbar-bg: #f1f1f1; /* Color de fondo de la pista */
+  --scrollbar-thumb: #888; /* Color del thumb */
+  --scrollbar-thumb-hover: #555; /* Color del thumb al pasar el mouse */
+}
+
+.scrollbar-custom {
+  scrollbar-width: thin; /* Firefox: tamaño de la barra de desplazamiento */
+}
+
+/* Chrome, Edge, Safari, y Opera */
+.scrollbar-custom::-webkit-scrollbar {
+  width: 12px; /* Ancho de la barra de desplazamiento vertical */
+  height: 12px; /* Altura de la barra de desplazamiento horizontal */
+}
+
+.scrollbar-custom::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-thumb); /* Color del thumb */
+  border-radius: 10px; /* Bordes redondeados del thumb */
+}
+
+.scrollbar-custom::-webkit-scrollbar-track {
+  background: var(--scrollbar-bg); /* Color de la pista */
+  border-radius: 10px; /* Bordes redondeados de la pista */
+}
+
+
