@@ -1,8 +1,57 @@
 from django.utils import timezone
 from apps.product.models import CategoryShop, Manufacture, Product, Provider
 
+def update_category_parents(categories_list, shop):
+    for category in categories_list:
+        id = category.get("id")
+        parent_id = category.get("parent")
+        if parent_id:
+            category_obj = CategoryShop.objects.get(category_id=id, shop=shop)    
+            category_obj_parent = CategoryShop.objects.get(category_id=parent_id, shop=shop)   
+            category_obj.parent = category_obj_parent
+            category_obj.save() 
+    
+def update_manufacture(product, shop):
+    manufacture = None
+    manufacture_name = product.get("brand")
+    if manufacture_name and manufacture_name != '-':
+        # manufacture_url = ''
+        new_manufacture = {
+                "name": manufacture_name
+            }
+        try:
+            manufacture = Manufacture.objects.get(name=manufacture_name, shop=shop)                           
+            for key, value in new_manufacture.items():
+                setattr(manufacture, key, value)
+            manufacture.save()
+        except Manufacture.DoesNotExist:
+            new_manufacture["shop"] = shop
+            manufacture = Manufacture.objects.create(**new_manufacture)
+            
+    return manufacture
 
-def create_product(product, shop):
+def update_provider(product, shop):
+    provider = None
+    provider_id = product.get("productProvider")
+    if provider_id:
+        new_provider = {
+            "provider_id": provider_id
+        }
+        provider_name = product.get("codeProductProvider")
+        if provider_name:
+            new_provider["name"] = provider_name
+        try:
+            provider = Provider.objects.get(provider_id=provider_id, shop=shop)                           
+            for key, value in new_provider.items():
+                setattr(provider, key, value)
+            provider.save()
+        except Provider.DoesNotExist:
+            new_provider["shop"] = shop
+            provider = Provider.objects.create(**new_provider)
+            
+    return provider
+
+def create_product(product, shop, manufacture, provider):
     base_product_url = "https://www.tuambia.com/catalog"
     
     product_id = product.get("id")
@@ -25,6 +74,8 @@ def create_product(product, shop):
         'image_url': product_image_url,
         'currency': product_currency,
         'old_price': product_old_price,
+        'manufacture': manufacture,
+        'provider': provider,
         'shop': shop,
         'updated_at': timezone.now(),
     }
