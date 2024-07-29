@@ -36,8 +36,9 @@ def update_database_tuambia_api():
         shop, created = Shop.objects.get_or_create(
             slug='tuambia', defaults=tuambia)
 
+        # Updating database
         update_categories(headers, shop)
-        # products = update_products(headers, shop)
+        update_products(headers, shop)
 
         new_products = Product.objects.filter(created_at__gte=start_update, shop=shop)
         new_products_count = new_products.count()

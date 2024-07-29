@@ -47,10 +47,6 @@ def update_categories(headers, shop, proxy=None):
             # Update category parents
             update_category_parents(categories_list, shop)
                 
-                
-            
-            
-                    
             print("------Category process completed successfully------")
         else:
             print(f"Failed to fetch categories. Status code: {response.status_code}")

@@ -51,21 +51,22 @@ def update_provider(product, shop):
             
     return provider
 
-def create_product(product, shop, manufacture, provider):
+def create_product(product_data, shop, manufacture, provider, category_id):
     base_product_url = "https://www.tuambia.com/catalog"
     
-    product_id = product.get("id")
-    product_name = product.get("name")
-    product_description = product.get("description")
-    product_slug = product.get("slug")
+    product_id = product_data.get("id")
+    product_name = product_data.get("name")
+    product_description = product_data.get("description")
+    product_slug = product_data.get("slug")
     product_url = f'{base_product_url}/{product_slug}'
-    product_images = product.get("media")
+    product_images = product_data.get("media")
     product_image_url = None
     if len(product_images) > 0:
         product_image_url = product_images[0]["url"]     
     product_currency = 'US$'
-    product_old_price = product.get("price")
-    external_current_price = product.get("finalPrice")
+    product_old_price = product_data.get("price")
+    external_current_price = product_data.get("finalPrice")
+    
     new_product = {
         'name': product_name,
         'description': product_description,
@@ -98,5 +99,11 @@ def create_product(product, shop, manufacture, provider):
     except Product.DoesNotExist:
         new_product["current_price"] = external_current_price
         product = Product.objects.create(**new_product)      
+        
+    try:
+        category = CategoryShop.objects.get(category_id=category_id, shop=shop)
+        product.categories_shop.add(category)
+    except CategoryShop.DoesNotExist:
+        category = None
 
     

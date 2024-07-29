@@ -5,8 +5,6 @@ from .utils import create_product, update_manufacture, update_provider
 def update_products(headers, shop, proxy=None):
     url = "https://api.tuambia.com/ms-auth/api/products/search/"
 
-    
-    products_total = []
     payload = {
         "size": 100, "page": 1
     }
@@ -24,11 +22,11 @@ def update_products(headers, shop, proxy=None):
                 if product.get("visible"):
                     manufacture = update_manufacture(product, shop)
                     provider = update_provider(product, shop)
-                    create_product(product, shop, manufacture, provider)
+                    category = product.get("category")["id"]
+                    create_product(product, shop, manufacture, provider, category)
                     
             # Other pages    
             for page_number in range(2, total_pages + 1):
-                products_per_page = []
                 payload["page"] = page_number
                 print(f"Processing products from page {page_number}")
                 response = requests.post(url, headers=headers, data=payload)
@@ -38,14 +36,13 @@ def update_products(headers, shop, proxy=None):
                         if product.get("visible"):
                             manufacture = update_manufacture(product, shop)
                             provider = update_provider(product, shop)
-                            create_product(product, shop, manufacture, provider)
+                            create_product(product, shop, manufacture, provider, category)
                 else:
-                    print(f"Failed to fetch products from page {page_number}. Status code: {first_response.status_code}")        
+                    print(f"Failed to fetch products from page {page_number}. Status code: {response.status_code}")        
         else:
             print(f"Failed to fetch products from page 1. Status code: {first_response.status_code}")   
                
-        print(f"Products count: {len(products_total)}")  
-        # return products           
+        print("------TuAmbia Products process completed successfully------")  
     except Exception as e:
         print(f"An error occurred: {e}")
         raise Exception(e)
