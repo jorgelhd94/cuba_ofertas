@@ -4,10 +4,10 @@ from apps.product.models import CategoryShop, Manufacture, Product, Provider
 
 def create_product(product, shop):
     base_product_url = "https://www.tuambia.com/catalog"
-    image_base_url = 'https://medias.treew.com/imgproducts/thumbs'
     
     product_id = product.get("id")
     product_name = product.get("name")
+    product_description = product.get("description")
     product_slug = product.get("slug")
     product_url = f'{base_product_url}/{product_slug}'
     product_images = product.get("media")
@@ -19,6 +19,7 @@ def create_product(product, shop):
     external_current_price = product.get("finalPrice")
     new_product = {
         'name': product_name,
+        'description': product_description,
         'product_id': product_id,
         'product_url': product_url,
         'image_url': product_image_url,

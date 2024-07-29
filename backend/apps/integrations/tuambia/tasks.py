@@ -11,6 +11,7 @@ origin = config("ORIGIN_TUAMBIA")
 def update_database_tuambia_api():
     headers = {
         "Origin": origin,
+        "Cookie": "AWSALB=+qU8lb6wnEE7BRFNdvpaWskCRz2ZEFGFGVT+eDfm1Rg0XYlfgj0QuEx2BnVWW/Rt36VRhjOz4PYkYSBU7syspTeXnVR2lCcj6xM7rtzpmLJkPO2EONSelzj0XlrkbDtJc/oERLle0BONeHx1h7vZoKfdp7Ubpr3kkVeunsNGoinTgsldMmPYfQLdIefKSw==; AWSALBCORS=+qU8lb6wnEE7BRFNdvpaWskCRz2ZEFGFGVT+eDfm1Rg0XYlfgj0QuEx2BnVWW/Rt36VRhjOz4PYkYSBU7syspTeXnVR2lCcj6xM7rtzpmLJkPO2EONSelzj0XlrkbDtJc/oERLle0BONeHx1h7vZoKfdp7Ubpr3kkVeunsNGoinTgsldMmPYfQLdIefKSw=="
     }
 
     # start_update = timezone.now()
