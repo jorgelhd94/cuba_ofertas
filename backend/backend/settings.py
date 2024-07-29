@@ -182,8 +182,9 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CRONJOBS = [
-    ('30 6 * * *', 'apps.search.tasks.update_database_sm23'),
-    ('0 6 * * *', 'apps.integrations.kata.tasks.update_database_kata'),
+    ('0 6 * * *', 'apps.integrations.sm23.tasks.update_database_sm23_api'),
+    ('15 6 * * *', 'apps.integrations.kata.tasks.update_database_kata'),
+    ('30 6 * * *', 'apps.integrations.tuambia.tasks.update_database_tuambia_api'),
 ]
 
 REST_FRAMEWORK = {

@@ -1,7 +1,7 @@
-import { IShop } from "@/lib/interfaces/IChop";
 import React from "react";
 import Sm23 from "@/public/assets/shops/sm23.png";
 import Kata from "@/public/assets/shops/kata.png";
+import TuAmbia from "@/public/assets/shops/tuambia.png";
 import Image from "next/image";
 import Link from "next/link";
 import { IProduct } from "@/lib/interfaces/IProduct";
@@ -15,6 +15,10 @@ const ShopImage = (props: Props) => {
     if (props.product.shop.slug === "kata") {
       return Kata;
     }
+    
+    if (props.product.shop.slug === "tuambia") {
+      return TuAmbia;
+    }
 
     return Sm23;
   };
@@ -25,7 +29,7 @@ const ShopImage = (props: Props) => {
 
   return (
     <Link href={getProductUrl()} target="_blank">
-      <Image src={getShopImage()} priority width={36} alt="Shop Image" />
+      <Image src={getShopImage()} priority width={props.product.shop.slug === "tuambia" ? 64 : 36} alt="Shop Image" />
     </Link>
   );
 };
