@@ -22,8 +22,8 @@ from common.utils import search_functions
 from django.utils import timezone
 
 from apps.integrations.kata.tasks import update_database_kata
-
 from apps.integrations.sm23.tasks import update_database_sm23_api
+from apps.integrations.tuambia.tasks import update_database_tuambia_api
 
 
 class ProductViewSet(viewsets.ModelViewSet):
@@ -329,6 +329,11 @@ class ProductsKataTestView(APIView):
 class ProductsSm23TestView(APIView):
     def get(self, request):
         products = update_database_sm23_api()
+        return Response({'products': products}, status=status.HTTP_200_OK)
+    
+class ProductsTuAmbiaTestView(APIView):
+    def get(self, request):
+        products = update_database_tuambia_api()
         return Response({'products': products}, status=status.HTTP_200_OK)
     
 class SearchDuplicateItems(APIView):
